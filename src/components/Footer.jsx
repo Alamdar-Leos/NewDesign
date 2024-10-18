@@ -6,10 +6,8 @@ const Footer = () => {
     {/* footers Section Start */}
     <section className="w3l-footers-20">
         <div className="container">
-            <div className="d-grid grid-col-3 grids-content1 bottom-border">
-                <div className="columns copyright-grid align-self text-center">
-                    <p className="copy-footer-29">© 2024 LEOS INTERNATIONAL. All rights reserved</p>
-                </div>
+            <div className="text-center">
+                <p className="footer-copyright-text">© 2024 LEOS INTERNATIONAL. All rights reserved</p>
             </div>
         </div>
     {/*move top */}

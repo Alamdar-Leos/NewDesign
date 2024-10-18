@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min";
 import { Link } from 'react-router-dom';
 
 
@@ -43,6 +41,7 @@ const WG3GeneralTabsComponent = () => {
         </li>
         {/* Interiors Tab Section End */}
 
+        {/* Amenities Tab Section Start */}
         <li className="nav-item" role="presentation">
           <button
             className="nav-link"
@@ -57,8 +56,9 @@ const WG3GeneralTabsComponent = () => {
             AMENITIES
           </button>
         </li>
-
         {/* Amenities Tab Section Start */}
+
+        {/* Location Tab Section Start */}
         <li className="nav-item" role="presentation">
           <button
             className="nav-link"
@@ -73,7 +73,7 @@ const WG3GeneralTabsComponent = () => {
             LOCATION
           </button>
         </li>
-        {/* Amenities Tab Section End */}
+        {/* Location Tab Section End */}
 
         {/* Floor Plans Section Start */}
         <li className="nav-item dropdown" role="presentation">
@@ -723,11 +723,7 @@ const WG3GeneralTabsComponent = () => {
           </div>
         </div>
         {/* Floor Plans End */}
-        <div
-          className="tab-pane fade"
-          id="building-amenities"
-          role="tabpanel"
-          aria-labelledby="building-amenities-tab">
+        <div className="tab-pane fade">
           <div className="single-post-image mb-5">
             <div className="owl-blog owl-carousel owl-theme">
               <div className="single-bg-white">

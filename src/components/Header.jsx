@@ -1,84 +1,90 @@
-import React from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   return (
     <>
+
+    {/* Header Background Design Start */}
+    <section className="w3l-about-breadcrumb">
+      <div className="breadcrumb-bg breadcrumb-bg-about pt-5">
+        <div className="container pt-lg-5 py-3">
+          {/* You can add some breadcrumb content here if needed */}
+        </div>
+      </div>
+    </section>
+    {/* Header Background Design End */}
+
     {/* Header Section Start */}
     <header id="site-header" className="fixed-top">
-        <div className="container">
-            <nav className="navbar navbar-expand-lg stroke px-0">
-                <h1><a className="navbar-brand" href="/">
-                        {/* <span className="fa fa-home"> LEOS</span> INTERNATIONAL */}
-                        <span><img src="../assets/images/logo.png" /></span>
-                    </a></h1>
-                    {/* if logo is image enable this   
-                    <a className="navbar-brand" href="#index.html">
-                        <img src="image-path" alt="Your logo" title="Your logo" style="height:35px;" />
-                    </a> */}
-                <button className="navbar-toggler  collapsed bg-gradient" type="button" data-toggle="collapse"
-                    data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon fa icon-expand fa-bars"></span>
-                    <span className="navbar-toggler-icon fa icon-close fa-times"></span>
-                </button>
+      <div className="container">
+        <div className="row">
+          {/* Header Left Sidebar Section Start */}
+          <div className="col-lg-4 d-flex align-items-center">
+              <Link to="/">
+                  <img src="../assets/images/logo.png" alt="Logo" />
+              </Link>
+          </div>
+          {/* Header Left Sidebar Section End */}
 
-                <div className="collapse navbar-collapse justify-content-center" id="navbarTogglerDemo02">
-                    <ul className="navbar-nav ml-lg-5 mr-auto">
-                        <li className="nav-item active">
-                            <a className="nav-link" href="/">Home <span className="sr-only">(current)</span></a>
-                        </li>
-                        <li className="nav-item @@listing__active">
-                            <a className="nav-link" href="listing.html">Listing</a>
-                        </li>
-                        <li className="nav-item dropdown @@property__active">
-                            <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Property <span className="fa fa-angle-down"></span>
-                            </a>
-                            <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a className="dropdown-item @@ps__active" href="property-single.html">Single property</a>
-                            </div>
-                        </li>
-                    </ul>
-                    {/* <div className="top-quote mt-lg-0">
-                        <a href="#buytheme" className="btn btn-style btn-primary"><span className="fa fa-home"></span> Add
-                            listiing</a>
-                    </div> */}
-                    {/*/search-right*/}
-                    {/* <div className="search mx-3">
-                        <input className="search_box" type="checkbox" id="search_box" />
-                        <label className="fa fa-search" for="search_box"></label>
-                        <div className="search_form">
-                            <form action="error.html" method="GET">
-                                <input type="text" placeholder="Search" />
-                                <input type="submit" value="search" />
-                            </form>
-                        </div>
-                    </div> */}
-                    {/*//search-right*/}
-                </div>
-
-                {/* toggle switch for light and dark theme */}
-                {/* <div className="mobile-position">
-                    <nav className="navigation">
-                        <div className="theme-switch-wrapper">
-                            <label className="theme-switch" for="checkbox">
-                                <input type="checkbox" id="checkbox" />
-                                <div className="mode-container">
-                                    <i className="gg-sun"></i>
-                                    <i className="gg-moon"></i>
-                                </div>
-                            </label>
-                        </div>
-                    </nav>
-                </div> */}
-                {/* //toggle switch for light and dark theme */}
-            </nav>
+          {/* Header Right Sidebar Section Start */}
+          <div className="col-lg-8 text-right">
+            <section className="w3l-cover-3">
+              <div className="container">
+                {/* <form action="#" className="w3l-cover-3-gd" method="GET">
+                  <span className="input-group-btn">
+                    <select className="btn btn-default" name="unitType" required>
+                      <option value="" selected>Units Type</option>
+                      <option>201 Studio</option>
+                      <option>202 1 Bedroom</option>
+                      <option>203 3 Bedroom</option>
+                      <option>204 4 Bedroom</option>
+                      <option>205 2 Bedroom</option>
+                      <option>206 6 Bedroom</option>
+                      <option>207 5 Bedroom</option>
+                    </select>
+                  </span>
+                  <span className="input-group-btn">
+                    <select className="btn btn-default" name="community" required>
+                      <option value="" selected>Community</option>
+                      <option>Studio</option>
+                      <option>1 Bedroom</option>
+                      <option>2 Bedroom</option>
+                      <option>3 Bedroom</option>
+                      <option>4 Bedroom</option>
+                      <option>5 Bedroom</option>
+                      <option>6 Bedroom</option>
+                    </select>
+                  </span>
+                  <span className="input-group-btn">
+                    <select className="btn btn-default" name="country" required>
+                      <option value="" selected>Country</option>
+                      <option>United Arab Emirates</option>
+                      <option>United Kingdom</option>
+                      <option>New Zealand</option>
+                      <option>China</option>
+                    </select>
+                  </span>
+                  <span className="input-group-btn">
+                    <select className="btn btn-default" name="units" required>
+                      <option value="" selected>Units</option>
+                      <option>Available Units</option>
+                      <option>Sold Units</option>
+                    </select>
+                  </span>
+                  <button type="submit" className="btn-primary">Search</button>
+                </form> */}
+              </div>
+            </section>
+          </div>
+          {/* Header Right Sidebar Section End */}
         </div>
+      </div>
     </header>
-    {/* Header Section  End */}
+    {/* Header Section End */}
+    
     </>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
