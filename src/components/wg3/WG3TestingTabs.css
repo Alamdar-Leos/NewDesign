@@ -160,3 +160,55 @@
     color: #fff;
     cursor: pointer;
 }
+
+
+/* Basic styling for search form */
+/* .search-form {
+    display: flex; 
+    gap: 10px;
+  } */
+  
+  /* Hide the search form on smaller screens */
+  @media (max-width: 1023px) {
+    .search-form {
+      display: none; /* Form is hidden by default on small screens */
+    }
+  
+    /* Show the search form when `show` class is added */
+    .search-form.show {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+  
+    /* Show the search icon only on smaller screens */
+    .search-icon {
+      display: block;
+      font-size: 24px;
+      cursor: pointer;
+    }
+  }
+  
+  /* Hide the search icon by default on larger screens */
+  /* @media (min-width: 769px) {
+    .search-icon {
+      display: none !important;
+    }
+    .w3l-cover-3 .w3l-cover-3-gd {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+  } */
+
+  @media (min-width: 1024px) {
+    .w3l-cover-3 .w3l-cover-3-gd {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    .search-icon {
+        display: none !important;
+      }
+  }
+  

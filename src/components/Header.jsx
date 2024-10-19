@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
+  const [showForm, setShowForm] = useState(false); // State to manage form visibility
+
+  // Function to toggle form visibility
+  const toggleForm = () => {
+    setShowForm(!showForm);
+  };
+  
   return (
     <>
 
@@ -30,8 +37,12 @@ const Header = () => {
           {/* Header Right Sidebar Section Start */}
           <div className="col-lg-8 text-right">
             <section className="w3l-cover-3">
-              <div className="container">
-                {/* <form action="#" className="w3l-cover-3-gd" method="GET">
+                {/* Search Icon (only visible on smaller screens) */}
+                <div className="search-icon" onClick={toggleForm}>
+                  <i className="fas fa-search"></i> {/* Font Awesome search icon */}
+                </div>
+                {/* Search Form (conditionally rendered) */}
+                <form className={`w3l-cover-3-gd search-form ${showForm ? 'show' : ''}`} method="GET">
                   <span className="input-group-btn">
                     <select className="btn btn-default" name="unitType" required>
                       <option value="" selected>Units Type</option>
@@ -73,8 +84,7 @@ const Header = () => {
                     </select>
                   </span>
                   <button type="submit" className="btn-primary">Search</button>
-                </form> */}
-              </div>
+                </form>
             </section>
           </div>
           {/* Header Right Sidebar Section End */}

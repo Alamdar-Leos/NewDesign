@@ -432,7 +432,8 @@ mark,
 
 .img-fluid {
   max-width: 100%;
-  height: 650px; 
+  height: 650px;
+  object-fit: cover;
 }
 
 .img-thumbnail {
@@ -10474,15 +10475,9 @@ nav ul li a:hover {
 }
 
 .w3l-cover-3 .w3l-cover-3-gd {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  max-width: 950px;
   margin: auto;
-  /* margin-top: 60px; */
   box-shadow: 1px 1px 10px 0px #00000030;
   background-color: white;
-  
 }
 
 .w3l-cover-3 .most-searches {
