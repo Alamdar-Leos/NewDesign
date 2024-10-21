@@ -2462,8 +2462,10 @@ input[type="button"].btn-block {
     background-color: transparent; }
 
 .dropdown-menu.show {
-  display: block; }
-
+  display: block;
+  height: 350px;
+  overflow: scroll;
+}
 .dropdown-header {
   display: block;
   padding: 0.5rem 1.5rem;

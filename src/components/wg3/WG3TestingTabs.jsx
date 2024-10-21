@@ -9,6 +9,7 @@ const WG3TestingTabs = () => {
     const [activeTab, setActiveTab] = useState('exteriors-tab');
     const [isFloorPlansDropdownOpen, setIsFloorPlansDropdownOpen] = useState(false); // For Floor Plans dropdown toggle
     const [isBrochuresDropdownOpen, SetIsBrochuresDropdownOpen] = useState(false); // For Brochures dropdown toggle
+    const [isAvailableUnitsOpen, SetIsAvailableUnitsOpen] = useState(false); // For Available Units dropdown toggle
     const [isVideosDropdownOpen, setIsVideosDropdownOpen] = useState(false); // For Videos dropdown toggle
     const [isFullScreenModalOpen, setIsFullScreenModalOpen] = useState(false);  // For Videos Popup
     const [isAmenitiesDropdownOpen, setIsAmenitiesDropdownOpen] = useState(false); // For Videos dropdown toggle
@@ -18,13 +19,23 @@ const WG3TestingTabs = () => {
         // Close the dropdowns when switching to other tabs
         setIsFloorPlansDropdownOpen(false);
         SetIsBrochuresDropdownOpen(false);
+        SetIsAvailableUnitsOpen(false);
         setIsVideosDropdownOpen(false);
         setIsAmenitiesDropdownOpen(false);
+    };
+
+    const toggleAvailableUnitsDropdown = () => {
+        SetIsAvailableUnitsOpen(!isAvailableUnitsOpen); // Toggle Brochures dropdown visibility
+        SetIsBrochuresDropdownOpen(false); // Close Brochures dropdown if open
+        setIsFloorPlansDropdownOpen(false); // Close Floor Plans dropdown if open
+        setIsVideosDropdownOpen(false); // Close Videos dropdown if open
+        setIsAmenitiesDropdownOpen(false); // Close Amenities dropdown if open
     };
 
     const toggleFloorPlansDropdown = () => {
         setIsFloorPlansDropdownOpen(!isFloorPlansDropdownOpen); // Toggle Floor Plans dropdown visibility
         SetIsBrochuresDropdownOpen(false); // Toggle Brochures dropdown visibility
+        SetIsAvailableUnitsOpen(false); // Toggle Available Units dropdown visibility
         setIsVideosDropdownOpen(false); // Close Videos dropdown if open
         setIsAmenitiesDropdownOpen(false); // Close Amenities dropdown if open
     };
@@ -33,13 +44,13 @@ const WG3TestingTabs = () => {
         setIsVideosDropdownOpen(!isVideosDropdownOpen); // Toggle Videos dropdown visibility
         setIsFloorPlansDropdownOpen(false); // Close Floor Plans dropdown if open
         SetIsBrochuresDropdownOpen(false); // Close Brochures dropdown if open
+        SetIsAvailableUnitsOpen(false); // Close Available Units dropdown if open
         setIsAmenitiesDropdownOpen(false); // Close Amenities dropdown if open
 
     };
     const openFullScreenModal = () => {
         setIsFullScreenModalOpen(true);
-    };
-    
+    };  
     const closeFullScreenModal = () => {
         setIsFullScreenModalOpen(false);
     };
@@ -47,9 +58,11 @@ const WG3TestingTabs = () => {
     const toggleBrochuresDropdown = () => {
         SetIsBrochuresDropdownOpen(!isBrochuresDropdownOpen); // Toggle Brochures dropdown visibility
         setIsFloorPlansDropdownOpen(false); // Close Floor Plans dropdown if open
+        SetIsAvailableUnitsOpen(false); // Close Available Units dropdown if open
         setIsVideosDropdownOpen(false); // Close Videos dropdown if open
         setIsAmenitiesDropdownOpen(false); // Close Amenities dropdown if open
     };
+
     const toggleAmenitiesDropdown = () => {
         setIsAmenitiesDropdownOpen(!isAmenitiesDropdownOpen); // Toggle Brochures dropdown visibility
         SetIsBrochuresDropdownOpen(false); // Toggle Brochures dropdown visibility
@@ -123,6 +136,78 @@ const WG3TestingTabs = () => {
                         </button>
                     </li>
                     {/* Location Tab Section End */}
+
+                    {/* Dropdown for Available Units Start */}
+                    <li className="dropdown">
+                        <button
+                            className={`tab-button dropdown-toggle ${isAvailableUnitsOpen ? 'active' : ''}`}
+                            onClick={(e) => {
+                                e.preventDefault(); // Prevent tab activation
+                                toggleAvailableUnitsDropdown(); // Toggle Floor Plans dropdown
+                            }}
+                            aria-expanded={isAvailableUnitsOpen}>
+                            Available Units
+                        </button>
+                        <ul className={`dropdown-menu ${isAvailableUnitsOpen ? 'show' : ''}`}>
+                            <li>
+                                <button
+                                    className={`tab-button ${activeTab === 'studio-type1-tab' ? 'active' : ''}`}
+                                    onClick={() => handleTabClick('studio-type1-tab')}>
+                                    WG - 104 (1 br)
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    className={`tab-button ${activeTab === 'studio-type2-tab' ? 'active' : ''}`}
+                                    onClick={() => handleTabClick('studio-type2-tab')}>
+                                    WG - 106 (1 br)
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    className={`tab-button ${activeTab === '1br-type1-tab' ? 'active' : ''}`}
+                                    onClick={() => handleTabClick('1br-type1-tab')}>
+                                    WG - 107 (2 br)
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    className={`tab-button ${activeTab === '1br-type2-tab' ? 'active' : ''}`}
+                                    onClick={() => handleTabClick('1br-type2-tab')}>
+                                    WG - 1105 (1 br)
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    className={`tab-button ${activeTab === '3br-type1-tab' ? 'active' : ''}`}
+                                    onClick={() => handleTabClick('3br-type1-tab')}>
+                                    WG - 1205 (studio)
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    className={`tab-button ${activeTab === '3br-type2-tab' ? 'active' : ''}`}
+                                    onClick={() => handleTabClick('3br-type2-tab')}>
+                                    WG - 1108 (3 br)
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    className={`tab-button ${activeTab === '3br-type3-tab' ? 'active' : ''}`}
+                                    onClick={() => handleTabClick('3br-type3-tab')}>
+                                    WG - 1214 (5 br)
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    className={`tab-button ${activeTab === '3br-type4-tab' ? 'active' : ''}`}
+                                    onClick={() => handleTabClick('3br-type4-tab')}>
+                                    WG - 1305 (3 br)
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+                    {/* Dropdown for Available Units End */}
 
                     {/* Dropdown for Floor Plans Start */}
                     <li className="dropdown">
