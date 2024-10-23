@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -7,47 +7,33 @@ import { Link } from 'react-router-dom';
 
 const WG3TestingTabs = () => {
     const [activeTab, setActiveTab] = useState('exteriors-tab');
-    const [isFloorPlansDropdownOpen, setIsFloorPlansDropdownOpen] = useState(false); // For Floor Plans dropdown toggle
-    const [isBrochuresDropdownOpen, SetIsBrochuresDropdownOpen] = useState(false); // For Brochures dropdown toggle
-    const [isAvailableUnitsOpen, SetIsAvailableUnitsOpen] = useState(false); // For Available Units dropdown toggle
-    const [isVideosDropdownOpen, setIsVideosDropdownOpen] = useState(false); // For Videos dropdown toggle
+    const [activeDropdown, setActiveDropdown] = useState(''); // General state for active dropdown
     const [isFullScreenModalOpen, setIsFullScreenModalOpen] = useState(false);  // For Videos Popup
-    const [isAmenitiesDropdownOpen, setIsAmenitiesDropdownOpen] = useState(false); // For Videos dropdown toggle
 
+    // Handle tab click and close dropdowns when switching tabs
     const handleTabClick = (tab) => {
         setActiveTab(tab);
-        // Close the dropdowns when switching to other tabs
-        setIsFloorPlansDropdownOpen(false);
-        SetIsBrochuresDropdownOpen(false);
-        SetIsAvailableUnitsOpen(false);
-        setIsVideosDropdownOpen(false);
-        setIsAmenitiesDropdownOpen(false);
+        setActiveDropdown(''); // Close all dropdowns when switching tabs
     };
 
-    const toggleAvailableUnitsDropdown = () => {
-        SetIsAvailableUnitsOpen(!isAvailableUnitsOpen); // Toggle Brochures dropdown visibility
-        SetIsBrochuresDropdownOpen(false); // Close Brochures dropdown if open
-        setIsFloorPlansDropdownOpen(false); // Close Floor Plans dropdown if open
-        setIsVideosDropdownOpen(false); // Close Videos dropdown if open
-        setIsAmenitiesDropdownOpen(false); // Close Amenities dropdown if open
+    // General toggle function for dropdowns
+    const toggleDropdown = (dropdown) => {
+        setActiveDropdown((prevDropdown) => (prevDropdown === dropdown ? '' : dropdown));
     };
 
-    const toggleFloorPlansDropdown = () => {
-        setIsFloorPlansDropdownOpen(!isFloorPlansDropdownOpen); // Toggle Floor Plans dropdown visibility
-        SetIsBrochuresDropdownOpen(false); // Toggle Brochures dropdown visibility
-        SetIsAvailableUnitsOpen(false); // Toggle Available Units dropdown visibility
-        setIsVideosDropdownOpen(false); // Close Videos dropdown if open
-        setIsAmenitiesDropdownOpen(false); // Close Amenities dropdown if open
-    };
+    // Close dropdowns if clicked outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (!event.target.closest('.dropdown')) {
+                setActiveDropdown(''); // Close all dropdowns if clicked outside
+            }
+        };
+        document.addEventListener('click', handleClickOutside);
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, []);
 
-    const toggleVideosDropdown = () => {
-        setIsVideosDropdownOpen(!isVideosDropdownOpen); // Toggle Videos dropdown visibility
-        setIsFloorPlansDropdownOpen(false); // Close Floor Plans dropdown if open
-        SetIsBrochuresDropdownOpen(false); // Close Brochures dropdown if open
-        SetIsAvailableUnitsOpen(false); // Close Available Units dropdown if open
-        setIsAmenitiesDropdownOpen(false); // Close Amenities dropdown if open
-
-    };
     const openFullScreenModal = () => {
         setIsFullScreenModalOpen(true);
     };  
@@ -55,21 +41,24 @@ const WG3TestingTabs = () => {
         setIsFullScreenModalOpen(false);
     };
 
-    const toggleBrochuresDropdown = () => {
-        SetIsBrochuresDropdownOpen(!isBrochuresDropdownOpen); // Toggle Brochures dropdown visibility
-        setIsFloorPlansDropdownOpen(false); // Close Floor Plans dropdown if open
-        SetIsAvailableUnitsOpen(false); // Close Available Units dropdown if open
-        setIsVideosDropdownOpen(false); // Close Videos dropdown if open
-        setIsAmenitiesDropdownOpen(false); // Close Amenities dropdown if open
+    const PrevArrow = ({ className, style, onClick }) => {
+        return (
+            <span
+                className={className}
+                style={{ ...style, display: 'block' }}
+                onClick={onClick}>←
+            </span>
+        );
     };
-
-    const toggleAmenitiesDropdown = () => {
-        setIsAmenitiesDropdownOpen(!isAmenitiesDropdownOpen); // Toggle Brochures dropdown visibility
-        SetIsBrochuresDropdownOpen(false); // Toggle Brochures dropdown visibility
-        setIsFloorPlansDropdownOpen(false); // Close Floor Plans dropdown if open
-        setIsVideosDropdownOpen(false); // Close Videos dropdown if open
+    const NextArrow = ({ className, style, onClick }) => {
+        return (
+            <span
+                className={className}
+                style={{ ...style, display: 'block' }}
+                onClick={onClick}>→
+            </span>
+        );
     };
-
     const singleImageSliderSettings = {
         dots: false,
         infinite: false,
@@ -77,20 +66,20 @@ const WG3TestingTabs = () => {
         slidesToShow: 1,
         slidesToScroll: 1,
         autoplay: false,
-        prevArrow: <span className="custom-prev">←</span>,
-        nextArrow: <span className="custom-next">→</span>,
+        prevArrow: <PrevArrow />, // Custom prev arrow component
+        nextArrow: <NextArrow />, // Custom next arrow component
     };
 
     // Slider settings for multiple images
     const multipleImagesSliderSettings = {
         dots: false,
-        infinite: true,
+        infinite: false,
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
         autoplay: false,
-        prevArrow: <span className="custom-prev">←</span>,
-        nextArrow: <span className="custom-next">→</span>,
+        prevArrow: <PrevArrow />, // Custom prev arrow component
+        nextArrow: <NextArrow />, // Custom next arrow component
     };
 
     return (
@@ -140,69 +129,68 @@ const WG3TestingTabs = () => {
                     {/* Dropdown for Available Units Start */}
                     <li className="dropdown">
                         <button
-                            className={`tab-button dropdown-toggle ${isAvailableUnitsOpen ? 'active' : ''}`}
+                            className={`tab-button dropdown-toggle ${activeDropdown === 'available-units' ? 'active' : ''}`}
                             onClick={(e) => {
-                                e.preventDefault(); // Prevent tab activation
-                                toggleAvailableUnitsDropdown(); // Toggle Floor Plans dropdown
-                            }}
-                            aria-expanded={isAvailableUnitsOpen}>
+                                e.preventDefault();
+                                toggleDropdown('available-units');
+                            }}>
                             Available Units
                         </button>
-                        <ul className={`dropdown-menu ${isAvailableUnitsOpen ? 'show' : ''}`}>
+                        <ul className={`dropdown-menu ${activeDropdown === 'available-units' ? 'show' : ''}`}>
                             <li>
                                 <button
                                     className={`tab-button ${activeTab === 'studio-type1-tab' ? 'active' : ''}`}
                                     onClick={() => handleTabClick('studio-type1-tab')}>
-                                    WG - 104 (1 br)
+                                    Studio Type 01
                                 </button>
                             </li>
                             <li>
                                 <button
                                     className={`tab-button ${activeTab === 'studio-type2-tab' ? 'active' : ''}`}
                                     onClick={() => handleTabClick('studio-type2-tab')}>
-                                    WG - 106 (1 br)
+                                    Studio Type 02
                                 </button>
                             </li>
                             <li>
                                 <button
                                     className={`tab-button ${activeTab === '1br-type1-tab' ? 'active' : ''}`}
                                     onClick={() => handleTabClick('1br-type1-tab')}>
-                                    WG - 107 (2 br)
+                                    1 BR Type 01
                                 </button>
                             </li>
                             <li>
                                 <button
                                     className={`tab-button ${activeTab === '1br-type2-tab' ? 'active' : ''}`}
                                     onClick={() => handleTabClick('1br-type2-tab')}>
-                                    WG - 1105 (1 br)
+                                    1 BR Type 02
                                 </button>
                             </li>
                             <li>
                                 <button
                                     className={`tab-button ${activeTab === '3br-type1-tab' ? 'active' : ''}`}
                                     onClick={() => handleTabClick('3br-type1-tab')}>
-                                    WG - 1205 (studio)
+                                    3 BR Type 01
                                 </button>
                             </li>
                             <li>
                                 <button
                                     className={`tab-button ${activeTab === '3br-type2-tab' ? 'active' : ''}`}
                                     onClick={() => handleTabClick('3br-type2-tab')}>
-                                    WG - 1108 (3 br)
+                                    3 BR Type 02
                                 </button>
                             </li>
                             <li>
                                 <button
                                     className={`tab-button ${activeTab === '3br-type3-tab' ? 'active' : ''}`}
                                     onClick={() => handleTabClick('3br-type3-tab')}>
-                                    WG - 1214 (5 br)
+                                    3 BR Type 03
                                 </button>
                             </li>
                             <li>
                                 <button
                                     className={`tab-button ${activeTab === '3br-type4-tab' ? 'active' : ''}`}
                                     onClick={() => handleTabClick('3br-type4-tab')}>
-                                    WG - 1305 (3 br)
+                                    3 BR Type 04
                                 </button>
                             </li>
                         </ul>
@@ -211,16 +199,15 @@ const WG3TestingTabs = () => {
 
                     {/* Dropdown for Floor Plans Start */}
                     <li className="dropdown">
-                        <button
-                            className={`tab-button dropdown-toggle ${isFloorPlansDropdownOpen ? 'active' : ''}`}
+                         <button
+                            className={`tab-button dropdown-toggle ${activeDropdown === 'floorPlans' ? 'active' : ''}`}
                             onClick={(e) => {
-                                e.preventDefault(); // Prevent tab activation
-                                toggleFloorPlansDropdown(); // Toggle Floor Plans dropdown
-                            }}
-                            aria-expanded={isFloorPlansDropdownOpen}>
+                                e.preventDefault();
+                                toggleDropdown('floorPlans');
+                            }}>
                             Floor Plans
                         </button>
-                        <ul className={`dropdown-menu ${isFloorPlansDropdownOpen ? 'show' : ''}`}>
+                        <ul className={`dropdown-menu ${activeDropdown === 'floorPlans' ? 'show' : ''}`}>
                             <li>
                                 <button
                                     className={`tab-button ${activeTab === 'studio-type1-tab' ? 'active' : ''}`}
@@ -284,35 +271,29 @@ const WG3TestingTabs = () => {
                     {/* Dropdown for Videos Start */}
                     <li className="dropdown">
                         <button
-                            className={`tab-button dropdown-toggle ${isVideosDropdownOpen ? 'active' : ''}`}
+                            className={`tab-button dropdown-toggle ${activeDropdown === 'videos' ? 'active' : ''}`}
                             onClick={(e) => {
                                 e.preventDefault();
-                                toggleVideosDropdown(); // Toggle Videos dropdown
-                            }}
-                            aria-expanded={isVideosDropdownOpen}>
+                                toggleDropdown('videos');
+                            }}>
                             Videos
                         </button>
-                        <ul className={`dropdown-menu ${isVideosDropdownOpen ? 'show' : ''}`}>
+                        <ul className={`dropdown-menu ${activeDropdown === 'videos' ? 'show' : ''}`}>
                             <li>
                                 <button
-                                    className={`tab-button ${isVideosDropdownOpen ? 'active' : ''}`}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        toggleVideosDropdown(); // Toggle Videos dropdown
-                                        openFullScreenModal();  // Open full-screen modal
-                                    }}
-                                    aria-expanded={isVideosDropdownOpen}>
+                                    className="tab-button"
+                                    onClick={() => {
+                                        toggleDropdown('videos');
+                                        openFullScreenModal();
+                                    }}>
                                     First Video
                                 </button>
                             </li>
                         </ul>
-
                         {isFullScreenModalOpen && (
                             <div className="video-modal">
                                 <div className="video-modal-content">
-                                    {/* Close button */}
                                     <span className="close-button" onClick={closeFullScreenModal}>&times;</span>
-                                    {/* Video iframe */}
                                     <iframe
                                         width="100%"
                                         height="100%"
@@ -330,44 +311,38 @@ const WG3TestingTabs = () => {
                     {/* Dropdown for Brochures Start */}
                     <li className="dropdown">
                         <button
-                            className={`tab-button dropdown-toggle ${isBrochuresDropdownOpen ? 'active' : ''}`}
+                            className={`tab-button dropdown-toggle ${activeDropdown === 'brochures' ? 'active' : ''}`}
                             onClick={(e) => {
-                                e.preventDefault(); // Prevent tab activation
-                                toggleBrochuresDropdown(); // Toggle Floor Plans dropdown
-                            }}
-                            aria-expanded={isBrochuresDropdownOpen}>
+                                e.preventDefault();
+                                toggleDropdown('brochures');
+                            }}>
                             Brochures
                         </button>
-                        <ul className={`dropdown-menu ${isBrochuresDropdownOpen ? 'show' : ''}`}>
+                        <ul className={`dropdown-menu ${activeDropdown === 'brochures' ? 'show' : ''}`}>
                             <li>
                                 <button
-                                    className="tab-button mr-2 mb-3 d-block"
-                                    onClick={() => window.open('../assets/brochures/wg3/WG3_English.pdf', '_blank')}
-                                    aria-label="Open English Brochure">
+                                    className="tab-button"
+                                    onClick={() => window.open('../assets/brochures/wg3/WG3_English.pdf', '_blank')}>
                                     English
                                 </button>
                                 <button
-                                    className="tab-button mr-2 mb-3 d-block"
-                                    onClick={() => window.open('../assets/brochures/wg3/WG3_Arabic.pdf', '_blank')}
-                                    aria-label="Open English Brochure">
+                                    className="tab-button"
+                                    onClick={() => window.open('../assets/brochures/wg3/WG3_Arabic.pdf', '_blank')}>
                                     Arabic
                                 </button>
                                 <button
-                                    className="tab-button mr-2 mb-3 d-block"
-                                    onClick={() => window.open('../assets/brochures/wg3/WG3_Russian.pdf', '_blank')}
-                                    aria-label="Open English Brochure">
+                                    className="tab-button"
+                                    onClick={() => window.open('../assets/brochures/wg3/WG3_Russian.pdf', '_blank')}>
                                     Russian
                                 </button>
                                 <button
-                                    className="tab-button mr-2 mb-3 d-block"
-                                    onClick={() => window.open('../assets/brochures/wg3/WG3_French.pdf', '_blank')}
-                                    aria-label="Open English Brochure">
+                                    className="tab-button"
+                                    onClick={() => window.open('../assets/brochures/wg3/WG3_French.pdf', '_blank')}>
                                     French
                                 </button>
                                 <button
-                                    className="tab-button mr-2 mb-3 d-block"
-                                    onClick={() => window.open('../assets/brochures/wg3/WG3_Mandarin.pdf', '_blank')}
-                                    aria-label="Open English Brochure">
+                                    className="tab-button"
+                                    onClick={() => window.open('../assets/brochures/wg3/WG3_Mandarin.pdf', '_blank')}>
                                     Mandarin
                                 </button>
                             </li>
@@ -375,35 +350,34 @@ const WG3TestingTabs = () => {
                     </li>
                     {/* Dropdown for Brochures End */}
 
-                    {/* Dropdown for Amenities Start */}
+                    {/* Dropdown for Features Start */}
                     <li className="dropdown">
                         <button
-                            className={`tab-button dropdown-toggle ${isAmenitiesDropdownOpen ? 'active' : ''}`}
+                            className={`tab-button dropdown-toggle ${activeDropdown === 'features' ? 'active' : ''}`}
                             onClick={(e) => {
-                                e.preventDefault(); // Prevent tab activation
-                                toggleAmenitiesDropdown(); // Toggle Floor Plans dropdown
-                            }}
-                            aria-expanded={isAmenitiesDropdownOpen}>
+                                e.preventDefault();
+                                toggleDropdown('features');
+                            }}>
                             Features
                         </button>
-                        <ul className={`dropdown-menu ${isAmenitiesDropdownOpen ? 'show' : ''}`}>
+                        <ul className={`dropdown-menu ${activeDropdown === 'features' ? 'show' : ''}`}>
                             <li>
                                 <button
-                                    className={`tab-button ${activeTab === 'building-amenities-tab' ? 'active' : ''}`}
-                                    onClick={() => handleTabClick('building-amenities-tab')}>
+                                    className={`tab-button ${activeTab === 'building-features-tab' ? 'active' : ''}`}
+                                    onClick={() => handleTabClick('building-features-tab')}>
                                     Building Features
                                 </button>
                             </li>
                             <li>
                                 <button
-                                    className={`tab-button ${activeTab === 'community-amenities-tab' ? 'active' : ''}`}
-                                    onClick={() => handleTabClick('community-amenities-tab')}>
+                                    className={`tab-button ${activeTab === 'community-features-tab' ? 'active' : ''}`}
+                                    onClick={() => handleTabClick('community-features-tab')}>
                                     Community Features
                                 </button>
                             </li>
                         </ul>
                     </li>
-                    {/* Dropdown for Amenities End */}
+                    {/* Dropdown for Features End */}
                     
                 </div>
             </ul>
@@ -607,7 +581,7 @@ const WG3TestingTabs = () => {
                         </div>
                     </Slider>
                 )}
-                {activeTab === 'building-amenities-tab' && (
+                {activeTab === 'building-features-tab' && (
                     <div className="single-bg-white">
                         <ul className="details-list row">
                             <li className="col-md-4 text-center icon-box">
@@ -641,7 +615,7 @@ const WG3TestingTabs = () => {
                         </ul>
                     </div>
                 )}
-                {activeTab === 'community-amenities-tab' && (
+                {activeTab === 'community-features-tab' && (
                     <div className="single-bg-white">
                         <ul className="details-list row">
                             <li className="col-md-4 text-center icon-box">

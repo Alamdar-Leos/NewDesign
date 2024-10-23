@@ -47,7 +47,6 @@ const Home = () => {
                                 <div className="box-content">
                                     <h3 className="title">CAVENDISH SQUARE</h3>
                                     <span className="post">Jumeirah Village - Jumeirah Village Triangle - Dubai</span>
-
                                 </div>
                             </div>
                         </Link>
