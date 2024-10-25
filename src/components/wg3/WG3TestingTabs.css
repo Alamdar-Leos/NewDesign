@@ -17,6 +17,7 @@
     text-transform: uppercase;
     transition: background-color 0.3s;
     margin-right: 20px;
+    font-size: 15px;
 }
 .tab-button.active {
     background-color: #d0a85f;
@@ -159,31 +160,42 @@
 }
 
 
-/* Basic styling for search form */
-/* .search-form {
-    display: flex; 
-    gap: 10px;
-  } */
+ul.available-units {
+    width: 100%;
+    min-width: 650px;
+    height: auto !important;
+    margin-top: 5% !important;
+    margin-left: -20rem;
+}
+.available-units button {
+    width: 12% !important;
+}
+.available-units span.input-group-btn {
+    width: 28% !important;
+}
+
   
   /* Hide the search form on smaller screens */
   @media (max-width: 1023px) {
     .search-form {
       display: none; /* Form is hidden by default on small screens */
     }
-  
     /* Show the search form when `show` class is added */
     .search-form.show {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
     }
-  
     /* Show the search icon only on smaller screens */
     .search-icon {
       display: block;
       font-size: 24px;
       cursor: pointer;
     }
+    .title-single {
+        font-size: 22px;
+    }
+
   }
   
   /* Hide the search icon by default on larger screens */
@@ -208,4 +220,3 @@
         display: none !important;
       }
   }
-  

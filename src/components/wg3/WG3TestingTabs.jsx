@@ -82,6 +82,14 @@ const WG3TestingTabs = () => {
         nextArrow: <NextArrow />, // Custom next arrow component
     };
 
+
+    const [showForm, setShowForm] = useState(false); // State to manage form visibility
+
+    // Function to toggle form visibility
+    const toggleForm = () => {
+        setShowForm(!showForm);
+    };
+
     return (
         <div className="wg3-tabs-container">
             <ul className="nav nav-tabs mb-4" id="myTab" role="tablist">
@@ -125,77 +133,6 @@ const WG3TestingTabs = () => {
                         </button>
                     </li>
                     {/* Location Tab Section End */}
-
-                    {/* Dropdown for Available Units Start */}
-                    <li className="dropdown">
-                        <button
-                            className={`tab-button dropdown-toggle ${activeDropdown === 'available-units' ? 'active' : ''}`}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                toggleDropdown('available-units');
-                            }}>
-                            Available Units
-                        </button>
-                        <ul className={`dropdown-menu ${activeDropdown === 'available-units' ? 'show' : ''}`}>
-                            <li>
-                                <button
-                                    className={`tab-button ${activeTab === 'studio-type1-tab' ? 'active' : ''}`}
-                                    onClick={() => handleTabClick('studio-type1-tab')}>
-                                    Studio Type 01
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className={`tab-button ${activeTab === 'studio-type2-tab' ? 'active' : ''}`}
-                                    onClick={() => handleTabClick('studio-type2-tab')}>
-                                    Studio Type 02
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className={`tab-button ${activeTab === '1br-type1-tab' ? 'active' : ''}`}
-                                    onClick={() => handleTabClick('1br-type1-tab')}>
-                                    1 BR Type 01
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className={`tab-button ${activeTab === '1br-type2-tab' ? 'active' : ''}`}
-                                    onClick={() => handleTabClick('1br-type2-tab')}>
-                                    1 BR Type 02
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className={`tab-button ${activeTab === '3br-type1-tab' ? 'active' : ''}`}
-                                    onClick={() => handleTabClick('3br-type1-tab')}>
-                                    3 BR Type 01
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className={`tab-button ${activeTab === '3br-type2-tab' ? 'active' : ''}`}
-                                    onClick={() => handleTabClick('3br-type2-tab')}>
-                                    3 BR Type 02
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className={`tab-button ${activeTab === '3br-type3-tab' ? 'active' : ''}`}
-                                    onClick={() => handleTabClick('3br-type3-tab')}>
-                                    3 BR Type 03
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className={`tab-button ${activeTab === '3br-type4-tab' ? 'active' : ''}`}
-                                    onClick={() => handleTabClick('3br-type4-tab')}>
-                                    3 BR Type 04
-                                </button>
-                            </li>
-                        </ul>
-                    </li>
-                    {/* Dropdown for Available Units End */}
 
                     {/* Dropdown for Floor Plans Start */}
                     <li className="dropdown">
@@ -378,6 +315,64 @@ const WG3TestingTabs = () => {
                         </ul>
                     </li>
                     {/* Dropdown for Features End */}
+
+                    {/* Dropdown for Available Units Start */}
+                    <li className="dropdown">
+                        <button
+                            className={`tab-button dropdown-toggle ${activeDropdown === 'available-units' ? 'active' : ''}`}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                toggleDropdown('available-units');
+                            }}>
+                            Available Units
+                        </button>
+                        <ul className={`dropdown-menu available-units ${activeDropdown === 'available-units' ? 'show' : ''}`}>
+                            <section className="w3l-cover-3">
+                                {/* Search Icon (only visible on smaller screens) */}
+                                <div className="search-icon" onClick={toggleForm}>
+                                <i className="fas fa-search"></i> {/* Font Awesome search icon */}
+                                </div>
+                                {/* Search Form (conditionally rendered) */}
+                                <form className={`w3l-cover-3-gd search-form ${showForm ? 'show' : ''}`} method="GET" onClick={toggleForm}>
+                                <span className="input-group-btn">
+                                    <select className="btn btn-default" name="unitType" required>
+                                    <option value="" selected>Floor</option>
+                                    <option>201 Studio</option>
+                                    <option>202 1 Bedroom</option>
+                                    <option>203 3 Bedroom</option>
+                                    <option>204 4 Bedroom</option>
+                                    <option>205 2 Bedroom</option>
+                                    <option>206 6 Bedroom</option>
+                                    <option>207 5 Bedroom</option>
+                                    </select>
+                                </span>
+                                <span className="input-group-btn">
+                                    <select className="btn btn-default" name="community" required>
+                                    <option value="" selected>Product Type</option>
+                                    <option>Studio</option>
+                                    <option>1 Bedroom</option>
+                                    <option>2 Bedroom</option>
+                                    <option>3 Bedroom</option>
+                                    <option>4 Bedroom</option>
+                                    <option>5 Bedroom</option>
+                                    <option>6 Bedroom</option>
+                                    </select>
+                                </span>
+                                <span className="input-group-btn">
+                                    <select className="btn btn-default" name="country" required>
+                                    <option value="" selected>Price</option>
+                                    <option>United Arab Emirates</option>
+                                    <option>United Kingdom</option>
+                                    <option>New Zealand</option>
+                                    <option>China</option>
+                                    </select>
+                                </span>
+                                <button type="submit" className="btn-primary">Search</button>
+                                </form>
+                            </section>
+                        </ul>
+                    </li>
+                    {/* Dropdown for Available Units End */}
                     
                 </div>
             </ul>
