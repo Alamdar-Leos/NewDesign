@@ -55,7 +55,7 @@ const Home = () => {
                           <img className="img-fluid" src="/assets/images/p1.jpg" alt={project.Name || 'Project Image'} />
                           <div className="box-content">
                             <h3 className="title">{project.Name}</h3>
-                            <span className="post">{`${project.Master_Community || ''}`}</span>
+                            <span className="post">{`${project.Type} - ${project.Record_Status__s || ''}`}</span>
                             {/* <span className="post">Anticipated Completion: {project.Anticipated_Completion_Date || 'TBD'}</span> */}
                           </div>
                         </div>
