@@ -15,17 +15,13 @@ const WG3TestingTabs = () => {
     const [price, setPrice] = useState(0); //for price range field
     const [floors, setFloors] = useState([]); // State for floors
     const [unitTypes, setUnitTypes] = useState([]); // State for unit types
-    const [showForm, setShowForm] = useState(false); // State to manage form visibility
     const [filteredUnits, setFilteredUnits] = useState([]); // State to store filtered units
     const [selectedFloor, setSelectedFloor] = useState('');
     const [selectedUnitType, setSelectedUnitType] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [selectedUnit, setSelectedUnit] = useState(null);
 
-    // Function to toggle form visibility
-    const toggleForm = () => {
-        setShowForm(!showForm);
-    };
+
     const handleUnitClick = (unit) => {
         setSelectedUnit(unit);
         setShowModal(true);
@@ -638,7 +634,7 @@ const WG3TestingTabs = () => {
 
                 {activeTab === 'available-units-tab' && (
                     <div className="single-bg-white">
-                        {/* Search Fulter for Available Units */}
+                        {/* Search Filter for Available Units */}
                         <div className="filter-form text-center mb-5">
                             <select
                                 className="tab-button text-center"
@@ -660,30 +656,11 @@ const WG3TestingTabs = () => {
                             </select>
                         </div>
 
-                        {/* Available Units Boxes */}
-                        {/* <div className="unit-grid row">
-                            {filteredUnits.length > 0 ? (
-                                filteredUnits.map((unit, index) => (
-                                    <div key={index} className="col-2 col-md-2 col-sm-6 col-xs-6">
-                                        <div className="unit-card text-center">
-                                            <div className="unit-icon">
-                                                <i className="fas fa-bed"></i>
-                                            </div>
-                                            <p className="unit-name">{unit.Product_Name}</p>
-                                            <p className="unit-type">{unit.Unit_Type}</p>
-                                        </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <p>No units available for the selected criteria.</p>
-                            )}
-                        </div> */}
-
                         {/* Available Units Grid */}
                         <div className="unit-grid row">
                             {filteredUnits.length > 0 ? (
                                 filteredUnits.map((unit, index) => (
-                                    <div key={index} className="col-4 col-md-2">
+                                    <div key={index} className="col-12 col-sm-4 col-md-3 col-lg-2 mb-4">
                                         <div 
                                             className="unit-card text-center" 
                                             onClick={() => handleUnitClick(unit)}
@@ -726,10 +703,6 @@ const WG3TestingTabs = () => {
                                                     <td className="text-end" style={{ color: selectedUnit.Product_Active ? 'green' : 'red' }}>
                                                         {selectedUnit.Product_Active ? 'Available' : 'Not Available'}
                                                     </td>
-                                                </tr>
-                                                <tr>
-                                                    <th className="text-start">Property Type</th>
-                                                    <td className="text-end">{selectedUnit?.Projects?.name || 'NA'}</td>
                                                 </tr>
                                                 <tr>
                                                     <th className="text-start">View</th>
