@@ -4,21 +4,54 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './WG3TestingTabs.css'; // Custom styles for dark mode and responsiveness
 import { Link } from 'react-router-dom';
+import Units from '../../json/Units.json';
+import Projects from '../../json/Projects.json';
+import { Modal } from 'react-bootstrap';
 
 const WG3TestingTabs = () => {
     const [activeTab, setActiveTab] = useState('exteriors-tab');
     const [activeDropdown, setActiveDropdown] = useState(''); // General state for active dropdown
-    const [isFullScreenModalOpen, setIsFullScreenModalOpen] = useState(false);  // For Videos Popup
+    const [isFullScreenModalOpen, setIsFullScreenModalOpen] = useState(false);  // For Popup View
+    const [price, setPrice] = useState(0); //for price range field
+    const [floors, setFloors] = useState([]); // State for floors
+    const [unitTypes, setUnitTypes] = useState([]); // State for unit types
+    const [showForm, setShowForm] = useState(false); // State to manage form visibility
+    const [filteredUnits, setFilteredUnits] = useState([]); // State to store filtered units
+    const [selectedFloor, setSelectedFloor] = useState('');
+    const [selectedUnitType, setSelectedUnitType] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [selectedUnit, setSelectedUnit] = useState(null);
+
+    // Function to toggle form visibility
+    const toggleForm = () => {
+        setShowForm(!showForm);
+    };
+    const handleUnitClick = (unit) => {
+        setSelectedUnit(unit);
+        setShowModal(true);
+    };
+
+    const closeModal = () => {
+        setShowModal(false);
+        setSelectedUnit(null);
+    };
 
     // Handle tab click and close dropdowns when switching tabs
     const handleTabClick = (tab) => {
         setActiveTab(tab);
         setActiveDropdown(''); // Close all dropdowns when switching tabs
     };
-
     // General toggle function for dropdowns
     const toggleDropdown = (dropdown) => {
         setActiveDropdown((prevDropdown) => (prevDropdown === dropdown ? '' : dropdown));
+    };
+
+    //Full Screen Popup Model
+    const openFullScreenModal = () => {
+        setIsFullScreenModalOpen(true);
+    };  
+    const closeFullScreenModal = () => {
+        setIsFullScreenModalOpen(false);
     };
 
     // Close dropdowns if clicked outside
@@ -34,11 +67,27 @@ const WG3TestingTabs = () => {
         };
     }, []);
 
-    const openFullScreenModal = () => {
-        setIsFullScreenModalOpen(true);
-    };  
-    const closeFullScreenModal = () => {
-        setIsFullScreenModalOpen(false);
+    // Extract unique floor and unit type values from JSON data
+    useEffect(() => {
+        const uniqueFloors = [...new Set(Units.data.map(unit => unit.Floor))];
+        const uniqueUnitTypes = [...new Set(Units.data.map(unit => unit.Unit_Type))];
+        setFloors(uniqueFloors.filter(floor => floor)); // filter out null/undefined values
+        setUnitTypes(uniqueUnitTypes.filter(type => type));
+    }, []);
+
+    // Filter units when the selectedFloor or selectedUnitType changes
+    useEffect(() => {
+        handleFilterChange();
+    }, [selectedFloor, selectedUnitType]);
+
+     // Handle form submission to filter units
+     const handleFilterChange = () => {
+        const units = Units.data.filter(unit =>
+            (selectedFloor ? unit.Floor === selectedFloor : true) &&
+            (selectedUnitType ? unit.Unit_Type === selectedUnitType : true)
+        );
+
+        setFilteredUnits(units);
     };
 
     const PrevArrow = ({ className, style, onClick }) => {
@@ -59,7 +108,9 @@ const WG3TestingTabs = () => {
             </span>
         );
     };
-    const singleImageSliderSettings = {
+
+    // Slider Settings
+    const sliderSettings = {
         dots: false,
         infinite: false,
         speed: 500,
@@ -68,26 +119,6 @@ const WG3TestingTabs = () => {
         autoplay: false,
         prevArrow: <PrevArrow />, // Custom prev arrow component
         nextArrow: <NextArrow />, // Custom next arrow component
-    };
-
-    // Slider settings for multiple images
-    const multipleImagesSliderSettings = {
-        dots: false,
-        infinite: false,
-        speed: 500,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        autoplay: false,
-        prevArrow: <PrevArrow />, // Custom prev arrow component
-        nextArrow: <NextArrow />, // Custom next arrow component
-    };
-
-
-    const [showForm, setShowForm] = useState(false); // State to manage form visibility
-
-    // Function to toggle form visibility
-    const toggleForm = () => {
-        setShowForm(!showForm);
     };
 
     return (
@@ -262,21 +293,29 @@ const WG3TestingTabs = () => {
                                     onClick={() => window.open('../assets/brochures/wg3/WG3_English.pdf', '_blank')}>
                                     English
                                 </button>
+                            </li>
+                            <li>
                                 <button
                                     className="tab-button"
                                     onClick={() => window.open('../assets/brochures/wg3/WG3_Arabic.pdf', '_blank')}>
                                     Arabic
                                 </button>
+                            </li>
+                            <li>
                                 <button
                                     className="tab-button"
                                     onClick={() => window.open('../assets/brochures/wg3/WG3_Russian.pdf', '_blank')}>
                                     Russian
                                 </button>
+                            </li>
+                            <li>
                                 <button
                                     className="tab-button"
                                     onClick={() => window.open('../assets/brochures/wg3/WG3_French.pdf', '_blank')}>
                                     French
                                 </button>
+                            </li>
+                            <li>
                                 <button
                                     className="tab-button"
                                     onClick={() => window.open('../assets/brochures/wg3/WG3_Mandarin.pdf', '_blank')}>
@@ -317,60 +356,12 @@ const WG3TestingTabs = () => {
                     {/* Dropdown for Features End */}
 
                     {/* Dropdown for Available Units Start */}
-                    <li className="dropdown">
+                    <li>
                         <button
-                            className={`tab-button dropdown-toggle ${activeDropdown === 'available-units' ? 'active' : ''}`}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                toggleDropdown('available-units');
-                            }}>
-                            Available Units
+                        className={`tab-button ${activeTab === 'available-units-tab' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('available-units-tab')}>
+                        Available Units
                         </button>
-                        <ul className={`dropdown-menu available-units ${activeDropdown === 'available-units' ? 'show' : ''}`}>
-                            <section className="w3l-cover-3">
-                                {/* Search Icon (only visible on smaller screens) */}
-                                <div className="search-icon" onClick={toggleForm}>
-                                <i className="fas fa-search"></i> {/* Font Awesome search icon */}
-                                </div>
-                                {/* Search Form (conditionally rendered) */}
-                                <form className={`w3l-cover-3-gd search-form ${showForm ? 'show' : ''}`} method="GET" onClick={toggleForm}>
-                                <span className="input-group-btn">
-                                    <select className="btn btn-default" name="unitType" required>
-                                    <option value="" selected>Floor</option>
-                                    <option>201 Studio</option>
-                                    <option>202 1 Bedroom</option>
-                                    <option>203 3 Bedroom</option>
-                                    <option>204 4 Bedroom</option>
-                                    <option>205 2 Bedroom</option>
-                                    <option>206 6 Bedroom</option>
-                                    <option>207 5 Bedroom</option>
-                                    </select>
-                                </span>
-                                <span className="input-group-btn">
-                                    <select className="btn btn-default" name="community" required>
-                                    <option value="" selected>Product Type</option>
-                                    <option>Studio</option>
-                                    <option>1 Bedroom</option>
-                                    <option>2 Bedroom</option>
-                                    <option>3 Bedroom</option>
-                                    <option>4 Bedroom</option>
-                                    <option>5 Bedroom</option>
-                                    <option>6 Bedroom</option>
-                                    </select>
-                                </span>
-                                <span className="input-group-btn">
-                                    <select className="btn btn-default" name="country" required>
-                                    <option value="" selected>Price</option>
-                                    <option>United Arab Emirates</option>
-                                    <option>United Kingdom</option>
-                                    <option>New Zealand</option>
-                                    <option>China</option>
-                                    </select>
-                                </span>
-                                <button type="submit" className="btn-primary">Search</button>
-                                </form>
-                            </section>
-                        </ul>
                     </li>
                     {/* Dropdown for Available Units End */}
                     
@@ -379,7 +370,7 @@ const WG3TestingTabs = () => {
 
             <div className="tab-content">
                 {activeTab === 'exteriors-tab' && (
-                    <Slider {...multipleImagesSliderSettings}>
+                    <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
                                 <img src="../assets/images/wg3/exterior/1.jpg" className="img-fluid radius-image" alt="image" />
@@ -393,7 +384,7 @@ const WG3TestingTabs = () => {
                     </Slider>
                 )}
                 {activeTab === 'interiors-tab' && (
-                    <Slider {...multipleImagesSliderSettings}>
+                    <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
                                     <img src="../assets/images/wg3/interior/1.jpg" className="img-fluid radius-image" alt="image" />
@@ -432,7 +423,7 @@ const WG3TestingTabs = () => {
                     </Slider>
                 )}
                 {activeTab === 'amenities-tab' && (
-                    <Slider {...multipleImagesSliderSettings}>
+                    <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
                                 <img src="../assets/images/wg3/amenities/1.jpg" className="img-fluid radius-image" alt="image" />
@@ -496,7 +487,7 @@ const WG3TestingTabs = () => {
                     </Slider>
                 )}
                 {activeTab === 'location-tab' && (
-                    <Slider {...singleImageSliderSettings}>
+                    <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
                                 <img src="../assets/images/wg3/wg3-location.jpg" className="img-fluid radius-image" alt="image" />
@@ -505,7 +496,7 @@ const WG3TestingTabs = () => {
                     </Slider>
                 )}
                 {activeTab === 'studio-type1-tab' && (
-                    <Slider {...singleImageSliderSettings}>
+                    <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
                                 <img src="../assets/images/wg3/floor-plan/studio-1.jpg" className="img-fluid radius-image" alt="image" />
@@ -514,7 +505,7 @@ const WG3TestingTabs = () => {
                     </Slider>
                 )}
                 {activeTab === 'studio-type2-tab' && (
-                    <Slider {...singleImageSliderSettings}>
+                    <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
                                 <img src="../assets/images/wg3/floor-plan/studio-2.jpg" className="img-fluid radius-image" alt="image" />
@@ -523,7 +514,7 @@ const WG3TestingTabs = () => {
                     </Slider>
                 )}
                 {activeTab === '1br-type1-tab' && (
-                    <Slider {...singleImageSliderSettings}>
+                    <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
                                 <img src="../assets/images/wg3/floor-plan/1br-01.jpg" className="img-fluid radius-image" alt="image" />
@@ -532,7 +523,7 @@ const WG3TestingTabs = () => {
                     </Slider>
                 )}
                 {activeTab === '1br-type2-tab' && (
-                    <Slider {...singleImageSliderSettings}>
+                    <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
                                 <img src="../assets/images/wg3/floor-plan/1br-02.jpg" className="img-fluid radius-image" alt="image" />
@@ -541,7 +532,7 @@ const WG3TestingTabs = () => {
                     </Slider>
                 )}
                 {activeTab === '3br-type1-tab' && (
-                    <Slider {...singleImageSliderSettings}>
+                    <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
                                 <img src="../assets/images/wg3/floor-plan/3br-01.jpg" className="img-fluid radius-image" alt="image" />
@@ -550,7 +541,7 @@ const WG3TestingTabs = () => {
                     </Slider>
                 )}
                 {activeTab === '3br-type2-tab' && (
-                    <Slider {...singleImageSliderSettings}>
+                    <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
                                 <img src="../assets/images/wg3/floor-plan/3br-02.jpg" className="img-fluid radius-image" alt="image" />
@@ -559,7 +550,7 @@ const WG3TestingTabs = () => {
                     </Slider>
                 )}
                 {activeTab === '3br-type3-tab' && (
-                    <Slider {...singleImageSliderSettings}>
+                    <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
                                 <img src="../assets/images/wg3/floor-plan/3br-03.jpg" className="img-fluid radius-image" alt="image" />
@@ -568,7 +559,7 @@ const WG3TestingTabs = () => {
                     </Slider>
                 )}
                 {activeTab === '3br-type4-tab' && (
-                    <Slider {...singleImageSliderSettings}>
+                    <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
                                 <img src="../assets/images/wg3/floor-plan/3br-04.jpg" className="img-fluid radius-image" alt="image" />
@@ -644,6 +635,137 @@ const WG3TestingTabs = () => {
                         </ul>
                     </div>
                 )}
+
+                {activeTab === 'available-units-tab' && (
+                    <div className="single-bg-white">
+                        {/* Search Fulter for Available Units */}
+                        <div className="filter-form text-center mb-5">
+                            <select
+                                className="tab-button text-center"
+                                value={selectedFloor}
+                                onChange={(e) => setSelectedFloor(e.target.value)}>
+                                <option value="">Select Floor</option>
+                                {floors.map((floor, index) => (
+                                    <option key={index} value={floor}>{floor}</option>
+                                ))}
+                            </select>
+                            <select
+                                className="tab-button text-center"
+                                value={selectedUnitType}
+                                onChange={(e) => setSelectedUnitType(e.target.value)}>
+                                <option value="">Select Unit Type</option>
+                                {unitTypes.map((type, index) => (
+                                    <option key={index} value={type}>{type}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Available Units Boxes */}
+                        {/* <div className="unit-grid row">
+                            {filteredUnits.length > 0 ? (
+                                filteredUnits.map((unit, index) => (
+                                    <div key={index} className="col-2 col-md-2 col-sm-6 col-xs-6">
+                                        <div className="unit-card text-center">
+                                            <div className="unit-icon">
+                                                <i className="fas fa-bed"></i>
+                                            </div>
+                                            <p className="unit-name">{unit.Product_Name}</p>
+                                            <p className="unit-type">{unit.Unit_Type}</p>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <p>No units available for the selected criteria.</p>
+                            )}
+                        </div> */}
+
+                        {/* Available Units Grid */}
+                        <div className="unit-grid row">
+                            {filteredUnits.length > 0 ? (
+                                filteredUnits.map((unit, index) => (
+                                    <div key={index} className="col-4 col-md-2">
+                                        <div 
+                                            className="unit-card text-center" 
+                                            onClick={() => handleUnitClick(unit)}
+                                            style={{ cursor: 'pointer' }}
+                                        >
+                                            <div className="unit-icon">
+                                                <i className="fas fa-bed"></i>
+                                            </div>
+                                            <p className="unit-name">{unit.Product_Name}</p>
+                                            <p className="unit-type">{unit.Unit_Type}</p>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <p>No units available for the selected criteria.</p>
+                            )}
+                        </div>
+
+                        {/* Modal for Unit Details */}
+                        <Modal show={showModal} onHide={closeModal} centered>
+                            <Modal.Header closeButton>
+                                <Modal.Title className="text-primary">{selectedUnit?.Projects?.name || 'NA'}</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                {selectedUnit && (
+                                    <div className="unit-detail-card">
+                                        <h3 className="text-center mb-4 text-secondary">{selectedUnit.Product_Name || 'NA'}</h3>
+                                        <table className="table table-striped table-bordered">
+                                            <tbody>
+                                                <tr>
+                                                    <th className="text-start">Unit Number</th>
+                                                    <td className="text-end">{selectedUnit.Flat_No || 'NA'}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th className="text-start">Unit Type</th>
+                                                    <td className="text-end">{selectedUnit.Unit_Type || 'NA'}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th className="text-start">Availability</th>
+                                                    <td className="text-end" style={{ color: selectedUnit.Product_Active ? 'green' : 'red' }}>
+                                                        {selectedUnit.Product_Active ? 'Available' : 'Not Available'}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th className="text-start">Property Type</th>
+                                                    <td className="text-end">{selectedUnit?.Projects?.name || 'NA'}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th className="text-start">View</th>
+                                                    <td className="text-end">{selectedUnit.View || 'NA'}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th className="text-start">Floor</th>
+                                                    <td className="text-end">{selectedUnit.Floor || 'NA'}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th className="text-start">Bedroom</th>
+                                                    <td className="text-end">{selectedUnit.Unit_Type || 'NA'}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th className="text-start">Balcony Size</th>
+                                                    <td className="text-end">{selectedUnit.Balcony_Area_Sq_ft ? `${selectedUnit.Balcony_Area_Sq_ft} sq ft` : 'NA'}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th className="text-start">Total Area</th>
+                                                    <td className="text-end">{selectedUnit.Total_Area_Sq_ft ? `${selectedUnit.Total_Area_Sq_ft} sq ft` : 'NA'}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th className="text-start">Price</th>
+                                                    <td className="text-end">{selectedUnit.Unit_Price ? `AED ${selectedUnit.Unit_Price}` : 'NA'}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                )}
+                            </Modal.Body>
+                        </Modal>
+
+
+                    </div>
+                )}
+            
             </div>
         </div>
     );
