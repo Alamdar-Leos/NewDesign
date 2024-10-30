@@ -492,7 +492,9 @@ pre {
   max-width: 100%;
   padding: 0px 40px;
 }
-
+.bg-color {
+  background-color: #d0a85f;
+}
 .container-fluid, .container-sm, .container-md, .container-lg, .container-xl {
   width: 100%;
   padding-right: 15px;
@@ -2456,8 +2458,7 @@ input[type="button"].btn-block {
 
 .dropdown-menu.show {
   display: block;
-  /* height: 350px;
-  overflow: scroll; */
+  padding: 12px 0px;
 }
 .dropdown-header {
   display: block;
@@ -5145,7 +5146,8 @@ button.bg-dark:focus {
   justify-content: flex-end !important; }
 
 .justify-content-center {
-  justify-content: center !important; }
+  justify-content: center !important;
+}
 
 .justify-content-between {
   justify-content: space-between !important; }
@@ -9566,7 +9568,7 @@ a.text-dark:hover, a.text-dark:focus {
   --secondary-color: #b1dc6f;
   --font-color: #666;
   --bg-color: #fff;
-  --heading-color: #3f3a64;
+  /* --heading-color: #3f3a64; */
   --border-radius: 6px;
   --border-radius-full: 35px;
   --border-color: transparent;

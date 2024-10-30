@@ -204,12 +204,18 @@
         display: none !important;
     }
 }
-
-ul.dropdown-menu li button {
-    font-size: 14px;
-    margin: 0px;
+@media (min-width: 992px) {
+    .custom-col-lg {
+        flex: 0 0 12.5%;
+        max-width: 12.5%;
+    }
 }
 
+ul.dropdown-menu li button {
+    font-size: 13px;
+    margin: 0px;
+    padding: 10px;
+}
 .unit-card {
     background: #333333;
     margin: 10px;

@@ -693,7 +693,7 @@ const WG3TestingTabs = () => {
                         <div className="unit-grid row">
                             {filteredUnits.length > 0 ? (
                                 filteredUnits.map((unit, index) => (
-                                    <div key={index} className="col-12 col-sm-4 col-md-3 col-lg-2 mb-4">
+                                    <div key={index} className="col-12 col-md-4 custom-col-lg mb-4">
                                         <div 
                                             className="unit-card text-center" 
                                             onClick={() => handleUnitClick(unit)}
@@ -714,8 +714,8 @@ const WG3TestingTabs = () => {
 
                         {/* Modal for Unit Details */}
                         <Modal show={showModal} onHide={closeModal} centered dialogClassName="custom-modal-80">
-                            <Modal.Header closeButton className="justify-content-center">
-                                <Modal.Title className="text-primary w-100 text-center">
+                            <Modal.Header closeButton className="justify-content-center bg-color">
+                                <Modal.Title className="w-100 text-center">
                                     {selectedUnit?.Projects?.name || 'NA'}
                                 </Modal.Title>
                             </Modal.Header>
@@ -736,13 +736,9 @@ const WG3TestingTabs = () => {
                                         {/* Right Column: Unit Details */}
                                         <div className="col-12 col-md-5">
                                             <div className="unit-detail-card">
-                                                <h3 className="text-center mb-4 text-primary">{selectedUnit.Product_Name || 'NA'}</h3>
+                                                <h3 className="text-center mb-4">{selectedUnit.Product_Name || 'NA'}</h3>
                                                 <table className="table table-striped table-bordered">
                                                     <tbody>
-                                                        <tr>
-                                                            <th className="text-start">Flat Number</th>
-                                                            <td className="text-end">{selectedUnit.Flat_No || 'NA'}</td>
-                                                        </tr>
                                                         <tr>
                                                             <th className="text-start">Unit Type</th>
                                                             <td className="text-end">{selectedUnit.Unit_Type || 'NA'}</td>
