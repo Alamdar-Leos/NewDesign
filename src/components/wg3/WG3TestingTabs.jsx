@@ -12,12 +12,16 @@ const WG3TestingTabs = () => {
     const [activeTab, setActiveTab] = useState('exteriors-tab');
     const [activeDropdown, setActiveDropdown] = useState(''); // General state for active dropdown
     const [isFullScreenModalOpen, setIsFullScreenModalOpen] = useState(false);  // For Popup View
-    const [price, setPrice] = useState(0); //for price range field
     const [floors, setFloors] = useState([]); // State for floors
     const [unitTypes, setUnitTypes] = useState([]); // State for unit types
+    const [prices, setPrices] = useState([]); // State for price
     const [filteredUnits, setFilteredUnits] = useState([]); // State to store filtered units
     const [selectedFloor, setSelectedFloor] = useState('');
     const [selectedUnitType, setSelectedUnitType] = useState('');
+    const [minPrice, setMinPrice] = useState(''); // Minimum price state
+    const [maxPrice, setMaxPrice] = useState(''); // Maximum price state
+    const [showPriceRange, setShowPriceRange] = useState(false); // Toggle price range input
+
     const [showModal, setShowModal] = useState(false);
     const [selectedUnit, setSelectedUnit] = useState(null);
 
@@ -63,26 +67,34 @@ const WG3TestingTabs = () => {
         };
     }, []);
 
+    // Toggle function to show/hide price range inputs
+    const togglePriceRange = () => {
+        setShowPriceRange(!showPriceRange);
+    };
+
     // Extract unique floor and unit type values from JSON data
     useEffect(() => {
         const uniqueFloors = [...new Set(Units.data.map(unit => unit.Floor))];
         const uniqueUnitTypes = [...new Set(Units.data.map(unit => unit.Unit_Type))];
+        const uniquePrice = [...new Set(Units.data.map(unit => unit.Unit_Price))];
         setFloors(uniqueFloors.filter(floor => floor)); // filter out null/undefined values
         setUnitTypes(uniqueUnitTypes.filter(type => type));
+        setPrices(uniquePrice.filter(price => price));
     }, []);
 
     // Filter units when the selectedFloor or selectedUnitType changes
     useEffect(() => {
         handleFilterChange();
-    }, [selectedFloor, selectedUnitType]);
+    }, [selectedFloor, selectedUnitType, minPrice, maxPrice]);
 
-     // Handle form submission to filter units
-     const handleFilterChange = () => {
+    const handleFilterChange = () => {
         const units = Units.data.filter(unit =>
             (selectedFloor ? unit.Floor === selectedFloor : true) &&
-            (selectedUnitType ? unit.Unit_Type === selectedUnitType : true)
+            (selectedUnitType ? unit.Unit_Type === selectedUnitType : true) &&
+            (minPrice ? unit.Unit_Price >= minPrice : true) &&
+            (maxPrice ? unit.Unit_Price <= maxPrice : true)
         );
-
+    
         setFilteredUnits(units);
     };
 
@@ -631,7 +643,6 @@ const WG3TestingTabs = () => {
                         </ul>
                     </div>
                 )}
-
                 {activeTab === 'available-units-tab' && (
                     <div className="single-bg-white">
                         {/* Search Filter for Available Units */}
@@ -654,6 +665,28 @@ const WG3TestingTabs = () => {
                                     <option key={index} value={type}>{type}</option>
                                 ))}
                             </select>
+                            {/* Price Range Filter */}
+                                <button className="tab-button text-center" onClick={togglePriceRange}>
+                                    Select Price Range
+                                </button>
+                                {showPriceRange && (
+                                    <div className="price-range-inputs">
+                                        <input
+                                            type="number"
+                                            className="tab-button"
+                                            placeholder="Min Price"
+                                            value={minPrice}
+                                            onChange={(e) => setMinPrice(e.target.value)}
+                                        />
+                                        <input
+                                            type="number"
+                                            className="tab-button"
+                                            placeholder="Max Price"
+                                            value={maxPrice}
+                                            onChange={(e) => setMaxPrice(e.target.value)}
+                                        />
+                                    </div>
+                                )}
                         </div>
 
                         {/* Available Units Grid */}
@@ -680,61 +713,78 @@ const WG3TestingTabs = () => {
                         </div>
 
                         {/* Modal for Unit Details */}
-                        <Modal show={showModal} onHide={closeModal} centered>
-                            <Modal.Header closeButton>
-                                <Modal.Title className="text-primary">{selectedUnit?.Projects?.name || 'NA'}</Modal.Title>
+                        <Modal show={showModal} onHide={closeModal} centered dialogClassName="custom-modal-80">
+                            <Modal.Header closeButton className="justify-content-center">
+                                <Modal.Title className="text-primary w-100 text-center">
+                                    {selectedUnit?.Projects?.name || 'NA'}
+                                </Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
                                 {selectedUnit && (
-                                    <div className="unit-detail-card">
-                                        <h3 className="text-center mb-4 text-secondary">{selectedUnit.Product_Name || 'NA'}</h3>
-                                        <table className="table table-striped table-bordered">
-                                            <tbody>
-                                                <tr>
-                                                    <th className="text-start">Unit Number</th>
-                                                    <td className="text-end">{selectedUnit.Flat_No || 'NA'}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th className="text-start">Unit Type</th>
-                                                    <td className="text-end">{selectedUnit.Unit_Type || 'NA'}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th className="text-start">Availability</th>
-                                                    <td className="text-end" style={{ color: selectedUnit.Product_Active ? 'green' : 'red' }}>
-                                                        {selectedUnit.Product_Active ? 'Available' : 'Not Available'}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th className="text-start">View</th>
-                                                    <td className="text-end">{selectedUnit.View || 'NA'}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th className="text-start">Floor</th>
-                                                    <td className="text-end">{selectedUnit.Floor || 'NA'}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th className="text-start">Bedroom</th>
-                                                    <td className="text-end">{selectedUnit.Unit_Type || 'NA'}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th className="text-start">Balcony Size</th>
-                                                    <td className="text-end">{selectedUnit.Balcony_Area_Sq_ft ? `${selectedUnit.Balcony_Area_Sq_ft} sq ft` : 'NA'}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th className="text-start">Total Area</th>
-                                                    <td className="text-end">{selectedUnit.Total_Area_Sq_ft ? `${selectedUnit.Total_Area_Sq_ft} sq ft` : 'NA'}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th className="text-start">Price</th>
-                                                    <td className="text-end">{selectedUnit.Unit_Price ? `AED ${selectedUnit.Unit_Price}` : 'NA'}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                    <div className="row">
+                                        {/* Left Column: Image */}
+                                        <div className="col-12 col-md-7">
+                                            <div className="image-container">
+                                                <img
+                                                    src={selectedUnit.image || '../assets/images/2d-floor.png'} // Placeholder or dynamic image source
+                                                    alt={selectedUnit.Product_Name}
+                                                    className="img-fluid rounded"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {/* Right Column: Unit Details */}
+                                        <div className="col-12 col-md-5">
+                                            <div className="unit-detail-card">
+                                                <h3 className="text-center mb-4 text-primary">{selectedUnit.Product_Name || 'NA'}</h3>
+                                                <table className="table table-striped table-bordered">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th className="text-start">Flat Number</th>
+                                                            <td className="text-end">{selectedUnit.Flat_No || 'NA'}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th className="text-start">Unit Type</th>
+                                                            <td className="text-end">{selectedUnit.Unit_Type || 'NA'}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th className="text-start">Availability</th>
+                                                            <td className="text-end" style={{ color: selectedUnit.Product_Active ? 'green' : 'red' }}>
+                                                                {selectedUnit.Product_Active ? 'Available' : 'Not Available'}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th className="text-start">View</th>
+                                                            <td className="text-end">{selectedUnit.View || 'NA'}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th className="text-start">Floor</th>
+                                                            <td className="text-end">{selectedUnit.Floor || 'NA'}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th className="text-start">Bedroom Type</th>
+                                                            <td className="text-end">{selectedUnit.Unit_Type || 'NA'}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th className="text-start">Balcony Size</th>
+                                                            <td className="text-end">{selectedUnit.Balcony_Area_Sq_ft ? `${selectedUnit.Balcony_Area_Sq_ft} sq ft` : 'NA'}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th className="text-start">Total Area</th>
+                                                            <td className="text-end">{selectedUnit.Total_Area_Sq_ft ? `${selectedUnit.Total_Area_Sq_ft} sq ft` : 'NA'}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th className="text-start">Price</th>
+                                                            <td className="text-end">{selectedUnit.Unit_Price ? `AED ${selectedUnit.Unit_Price}` : 'NA'}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                 )}
                             </Modal.Body>
                         </Modal>
-
 
                     </div>
                 )}

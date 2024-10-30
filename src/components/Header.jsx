@@ -120,7 +120,7 @@ const Header = () => {
               {/* Header Middle Section End */}
 
               {/* Header Right Section */}
-              <div className="col-lg-4 col-md-4 col-sm-6 d-flex justify-content-center justify-content-md-end">
+              <div className="col-lg-4 col-md-4 col-sm-6 d-flex justify-content-center justify-content-lg-end justify-content-sm-end">
                 <div className="post-content text-center text-md-right">
                     <Link to="/" className="btn btn-style btn-primary">
                       <span className="fa fa-home"></span> Back to Home

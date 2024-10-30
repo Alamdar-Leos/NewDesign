@@ -4293,7 +4293,7 @@ a.close.disabled {
 .modal-body {
   position: relative;
   flex: 1 1 auto;
-  padding: 1rem; }
+  padding: 2rem; }
 
 .modal-footer {
   display: flex;
@@ -9736,17 +9736,28 @@ a.more:hover {
       font-size: 28px !important;
       line-height: 38px; }
 }
+@media (max-width: 850px) {
+  .img-fluid {
+    height: 450px;
+  }
 
+}
 @media (max-width: 568px) {
   .title-big {
     font-size: 30px !important;
-    line-height: 38px; }
+    line-height: 38px; 
+  }
   .title-medium {
-      font-size: 25px !important;
-      line-height: 36px; }
+    font-size: 25px !important;
+    line-height: 36px; 
+  }
+    
 }
 
-@media (max-width: 415px) {
+@media (max-width: 425px) {
+  .container {
+    padding: 0px 20px;
+  }
   .title-big {
     font-size: 28px !important;
     line-height: 34px; }
