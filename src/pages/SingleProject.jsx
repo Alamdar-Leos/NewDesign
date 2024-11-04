@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import WG3TestingTabs from '../components/wg3/WG3TestingTabs';
+import SingleProjectTabs from '../components/singleProject/SingleProjectTabs';
 
 
 const SingleProject = () => {
@@ -12,7 +12,7 @@ const SingleProject = () => {
         <div className="row">
           <div className="col-lg-12">
               {/* Testing Tabs Start */}
-              <WG3TestingTabs />
+              <SingleProjectTabs />
               {/* Testing Tabs End */}
           </div>
         </div>
