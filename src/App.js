@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Home from './pages/Home';
 import SingleProject from './pages/SingleProject';
+import TestPage from './pages/TestPage';
+
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import Header from './components/Header';
@@ -19,6 +21,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/single-property" element={<SingleProject />} />
+          {/* <Route path="/:id" element={<TestPage />} /> */}
           
         </Routes>
 

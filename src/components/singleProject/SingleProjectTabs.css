@@ -227,22 +227,29 @@ ul.dropdown-menu li button {
     background: #d0a85f;
 }
 .unit-icon i {
-    font-size: 30px;
+    font-size: 25px;
     color: #d0a85f;
 }
 p.unit-name {
     color: #d0a85f;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 600;
-    padding-top: 10px;
+    padding-top: 5px;
 }
 p.unit-type {
     color: #d0a85f;
     font-size: 12px;
+    line-height: 20px;
+}
+p.unit-price {
+    color: #d0a85f;
+    font-size: 12px;
+    line-height: 20px;
 }
 .unit-card:hover .unit-icon i,
 .unit-card:hover p.unit-name,
-.unit-card:hover p.unit-type {
+.unit-card:hover p.unit-type,
+.unit-card:hover p.unit-price {
     color: white;
 }
 .price-range-inputs {
@@ -250,7 +257,6 @@ p.unit-type {
 }
 .custom-modal-80.modal-dialog {
     max-width: 80%;
-    height: 100vh;
 }
 .modal-header .btn-close {
     width: 25px;
@@ -298,4 +304,9 @@ span.price-filter-color {
 
 .price-range:hover::-moz-range-thumb {
     background-color: #d0a85f;
+}
+.unit-2d-img.rounded {
+    width: 95%;
+    height: 580px;
+    object-fit: contain;
 }

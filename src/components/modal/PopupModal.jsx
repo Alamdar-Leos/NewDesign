@@ -18,9 +18,8 @@ const PopupModel = ({ show, onHide, title, contentType, selectedUnit }) => {
             <Modal.Body>
                 {contentType === 'brochure' && (
                     <iframe
-                        src={`../assets/brochures/wg3/WG3_${title}.pdf`}
+                        src={`../assets/brochures/WG3_${title}.pdf`}
                         width="100%"
-                        height="500px"
                         title={`${title} Brochure`}
                         style={{ border: 'none' }}
                     />

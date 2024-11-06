@@ -60,6 +60,16 @@ const Home = () => {
                           </div>
                         </div>
                       </Link>
+                      {/* <Link to={`/${project.id}`}>
+                        <div className="box16">
+                          <img className="img-fluid" src="/assets/images/p1.jpg" alt={project.Name || 'Project Image'} />
+                          <div className="box-content">
+                            <h3 className="title">{project.Name}</h3>
+                            <span className="post">{`${project.Type} - ${project.Record_Status__s || ''}`}</span>
+                          </div>
+                        </div>
+                      </Link> */}
+
                     </div>
                   ))}
                 </div>

@@ -3,7 +3,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './SingleProjectTabs.css';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Units from '../../json/Units.json';
 import Projects from '../../json/Projects.json';
 import { Modal } from 'react-bootstrap/';
@@ -34,6 +34,18 @@ const SingleProjectTabs = () => {
     const [maxPrice, setMaxPrice] = useState('');
     const [filteredUnits, setFilteredUnits] = useState([]);
     const [isFilterApplied, setIsFilterApplied] = useState(false);
+
+    
+    // For Project Single Page
+    const { id } = useParams();
+    const [project, setProject] = useState(null);
+
+    useEffect(() => {
+        const projectDetails = Projects.data.find((proj) => proj.id === id);
+        setProject(projectDetails);
+    }, [id]);
+
+
 
     // Initialize unique floors, unit types, and price range
     useEffect(() => {
@@ -683,7 +695,9 @@ const SingleProjectTabs = () => {
                                     value={selectedFloor}
                                     onChange={(e) => setSelectedFloor(e.target.value)}>
                                     <option value="">Select Floor</option>
-                                    {floors.map((floor, index) => (
+                                    {floors
+                                        .sort((a, b) => a - b)  // Sort floors in ascending order
+                                        .map((floor, index) => (
                                         <option key={index} value={floor}>{floor}</option>
                                     ))}
                                     </select>
@@ -692,7 +706,9 @@ const SingleProjectTabs = () => {
                                         value={selectedUnitType}
                                         onChange={(e) => setSelectedUnitType(e.target.value)}>
                                         <option value="">Select Unit Type</option>
-                                        {unitTypes.map((type, index) => (
+                                        {unitTypes
+                                            .sort((a, b) => a.localeCompare(b))  // Sort unit types in ascending order (alphabetically)
+                                            .map((type, index) => (
                                             <option key={index} value={type}>{type}</option>
                                         ))}
                                     </select>
@@ -731,6 +747,7 @@ const SingleProjectTabs = () => {
                                             </div>
                                             <p className="unit-name">{unit.Product_Name}</p>
                                             <p className="unit-type">{unit.Unit_Type}</p>
+                                            <p className="unit-price">AED {formatPrice(unit.Unit_Price)}</p>
                                         </div>
                                     </div>
                                 ))
@@ -761,9 +778,9 @@ const SingleProjectTabs = () => {
                                         <div className="col-12 col-md-7">
                                             <div className="image-container">
                                                 <img
-                                                    src={selectedUnit.image || '../assets/images/2d-floor.png'} // Placeholder or dynamic image source
+                                                    src={selectedUnit.image || '../assets/images/2d-floor.png'}
                                                     alt={selectedUnit.Product_Name}
-                                                    className="img-fluid rounded"
+                                                    className="unit-2d-img rounded"
                                                 />
                                             </div>
                                         </div>
