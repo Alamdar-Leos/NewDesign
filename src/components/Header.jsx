@@ -99,7 +99,8 @@ const Header = () => {
       {/* Header Home End */}
 
       {/* Header Single Property Start */}
-      {location.pathname === '/single-property' && (
+      {/* {location.pathname === '/single-property' && ( */}
+      {/^\/\w+/.test(location.pathname) && (
         <header id="site-header" className="single-property">
           <div className="container">
             <div className="row d-flex align-items-center">

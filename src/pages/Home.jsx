@@ -51,7 +51,8 @@ const Home = () => {
                 <div className="row pt-md-1 pt-1">
                   {groupedProjects[community].map((project) => (
                     <div key={project.id} className="col-lg-4 col-md-6 mt-4">
-                      <Link to="/single-property">
+                      {/* <Link to="/single-property"> */}
+                      <Link to={`/${project.id}`}>
                         <div className="box16">
                           <img className="img-fluid" src="/assets/images/p1.jpg" alt={project.Name || 'Project Image'} />
                           <div className="box-content">

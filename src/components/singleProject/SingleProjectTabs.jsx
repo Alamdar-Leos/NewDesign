@@ -35,7 +35,6 @@ const SingleProjectTabs = () => {
     const [filteredUnits, setFilteredUnits] = useState([]);
     const [isFilterApplied, setIsFilterApplied] = useState(false);
 
-    
     // For Project Single Page
     const { id } = useParams();
     const [project, setProject] = useState(null);
@@ -45,34 +44,44 @@ const SingleProjectTabs = () => {
         setProject(projectDetails);
     }, [id]);
 
-
-
     // Initialize unique floors, unit types, and price range
     useEffect(() => {
-        const uniqueFloors = [...new Set(Units.data.map(unit => unit.Floor))].filter(Boolean);
-        const uniqueUnitTypes = [...new Set(Units.data.map(unit => unit.Unit_Type))].filter(Boolean);
-        const prices = Units.data.map(unit => unit.Unit_Price).filter(Boolean);
+        if (project) {
+            const projectUnits = Units.data.filter(
+                (unit) => unit.Projects.id === project.id
+            );
 
-        setFloors(uniqueFloors);
-        setUnitTypes(uniqueUnitTypes);
+            const uniqueFloors = [...new Set(projectUnits.map((unit) => unit.Floor))].filter(Boolean);
+            const uniqueUnitTypes = [...new Set(projectUnits.map((unit) => unit.Unit_Type))].filter(Boolean);
+            const prices = projectUnits.map((unit) => unit.Unit_Price).filter(Boolean);
 
-        const minPriceValue = Math.min(...prices);
-        const maxPriceValue = Math.max(...prices);
-        setPriceRange({ min: minPriceValue, max: maxPriceValue });
-        setMinPrice(minPriceValue);
-        setMaxPrice(maxPriceValue);
-    }, []);
+            setFloors(uniqueFloors);
+            setUnitTypes(uniqueUnitTypes);
+
+            const minPriceValue = Math.min(...prices);
+            const maxPriceValue = Math.max(...prices);
+            setPriceRange({ min: minPriceValue, max: maxPriceValue });
+            setMinPrice(minPriceValue);
+            setMaxPrice(maxPriceValue);
+
+            setFilteredUnits(projectUnits);
+        }
+    }, [project]);
 
     // Update filtered units based on selected filters
     useEffect(() => {
-        const filtered = Units.data.filter(unit =>
-            (selectedFloor ? unit.Floor === selectedFloor : true) &&
-            (selectedUnitType ? unit.Unit_Type === selectedUnitType : true) &&
-            (minPrice ? unit.Unit_Price >= minPrice : true) &&
-            (maxPrice ? unit.Unit_Price <= maxPrice : true)
-        );
-        setFilteredUnits(filtered);
-    }, [selectedFloor, selectedUnitType, minPrice, maxPrice]);
+        if (project) {
+            const filtered = Units.data.filter(
+                (unit) =>
+                    unit.Projects.id === project.id &&
+                    (selectedFloor ? unit.Floor === selectedFloor : true) &&
+                    (selectedUnitType ? unit.Unit_Type === selectedUnitType : true) &&
+                    (minPrice ? unit.Unit_Price >= minPrice : true) &&
+                    (maxPrice ? unit.Unit_Price <= maxPrice : true)
+            );
+            setFilteredUnits(filtered);
+        }
+    }, [project, selectedFloor, selectedUnitType, minPrice, maxPrice]);
 
     // Check if any filter is applied
     useEffect(() => {
@@ -100,9 +109,6 @@ const SingleProjectTabs = () => {
             [modalId]: !prevState[modalId],
         }));
     };
-    // const toggleModal = (key) => {
-    //     setModalStates((prev) => ({ ...prev, [key]: !prev[key] }));
-    // };
 
     const showBrochureModal = (language) => {
         setModalTitle(language);
@@ -152,15 +158,7 @@ const SingleProjectTabs = () => {
         return () => document.removeEventListener('click', handleClickOutside);
     }, []);
 
-    // Format price helper function
-    // const formatPrice = (price) => {
-    //     if (price >= 1e6) {
-    //         return `${(price / 1e6).toFixed(1)}M`;
-    //     } else if (price >= 1e3) {
-    //         return `${(price / 1e3).toFixed(0)}K`;
-    //     }
-    //     return price.toString();
-    // };
+
     const formatPrice = (price) => {
         return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     };
@@ -619,31 +617,31 @@ const SingleProjectTabs = () => {
                 {activeTab === 'building-features-tab' && (
                     <div className="single-bg-white">
                         <ul className="details-list row">
-                            <li className="col-md-4 text-center icon-box">
+                            <li className="col-md-3 text-center icon-box">
                                 <img src="../assets/images/amenities-01.png" alt="Air Conditioning" className="icon-img" />
                                 <p>Air Conditioning</p>
                             </li>
-                            <li className="col-md-4 text-center icon-box">
+                            <li className="col-md-3 text-center icon-box">
                                 <img src="../assets/images/amenities-01.png" alt="Built-In Wardrobes" className="icon-img" />
                                 <p>Built-In Wardrobes</p>
                             </li>
-                            <li className="col-md-4 text-center icon-box">
+                            <li className="col-md-3 text-center icon-box">
                                 <img src="../assets/images/amenities-01.png" alt="Dishwasher" className="icon-img" />
                                 <p>Dishwasher</p>
                             </li>
-                            <li className="col-md-4 text-center icon-box">
+                            <li className="col-md-3 text-center icon-box">
                                 <img src="../assets/images/amenities-01.png" alt="Floor Coverings" className="icon-img" />
                                 <p>Floor Coverings</p>
                             </li>
-                            <li className="col-md-4 text-center icon-box">
+                            <li className="col-md-3 text-center icon-box">
                                 <img src="../assets/images/amenities-01.png" alt="Medical / Clinic" className="icon-img" />
                                 <p>Medical / Clinic</p>
                             </li>
-                            <li className="col-md-4 text-center icon-box">
+                            <li className="col-md-3 text-center icon-box">
                                 <img src="../assets/images/amenities-01.png" alt="Fencing" className="icon-img" />
                                 <p>Fencing</p>
                             </li>
-                            <li className="col-md-4 text-center icon-box">
+                            <li className="col-md-3 text-center icon-box">
                                 <img src="../assets/images/amenities-01.png" alt="Internet and wifi" className="icon-img" />
                                 <p>Internet and wifi</p>
                             </li>
@@ -653,31 +651,31 @@ const SingleProjectTabs = () => {
                 {activeTab === 'community-features-tab' && (
                     <div className="single-bg-white">
                         <ul className="details-list row">
-                            <li className="col-md-4 text-center icon-box">
+                            <li className="col-md-3 text-center icon-box">
                                 <img src="../assets/images/amenities-01.png" alt="Air Conditioning" className="icon-img" />
                                 <p>Air Conditioning</p>
                             </li>
-                            <li className="col-md-4 text-center icon-box">
+                            <li className="col-md-3 text-center icon-box">
                                 <img src="../assets/images/amenities-01.png" alt="Built-In Wardrobes" className="icon-img" />
                                 <p>Built-In Wardrobes</p>
                             </li>
-                            <li className="col-md-4 text-center icon-box">
+                            <li className="col-md-3 text-center icon-box">
                                 <img src="../assets/images/amenities-01.png" alt="Dishwasher" className="icon-img" />
                                 <p>Dishwasher</p>
                             </li>
-                            <li className="col-md-4 text-center icon-box">
+                            <li className="col-md-3 text-center icon-box">
                                 <img src="../assets/images/amenities-01.png" alt="Floor Coverings" className="icon-img" />
                                 <p>Floor Coverings</p>
                             </li>
-                            <li className="col-md-4 text-center icon-box">
+                            <li className="col-md-3 text-center icon-box">
                                 <img src="../assets/images/amenities-01.png" alt="Medical / Clinic" className="icon-img" />
                                 <p>Medical / Clinic</p>
                             </li>
-                            <li className="col-md-4 text-center icon-box">
+                            <li className="col-md-3 text-center icon-box">
                                 <img src="../assets/images/amenities-01.png" alt="Fencing" className="icon-img" />
                                 <p>Fencing</p>
                             </li>
-                            <li className="col-md-4 text-center icon-box">
+                            <li className="col-md-3 text-center icon-box">
                                 <img src="../assets/images/amenities-01.png" alt="Internet and wifi" className="icon-img" />
                                 <p>Internet and wifi</p>
                             </li>
@@ -767,7 +765,7 @@ const SingleProjectTabs = () => {
                         /> */}
                         <Modal show={showModal} onHide={closeModal} centered dialogClassName="custom-modal-80">
                             <Modal.Header closeButton className="justify-content-center bg-color">
-                                <Modal.Title className="w-100 text-center">
+                                <Modal.Title className="w-100 text-center text-uppercase">
                                     {selectedUnit?.Projects?.name || 'NA'}
                                 </Modal.Title>
                             </Modal.Header>
