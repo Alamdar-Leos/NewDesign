@@ -11,13 +11,13 @@
 .tab-button {
     background-color: #333333;
     color: #ffffff;
-    padding: 10px 20px;
+    padding: 10px 17px;
     border: none;
     cursor: pointer;
     text-transform: uppercase;
     transition: background-color 0.3s;
     margin-right: 20px;
-    font-size: 15px;
+    font-size: 14px;
 }
 .tab-button.active {
     background-color: #d0a85f;
@@ -306,7 +306,34 @@ span.price-filter-color {
     background-color: #d0a85f;
 }
 .unit-2d-img.rounded {
-    width: 95%;
-    height: 580px;
+    width: 85%;
+    height: 530px;
     object-fit: contain;
+}
+
+
+
+
+.icon-img {
+    margin-bottom: 10px;
+}
+.icon-box p {
+    color: #d0a85f;
+}
+
+@media (min-width: 320px) and (max-width: 575px) {
+    .search-icon {
+        margin-top: -55px;
+    }
+}
+@media (min-width: 768px) {
+    .icon-box {
+        width: calc(50% - 15px); /* Two columns on tablets */
+    }
+}
+
+@media (min-width: 992px) {
+    .icon-box {
+        width: calc(25% - 15px); /* Four columns on desktops */
+    }
 }

@@ -6,14 +6,20 @@ import './SingleProjectTabs.css';
 import { Link, useParams } from 'react-router-dom';
 import Units from '../../json/Units.json';
 import Projects from '../../json/Projects.json';
-import { Modal } from 'react-bootstrap/';
+import { Modal, Tab, Nav } from 'react-bootstrap/';
 import Button from 'react-bootstrap/Button';
 import PopupModal from '../modal/PopupModal.jsx';
+
+import { AvailableUnitsAPI } from '../../services/API.jsx';
+import {fetchProjectsAPI} from '../../services/API.jsx';
+
 
 const SingleProjectTabs = () => {
     // Tab and Dropdown States
     const [activeTab, setActiveTab] = useState('exteriors-tab');
     const [activeDropdown, setActiveDropdown] = useState('');
+
+    // const [projwctName   queryParams.get('name');
 
     // Modal and Popup States
     const [isFullScreenModalOpen, setIsFullScreenModalOpen] = useState(false);
@@ -32,28 +38,63 @@ const SingleProjectTabs = () => {
     const [selectedUnitType, setSelectedUnitType] = useState('');
     const [minPrice, setMinPrice] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
+    const [units, setUnits] = useState([]);
     const [filteredUnits, setFilteredUnits] = useState([]);
     const [isFilterApplied, setIsFilterApplied] = useState(false);
 
     // For Project Single Page
-    const { id } = useParams();
+    const { id: projectId } = useParams();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [project, setProject] = useState(null);
 
     useEffect(() => {
-        const projectDetails = Projects.data.find((proj) => proj.id === id);
+        const projectDetails = Projects.data.find((proj) => proj.projectId === projectId);
         setProject(projectDetails);
-    }, [id]);
+    }, [projectId]);
 
-    // Initialize unique floors, unit types, and price range
+    // Fetch units based on the projectId
+    const fetchUnits = async (projectId) => {
+        try {
+        if (!projectId) {
+            throw new Error("Project ID is required to fetch units.");
+        }
+
+        setLoading(true);
+        setError(null); // Clear previous errors
+
+        // Fetching units from the API
+        const unitsData = await AvailableUnitsAPI(projectId);
+
+        // Ensure the data is in the expected format (check if 'data' exists and it's an array)
+        if (!unitsData || !Array.isArray(unitsData.data)) {
+            throw new Error("No valid units data received.");
+        }
+
+        setUnits(unitsData.data); // Assuming the units data is inside the 'data' field
+        } catch (err) {
+        console.error("Error fetching units:", err);
+        setError(err.message); // Store error message
+        } finally {
+        setLoading(false);
+        }
+    };
+
+    // Fetch units data when the project changes
     useEffect(() => {
-        if (project) {
-            const projectUnits = Units.data.filter(
-                (unit) => unit.Projects.id === project.id
-            );
+        if (projectId) {
+          fetchUnits(projectId); // Fetch units when the projectId is available
+        } else {
+          console.error("No project ID provided");
+        }
+      }, [projectId]); // Re-run when projectId changes
 
-            const uniqueFloors = [...new Set(projectUnits.map((unit) => unit.Floor))].filter(Boolean);
-            const uniqueUnitTypes = [...new Set(projectUnits.map((unit) => unit.Unit_Type))].filter(Boolean);
-            const prices = projectUnits.map((unit) => unit.Unit_Price).filter(Boolean);
+    //Initialize unique floors, unit types, and price range
+    useEffect(() => {
+        if (units.length > 0) {
+            const uniqueFloors = [...new Set(units.map((unit) => unit.Floor))].filter(Boolean);
+            const uniqueUnitTypes = [...new Set(units.map((unit) => unit.Unit_Type))].filter(Boolean);
+            const prices = units.map((unit) => unit.Unit_Price).filter(Boolean);
 
             setFloors(uniqueFloors);
             setUnitTypes(uniqueUnitTypes);
@@ -64,16 +105,18 @@ const SingleProjectTabs = () => {
             setMinPrice(minPriceValue);
             setMaxPrice(maxPriceValue);
 
-            setFilteredUnits(projectUnits);
+            setFilteredUnits(units);
         }
-    }, [project]);
+        else {
+            console.log('The units are not fetching');
+        }
+    }, [units]);
 
     // Update filtered units based on selected filters
     useEffect(() => {
-        if (project) {
-            const filtered = Units.data.filter(
+        if (units.length > 0) {
+            const filtered = units.filter(
                 (unit) =>
-                    unit.Projects.id === project.id &&
                     (selectedFloor ? unit.Floor === selectedFloor : true) &&
                     (selectedUnitType ? unit.Unit_Type === selectedUnitType : true) &&
                     (minPrice ? unit.Unit_Price >= minPrice : true) &&
@@ -81,25 +124,25 @@ const SingleProjectTabs = () => {
             );
             setFilteredUnits(filtered);
         }
-    }, [project, selectedFloor, selectedUnitType, minPrice, maxPrice]);
+    }, [units, selectedFloor, selectedUnitType, minPrice, maxPrice]);
 
     // Check if any filter is applied
     useEffect(() => {
         setIsFilterApplied(
-            selectedFloor !== '' || 
-            selectedUnitType !== '' || 
-            minPrice > priceRange.min || 
+            selectedFloor !== '' ||
+            selectedUnitType !== '' ||
+            minPrice > priceRange.min ||
             maxPrice < priceRange.max
         );
     }, [selectedFloor, selectedUnitType, minPrice, maxPrice, priceRange]);
 
-    // Handle Reset Filter
+    // Reset Filter
     const resetFilter = () => {
         setSelectedFloor('');
         setSelectedUnitType('');
         setMinPrice(priceRange.min);
         setMaxPrice(priceRange.max);
-        setFilteredUnits(Units.data);
+        setFilteredUnits(units);
     };
 
     // Handle modal toggle
@@ -116,10 +159,31 @@ const SingleProjectTabs = () => {
         toggleModal('brochureModal');
     };
 
-    const handleUnitClick = (unit) => {
-        setSelectedUnit(unit);
+    // const handleUnitClick = async (unit) => {
+    //     setSelectedUnit(unit);
+    //     setShowModal(true);
+    // };
+
+    const handleUnitClick = async (unitId) => {
+        const fetchunit = await fetch(
+          `https://backend.leosdevelopments.com/api/v1/units/unit/${unitId}?device=WEB`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer 5ATh6co8WUuhaWp4_$45FGFGDFK%44*&23DF`,
+            },
+          }
+        );
+       console.log(fetchunit);
+        if (fetchunit.ok) {
+          const response = await fetchunit.json();
+          console.log(response);
+          setSelectedUnit(response);
+        }
+        
         setShowModal(true);
-    };
+      };
+
 
     const showUnitModal = (unit) => {
         setSelectedUnit(unit);
@@ -224,6 +288,16 @@ const SingleProjectTabs = () => {
                     </li>
                     {/* Amenities Tab Section End */}
 
+                    {/* Community Tab Section Start */}
+                    <li>
+                        <button
+                            className={`tab-button ${activeTab === 'community-tab' ? 'active' : ''}`}
+                            onClick={() => handleTabClick('community-tab')}>
+                            Community
+                        </button>
+                    </li>
+                    {/* Community Tab Section End */}
+
                     {/* Location Tab Section Start */}
                     <li>
                         <button
@@ -233,6 +307,45 @@ const SingleProjectTabs = () => {
                         </button>
                     </li>
                     {/* Location Tab Section End */}
+
+                    {/* Construction Progress Tab Section Start */}
+                    <li>
+                        <button
+                            className={`tab-button ${activeTab === 'construction-progress-tab' ? 'active' : ''}`}
+                            onClick={() => handleTabClick('construction-progress-tab')}>
+                            Construction Progress
+                        </button>
+                    </li>
+                    {/* Construction Progress Section End */}
+
+                    {/* Dropdown for Social Media Start */}
+                    <li className="dropdown">
+                         <button
+                            className={`tab-button dropdown-toggle ${activeDropdown === 'social-media' ? 'active' : ''}`}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                toggleDropdown('social-media');
+                            }}>
+                            Social Media
+                        </button>
+                        <ul className={`dropdown-menu ${activeDropdown === 'social-media' ? 'show' : ''}`}>
+                            <li>
+                                <button
+                                    className={`tab-button ${activeTab === 'facebook' ? 'active' : ''}`}
+                                    onClick={() => { window.open('https://www.facebook.com/', '_blank'); }}>
+                                    FACEBOOK
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    className={`tab-button ${activeTab === 'instagram' ? 'active' : ''}`}
+                                    onClick={() => { window.open('https://www.instagram.com/', '_blank'); }}>
+                                    INSTAGRAM
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+                    {/* Dropdown for Social Media End */}
 
                     {/* Dropdown for Floor Plans Start */}
                     <li className="dropdown">
@@ -373,36 +486,7 @@ const SingleProjectTabs = () => {
                     />  
                     {/* Dropdown for Brochures End */}
 
-                    {/* Dropdown for Features Start */}
-                    <li className="dropdown">
-                        <button
-                            className={`tab-button dropdown-toggle ${activeDropdown === 'features' ? 'active' : ''}`}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                toggleDropdown('features');
-                            }}>
-                            Features
-                        </button>
-                        <ul className={`dropdown-menu ${activeDropdown === 'features' ? 'show' : ''}`}>
-                            <li>
-                                <button
-                                    className={`tab-button ${activeTab === 'building-features-tab' ? 'active' : ''}`}
-                                    onClick={() => handleTabClick('building-features-tab')}>
-                                    Building Features
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className={`tab-button ${activeTab === 'community-features-tab' ? 'active' : ''}`}
-                                    onClick={() => handleTabClick('community-features-tab')}>
-                                    Community Features
-                                </button>
-                            </li>
-                        </ul>
-                    </li>
-                    {/* Dropdown for Features End */}
-
-                    {/* Dropdown for Available Units Start */}
+                    {/* Available Units Start */}
                     <li>
                         <button
                         className={`tab-button ${activeTab === 'available-units-tab' ? 'active' : ''}`}
@@ -410,7 +494,7 @@ const SingleProjectTabs = () => {
                         Available Units
                         </button>
                     </li>
-                    {/* Dropdown for Available Units End */}
+                    {/* Available Units End */}
                     
                 </div>
             </ul>
@@ -533,11 +617,66 @@ const SingleProjectTabs = () => {
                         </div>
                     </Slider>
                 )}
+                {activeTab === 'community-tab' && (
+                    <Slider {...sliderSettings}>
+                        <div className="item">
+                            <div className="card">
+                                <img src="../assets/images/wg3/amenities/9.jpg" className="img-fluid radius-image" alt="image" />
+                            </div>
+                        </div>
+                        <div className="item">
+                            <div className="card">
+                                <img src="../assets/images/wg3/amenities/10.jpg" className="img-fluid radius-image" alt="image" />
+                            </div>
+                        </div>
+                        <div className="item">
+                            <div className="card">
+                                <img src="../assets/images/wg3/amenities/11.jpg" className="img-fluid radius-image" alt="image" />
+                            </div>
+                        </div>
+                        <div className="item">
+                            <div className="card">
+                                <img src="../assets/images/wg3/amenities/12.jpg" className="img-fluid radius-image" alt="image" />
+                            </div>
+                        </div>
+                    </Slider>
+                )}
                 {activeTab === 'location-tab' && (
                     <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
                                 <img src="../assets/images/wg3/wg3-location.jpg" className="img-fluid radius-image" alt="image" />
+                            </div>
+                            <div className='view-map-btn text-center'>
+                                <button className='btn btn-style btn-primary mt-2'
+                                    onClick={() => { window.open('https://www.google.com/maps/dir//Dubailand,+Weybridge+Gardens+2+-+Dubai/@25.0954867,55.2901528,12z/data=!4m8!4m7!1m0!1m5!1m1!1s0x3e5f65b33c6a5e25:0xbd33168c8138d508!2m2!1d55.3725543!2d25.0955095?entry=ttu&g_ep=EgoyMDI0MTExNy4wIKXMDSoASAFQAw%3D%3D', '_blank'); }}>
+                                    View on Map
+                                </button>
+                            </div>
+                            
+                        </div>
+                    </Slider>
+                )}
+                {activeTab === 'construction-progress-tab' && (
+                    <Slider {...sliderSettings}>
+                        <div className="item">
+                            <div className="card">
+                                <img src="../assets/images/wg3/amenities/5.jpg" className="img-fluid radius-image" alt="image" />
+                            </div>
+                        </div>
+                        <div className="item">
+                            <div className="card">
+                                <img src="../assets/images/wg3/amenities/6.jpg" className="img-fluid radius-image" alt="image" />
+                            </div>
+                        </div>
+                        <div className="item">
+                            <div className="card">
+                                <img src="../assets/images/wg3/amenities/7.jpg" className="img-fluid radius-image" alt="image" />
+                            </div>
+                        </div>
+                        <div className="item">
+                            <div className="card">
+                                <img src="../assets/images/wg3/amenities/8.jpg" className="img-fluid radius-image" alt="image" />
                             </div>
                         </div>
                     </Slider>
@@ -614,74 +753,6 @@ const SingleProjectTabs = () => {
                         </div>
                     </Slider>
                 )}
-                {activeTab === 'building-features-tab' && (
-                    <div className="single-bg-white">
-                        <ul className="details-list row">
-                            <li className="col-md-3 text-center icon-box">
-                                <img src="../assets/images/amenities-01.png" alt="Air Conditioning" className="icon-img" />
-                                <p>Air Conditioning</p>
-                            </li>
-                            <li className="col-md-3 text-center icon-box">
-                                <img src="../assets/images/amenities-01.png" alt="Built-In Wardrobes" className="icon-img" />
-                                <p>Built-In Wardrobes</p>
-                            </li>
-                            <li className="col-md-3 text-center icon-box">
-                                <img src="../assets/images/amenities-01.png" alt="Dishwasher" className="icon-img" />
-                                <p>Dishwasher</p>
-                            </li>
-                            <li className="col-md-3 text-center icon-box">
-                                <img src="../assets/images/amenities-01.png" alt="Floor Coverings" className="icon-img" />
-                                <p>Floor Coverings</p>
-                            </li>
-                            <li className="col-md-3 text-center icon-box">
-                                <img src="../assets/images/amenities-01.png" alt="Medical / Clinic" className="icon-img" />
-                                <p>Medical / Clinic</p>
-                            </li>
-                            <li className="col-md-3 text-center icon-box">
-                                <img src="../assets/images/amenities-01.png" alt="Fencing" className="icon-img" />
-                                <p>Fencing</p>
-                            </li>
-                            <li className="col-md-3 text-center icon-box">
-                                <img src="../assets/images/amenities-01.png" alt="Internet and wifi" className="icon-img" />
-                                <p>Internet and wifi</p>
-                            </li>
-                        </ul>
-                    </div>
-                )}
-                {activeTab === 'community-features-tab' && (
-                    <div className="single-bg-white">
-                        <ul className="details-list row">
-                            <li className="col-md-3 text-center icon-box">
-                                <img src="../assets/images/amenities-01.png" alt="Air Conditioning" className="icon-img" />
-                                <p>Air Conditioning</p>
-                            </li>
-                            <li className="col-md-3 text-center icon-box">
-                                <img src="../assets/images/amenities-01.png" alt="Built-In Wardrobes" className="icon-img" />
-                                <p>Built-In Wardrobes</p>
-                            </li>
-                            <li className="col-md-3 text-center icon-box">
-                                <img src="../assets/images/amenities-01.png" alt="Dishwasher" className="icon-img" />
-                                <p>Dishwasher</p>
-                            </li>
-                            <li className="col-md-3 text-center icon-box">
-                                <img src="../assets/images/amenities-01.png" alt="Floor Coverings" className="icon-img" />
-                                <p>Floor Coverings</p>
-                            </li>
-                            <li className="col-md-3 text-center icon-box">
-                                <img src="../assets/images/amenities-01.png" alt="Medical / Clinic" className="icon-img" />
-                                <p>Medical / Clinic</p>
-                            </li>
-                            <li className="col-md-3 text-center icon-box">
-                                <img src="../assets/images/amenities-01.png" alt="Fencing" className="icon-img" />
-                                <p>Fencing</p>
-                            </li>
-                            <li className="col-md-3 text-center icon-box">
-                                <img src="../assets/images/amenities-01.png" alt="Internet and wifi" className="icon-img" />
-                                <p>Internet and wifi</p>
-                            </li>
-                        </ul>
-                    </div>
-                )}
                 {activeTab === 'available-units-tab' && (
                     <div className="single-bg-white">
                         {/* Search Filter for Available Units */}
@@ -734,25 +805,26 @@ const SingleProjectTabs = () => {
                         <div className="unit-grid row">
                             {filteredUnits.length > 0 ? (
                                 filteredUnits.map((unit, index) => (
-                                    <div key={index} className="col-12 col-sm-4 col-md-3 custom-col-lg mb-4">
-                                        <div 
-                                            className="unit-card text-center" 
-                                            onClick={() => handleUnitClick(unit)}
-                                            style={{ cursor: 'pointer' }}
-                                        >
-                                            <div className="unit-icon">
-                                                <i className="fas fa-bed"></i>
-                                            </div>
-                                            <p className="unit-name">{unit.Product_Name}</p>
-                                            <p className="unit-type">{unit.Unit_Type}</p>
-                                            <p className="unit-price">AED {formatPrice(unit.Unit_Price)}</p>
-                                        </div>
+                                <div key={index} className="col-12 col-sm-4 col-md-3 custom-col-lg mb-4">
+                                    <div 
+                                    className="unit-card text-center" 
+                                    onClick={() => handleUnitClick(unit._id)} 
+                                    style={{ cursor: 'pointer' }}
+                                    >
+                                    <div className="unit-icon">
+                                        <i className="fas fa-bed"></i>
                                     </div>
+                                    <p className="unit-name">{unit.Product_Name}</p>
+                                    <p className="unit-type">{unit.Bedroom}</p>
+                                    <p className="unit-price">AED {formatPrice(unit.Unit_Price)}</p>
+                                    </div>
+                                </div>
                                 ))
                             ) : (
                                 <p>No units available for the selected criteria.</p>
                             )}
                         </div>
+
 
                         {/* Modal for Unit Details */}
                         
@@ -770,68 +842,116 @@ const SingleProjectTabs = () => {
                                 </Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                {selectedUnit && (
-                                    <div className="row">
-                                        {/* Left Column: Image */}
-                                        <div className="col-12 col-md-7">
-                                            <div className="image-container">
-                                                <img
-                                                    src={selectedUnit.image || '../assets/images/2d-floor.png'}
-                                                    alt={selectedUnit.Product_Name}
-                                                    className="unit-2d-img rounded"
-                                                />
-                                            </div>
-                                        </div>
+                                <Tab.Container defaultActiveKey="unit-details">
+                                    {/* Tabs Navigation */}
+                                    <Nav variant="tabs" className="justify-content-center mb-4">
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="unit-details">UNIT DETAILS</Nav.Link>
+                                        </Nav.Item>
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="payment-plan">PAYMENT PLANS</Nav.Link>
+                                        </Nav.Item>
+                                    </Nav>
 
-                                        {/* Right Column: Unit Details */}
-                                        <div className="col-12 col-md-5">
-                                            <div className="unit-detail-card">
-                                                <h3 className="text-center mb-4">{selectedUnit.Product_Name || 'NA'}</h3>
-                                                <table className="table table-striped table-bordered">
-                                                    <tbody>
-                                                        <tr>
-                                                            <th className="text-start">Unit Type</th>
-                                                            <td className="text-end">{selectedUnit.Unit_Type || 'NA'}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th className="text-start">Availability</th>
-                                                            <td className="text-end" style={{ color: selectedUnit.Product_Active ? 'green' : 'red' }}>
-                                                                {selectedUnit.Product_Active ? 'Available' : 'Not Available'}
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th className="text-start">View</th>
-                                                            <td className="text-end">{selectedUnit.View || 'NA'}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th className="text-start">Floor</th>
-                                                            <td className="text-end">{selectedUnit.Floor || 'NA'}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th className="text-start">Bedroom Type</th>
-                                                            <td className="text-end">{selectedUnit.Unit_Type || 'NA'}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th className="text-start">Balcony Size</th>
-                                                            <td className="text-end">{selectedUnit.Balcony_Area_Sq_ft ? `${selectedUnit.Balcony_Area_Sq_ft} sq ft` : 'NA'}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th className="text-start">Total Area</th>
-                                                            <td className="text-end">{selectedUnit.Total_Area_Sq_ft ? `${selectedUnit.Total_Area_Sq_ft} sq ft` : 'NA'}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th className="text-start">Price</th>
-                                                            <td className="text-end">{selectedUnit.Unit_Price ? `AED ${formatPrice(selectedUnit.Unit_Price)}` : 'NA'}</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
+                                    {/* Tabs Content */}
+                                    <Tab.Content>
+                                        {/* Unit Details Tab */}
+                                        <Tab.Pane eventKey="unit-details">
+                                            {selectedUnit && (
+                                                <div className="row">
+                                                    {/* Left Column: Image */}
+                                                    <div className="col-12 col-md-7">
+                                                        <div className="image-container">
+                                                            <img
+                                                                src={selectedUnit?.image || '../assets/images/2d-floor.png'}
+                                                                alt={selectedUnit?.Product_Name}
+                                                                className="unit-2d-img rounded"
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Right Column: Unit Details */}
+                                                    <div className="col-12 col-md-5">
+                                                        <div className="unit-detail-card">
+                                                            <h3 className="text-center mb-4">{selectedUnit?.Product_Name || 'NA'}</h3>
+                                                            <table className="table table-striped table-bordered">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <th className="text-start">Unit Type</th>
+                                                                        <td className="text-end">{selectedUnit?.Unit_Type || 'NA'}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th className="text-start">Availability</th>
+                                                                        <td className="text-end" style={{ color: selectedUnit?.Unit_Status ? 'green' : 'red' }}>
+                                                                            {selectedUnit?.Unit_Status ? 'Available' : 'Not Available'}
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th className="text-start">View</th>
+                                                                        <td className="text-end">{selectedUnit?.View || 'NA'}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th className="text-start">Floor</th>
+                                                                        <td className="text-end">{selectedUnit?.Floor || 'NA'}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th className="text-start">Bedroom</th>
+                                                                        <td className="text-end">{selectedUnit?.Bedroom || 'NA'}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th className="text-start">Suite Area</th>
+                                                                        <td className="text-end">{selectedUnit?.Suite_Area_Sq_ft ? `${selectedUnit?.Suite_Area_Sq_ft} sq ft` : 'NA'}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th className="text-start">Balcony Size</th>
+                                                                        <td className="text-end">{selectedUnit?.Balcony_Area_Sq_ft ? `${selectedUnit?.Balcony_Area_Sq_ft} sq ft` : 'NA'}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th className="text-start">Total Area</th>
+                                                                        <td className="text-end">{selectedUnit?.Total_Area_Sq_ft ? `${selectedUnit?.Total_Area_Sq_ft} sq ft` : 'NA'}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th className="text-start">Price</th>
+                                                                        <td className="text-end">{selectedUnit?.Unit_Price ? `AED ${formatPrice(selectedUnit?.Unit_Price)}` : 'NA'}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </Tab.Pane>
+
+                                        {/* Payment Plan Tab */}
+                                        <Tab.Pane eventKey="payment-plan">
+                                            {selectedUnit && (
+                                                <div className="payment-plan-container">
+                                                    <h4 className="text-center mb-4">Payment Plan</h4>
+                                                    <table className="table table-striped table-bordered">
+                                                        <tbody>
+                                                            {selectedUnit?.PaymentPlan ? (
+                                                                selectedUnit.PaymentPlan.map((plan, index) => (
+                                                                    <tr key={index}>
+                                                                        <th className="text-start">{plan.stage || `Stage ${index + 1}`}</th>
+                                                                        <td className="text-end">{plan.amount ? `AED ${formatPrice(plan.amount)}` : 'NA'}</td>
+                                                                    </tr>
+                                                                ))
+                                                            ) : (
+                                                                <tr>
+                                                                    <td colSpan="2" className="text-center">
+                                                                        No Payment Plan available.
+                                                                    </td>
+                                                                </tr>
+                                                            )}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            )}
+                                        </Tab.Pane>
+                                    </Tab.Content>
+                                </Tab.Container>
                             </Modal.Body>
                         </Modal>
-
                     </div>
                 )}
             

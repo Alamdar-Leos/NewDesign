@@ -1,7 +1,21 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { FilterContext } from '../context/FilterContext';
-import Projects from '../json/Projects.json';
+import { fetchProjectsAPI } from '../services/API';
+
+// Project Banner Image
+const getProjectImage = (media) => {
+  if (!media || !Array.isArray(media) || media.length === 0) {
+    return '/assets/images/default.jpg'; // Fallback image
+  }
+
+  const preferredMedia =
+    media.find((item) => item.subType === 'PROJECT_BANNER') ||
+    media.find((item) => item.class === 'MAIN') ||
+    media[0]; // Fallback to the first media item
+
+  return preferredMedia?.filePath || '/assets/images/default.jpg';
+};
 
 const Home = () => {
   const [groupedProjects, setGroupedProjects] = useState({});
@@ -10,84 +24,93 @@ const Home = () => {
   useEffect(() => {
     const groupByCommunity = (projects) => {
       return projects.reduce((acc, project) => {
-        const community = project.Master_Community || 'Unspecified Location';
-        if (!acc[community]) {
-          acc[community] = [];
-        }
+        const community = project.master_community || 'Unspecified Location';
+        acc[community] = acc[community] || [];
         acc[community].push(project);
         return acc;
       }, {});
     };
 
-    const fetchProjects = () => {
-      const filteredProjects = Projects.data.filter((project) => {
-        return (
-          (!selectedFilters.unitType || project.Unit_Type === selectedFilters.unitType) &&
-          (!selectedFilters.community || project.Master_Community === selectedFilters.community) &&
-          (!selectedFilters.country || project.Country === selectedFilters.country)
+    const fetchAndFilterProjects = async () => {
+      try {
+        const projects = await fetchProjectsAPI();
+
+        const sortedProjects = projects.sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
         );
-      });
-      const grouped = groupByCommunity(filteredProjects);
-      setGroupedProjects(grouped);
+
+        const filteredProjects = sortedProjects.filter((project) => {
+          return (
+            !selectedFilters.community || project.master_community === selectedFilters.community
+          );
+        });
+
+        setGroupedProjects(groupByCommunity(filteredProjects));
+      } catch (error) {
+        console.error('Error fetching and filtering projects:', error);
+      }
     };
 
-    fetchProjects();
+    fetchAndFilterProjects();
   }, [selectedFilters]);
 
-  return (
-    <>
-      <section className="locations-1" id="locations">
-        <div className="locations py-2">
-          <div className="container py-lg-5 py-md-4 py-2">
-            <div className="heading text-center mx-auto">
-              <h3 className="title-big heading-gold">OUR PROJECTS</h3>
-            </div>
+  // const saveData = (projectname) => {
+  //   localStorage.setItem(`currentSelectedProjectName`, projectname);
 
-            {Object.keys(groupedProjects).map((community) => (
+  //   console.log(localStorage.getItem('currentSelectedProjectName'));
+  // }
+
+  return (
+    <section className="locations-1" id="locations">
+      <div className="locations py-2">
+        <div className="container py-lg-5 py-md-4 py-2">
+          <div className="heading text-center mx-auto">
+            <h3 className="title-big heading-gold">OUR PROJECTS</h3>
+          </div>
+
+          {Object.keys(groupedProjects).length > 0 ? (
+            Object.keys(groupedProjects).map((community) => (
               <div key={community}>
                 <div className="heading mx-auto mt-5">
                   <h4 className="title-medium heading-gold">{community}</h4>
                 </div>
                 <div className="row pt-md-1 pt-1">
                   {groupedProjects[community].map((project) => (
-                    <div key={project.id} className="col-lg-4 col-md-6 mt-4">
-                      {/* <Link to="/single-property"> */}
-                      <Link to={`/${project.id}`}>
+                    <div key={project._id} className="col-lg-4 col-md-6 mt-4">
+
+                      <Link to={`/${project._id}`}>
                         <div className="box16">
-                          <img className="img-fluid" src="/assets/images/p1.jpg" alt={project.Name || 'Project Image'} />
+                          <img
+                            className="img-fluid"
+                            src={getProjectImage(project.media)}
+                            alt={project.name || 'Project Image'}
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = '/assets/images/default.jpg';
+                            }}
+                          />
                           <div className="box-content">
-                            <h3 className="title">{project.Name}</h3>
-                            <span className="post">{`${project.Type} - ${project.Record_Status__s || ''}`}</span>
+                            <h3 className="title">{project.name}</h3>
+                            {/* <span className="post">
+                              {`${project.type} - ${project.property_status || 'Available'}`}
+                            </span> */}
                           </div>
                         </div>
                       </Link>
-                      {/* <Link to={`/${project.id}`}>
-                        <div className="box16">
-                          <img className="img-fluid" src="/assets/images/p1.jpg" alt={project.Name || 'Project Image'} />
-                          <div className="box-content">
-                            <h3 className="title">{project.Name}</h3>
-                            <span className="post">{`${project.Type} - ${project.Record_Status__s || ''}`}</span>
-                          </div>
-                        </div>
-                      </Link> */}
-
                     </div>
                   ))}
                 </div>
               </div>
-            ))}
-
-            {Object.keys(groupedProjects).length === 0 && (
-              <div className="text-center">
-                <h4>No Projects Available</h4>
-              </div>
-            )}
-          </div>
+            ))
+          ) : (
+            <div className="text-center">
+              <h4>No Projects Available</h4>
+            </div>
+          )}
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
-
 };
 
 export default Home;
