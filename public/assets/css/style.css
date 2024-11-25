@@ -11080,10 +11080,10 @@ a.title-small {
 .locations-1 .box16:hover:after {
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.01) 0, rgba(0, 0, 0, 0.09) 11%, rgba(0, 0, 0, 0.12) 13%, rgba(0, 0, 0, 0.19) 20%, rgba(0, 0, 0, 0.29) 28%, rgba(0, 0, 0, 0.29) 29%, rgba(0, 0, 0, 0.42) 38%, rgba(0, 0, 0, 0.46) 43%, rgba(0, 0, 0, 0.53) 47%, rgba(0, 0, 0, 0.75) 69%, rgba(0, 0, 0, 0.87) 84%, rgba(0, 0, 0, 0.98) 99%, rgba(0, 0, 0, 0.94) 100%); }
 
-.locations-1 .box16 img {
+/* .locations-1 .box16 img {
   width: 100%;
   height: auto;
-  transition: transform 0.3s linear; }
+  transition: transform 0.3s linear; } */
 
 .locations-1 .box16 .box-content {
   padding: 25px;
@@ -11102,9 +11102,13 @@ a.title-small {
 .locations-1 .box16 .post {
   display: block;
   padding: 0px 0;
-  font-size: 15px;
-  color: #eee; }
-
+  font-size: 14px;
+  color: #eee; 
+}
+.box16 img {
+  height: 230px;
+  object-fit: cover;
+} 
 .locations-1 .box16 .social li a,
 .locations-1 .box17 .icon li a {
   border-radius: 50%;

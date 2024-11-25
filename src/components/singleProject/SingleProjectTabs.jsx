@@ -12,14 +12,13 @@ import PopupModal from '../modal/PopupModal.jsx';
 
 import { AvailableUnitsAPI } from '../../services/API.jsx';
 import {fetchProjectsAPI} from '../../services/API.jsx';
+import { fetchProjectImagesAPI } from '../../services/API.jsx';
 
 
 const SingleProjectTabs = () => {
     // Tab and Dropdown States
     const [activeTab, setActiveTab] = useState('exteriors-tab');
     const [activeDropdown, setActiveDropdown] = useState('');
-
-    // const [projwctName   queryParams.get('name');
 
     // Modal and Popup States
     const [isFullScreenModalOpen, setIsFullScreenModalOpen] = useState(false);
@@ -40,13 +39,63 @@ const SingleProjectTabs = () => {
     const [maxPrice, setMaxPrice] = useState('');
     const [units, setUnits] = useState([]);
     const [filteredUnits, setFilteredUnits] = useState([]);
-    const [isFilterApplied, setIsFilterApplied] = useState(false);
+    const [isFilterApplied, setIsFilterApplied] = useState(false);    
 
     // For Project Single Page
     const { id: projectId } = useParams();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [project, setProject] = useState(null);
+
+    // Project Single Page Images
+    const [exteriorImages, setExteriorImages] = useState([]);
+    const [interiorImages, setInteriorImages] = useState([]);
+    const [amenitiesImages, setAmenitiesImages] = useState([]);
+    const [locationImage, setLocationImage] = useState([]);
+
+    //Project Brochures
+    const [Brochure_ENGLISH, setBrochure_ENGLISH] = useState([]);
+    const [Brochure_ARABIC, setBrochure_ARABIC] = useState([]);
+    const [Brochure_RUSSIAN, setBrochure_RUSSIAN] = useState([]);
+    const [Brochure_FRENCH, setBrochure_FRENCH] = useState([]);
+    const [Brochure_MANDARIN, setBrochure_MANDARIN] = useState([]);
+
+    useEffect(() => {
+    const fetchImages = async () => {
+        try {
+        const { exteriorImages, interiorImages, amenitiesImages, locationImage, Brochure_ENGLISH, Brochure_ARABIC, Brochure_RUSSIAN, Brochure_FRENCH, Brochure_MANDARIN } = await fetchProjectImagesAPI(projectId);
+        setExteriorImages(exteriorImages);
+        setInteriorImages(interiorImages);
+        setAmenitiesImages(amenitiesImages);
+        setLocationImage(locationImage);
+
+        setBrochure_ENGLISH(Brochure_ENGLISH);
+        setBrochure_ARABIC(Brochure_ARABIC);
+        setBrochure_RUSSIAN(Brochure_RUSSIAN);
+        setBrochure_FRENCH(Brochure_FRENCH);
+        setBrochure_MANDARIN(Brochure_MANDARIN);
+
+        console.log('Set Exterior Images:', exteriorImages); // Debugging state
+        console.log('Set Interior Images:', interiorImages); // Debugging state
+        console.log('Set Amenities Images:', amenitiesImages); // Debugging state
+        console.log('Set Location Image:', locationImage); // Debugging state
+
+        console.log('Set English Brochure:', Brochure_ENGLISH); // Debugging state
+        console.log('Set Arabic Brochure:', Brochure_ARABIC); // Debugging state
+        console.log('Set Russian Brochure:', Brochure_RUSSIAN); // Debugging state
+        console.log('Set French Brochure:', Brochure_FRENCH); // Debugging state
+        console.log('Set Madarin Brochure:', Brochure_MANDARIN); // Debugging state
+
+        } catch (error) {
+        console.error(error.message);
+        }
+    };
+
+    if (projectId) {
+        console.log('Fetching images for projectId:', projectId); // Debug projectId
+        fetchImages();
+    }
+    }, [projectId]);
 
     useEffect(() => {
         const projectDetails = Projects.data.find((proj) => proj.projectId === projectId);
@@ -107,9 +156,9 @@ const SingleProjectTabs = () => {
 
             setFilteredUnits(units);
         }
-        else {
-            console.log('The units are not fetching');
-        }
+        // else {
+        //     console.log('The units are not fetching');
+        // }
     }, [units]);
 
     // Update filtered units based on selected filters
@@ -289,13 +338,13 @@ const SingleProjectTabs = () => {
                     {/* Amenities Tab Section End */}
 
                     {/* Community Tab Section Start */}
-                    <li>
+                    {/* <li>
                         <button
                             className={`tab-button ${activeTab === 'community-tab' ? 'active' : ''}`}
                             onClick={() => handleTabClick('community-tab')}>
                             Community
                         </button>
-                    </li>
+                    </li> */}
                     {/* Community Tab Section End */}
 
                     {/* Location Tab Section Start */}
@@ -319,7 +368,7 @@ const SingleProjectTabs = () => {
                     {/* Construction Progress Section End */}
 
                     {/* Dropdown for Social Media Start */}
-                    <li className="dropdown">
+                    {/* <li className="dropdown">
                          <button
                             className={`tab-button dropdown-toggle ${activeDropdown === 'social-media' ? 'active' : ''}`}
                             onClick={(e) => {
@@ -344,7 +393,7 @@ const SingleProjectTabs = () => {
                                 </button>
                             </li>
                         </ul>
-                    </li>
+                    </li> */}
                     {/* Dropdown for Social Media End */}
 
                     {/* Dropdown for Floor Plans Start */}
@@ -502,181 +551,138 @@ const SingleProjectTabs = () => {
             <div className="tab-content">
                 {activeTab === 'exteriors-tab' && (
                     <Slider {...sliderSettings}>
+                        {exteriorImages.length > 0 ? (
+                        exteriorImages.map((image, index) => (
+                            <div className="item" key={index}>
+                            <div className="card">
+                                <img src={image.url} alt={`Exterior ${index + 1}`} />
+                            </div>
+                            </div>
+                        ))
+                        ) : (
                         <div className="item">
                             <div className="card">
-                                <img src="../assets/images/wg3/exterior/1.jpg" className="img-fluid radius-image" alt="image" />
+                            <p>No images available.</p>
                             </div>
                         </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/exterior/2.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
+                        )}
                     </Slider>
                 )}
                 {activeTab === 'interiors-tab' && (
                     <Slider {...sliderSettings}>
+                        {interiorImages.length > 0 ? (
+                        interiorImages.map((image, index) => (
+                            <div className="item" key={index}>
+                            <div className="card">
+                                <img src={image.url} alt={`Exterior ${index + 1}`} />
+                            </div>
+                            </div>
+                        ))
+                        ) : (
                         <div className="item">
                             <div className="card">
-                                    <img src="../assets/images/wg3/interior/1.jpg" className="img-fluid radius-image" alt="image" />
+                            <p>No exterior images available.</p>
                             </div>
                         </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/interior/2.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/interior/3.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/interior/4.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/interior/5.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/interior/6.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/interior/7.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
+                        )}
                     </Slider>
+
                 )}
                 {activeTab === 'amenities-tab' && (
                     <Slider {...sliderSettings}>
+                        {amenitiesImages.length > 0 ? (
+                        amenitiesImages.map((image, index) => (
+                            <div className="item" key={index}>
+                            <div className="card">
+                                <img src={image.url} alt={`Exterior ${index + 1}`} />
+                            </div>
+                            </div>
+                        ))
+                        ) : (
                         <div className="item">
                             <div className="card">
-                                <img src="../assets/images/wg3/amenities/1.jpg" className="img-fluid radius-image" alt="image" />
+                            <p>No images available.</p>
                             </div>
                         </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/amenities/2.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/amenities/3.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/amenities/4.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/amenities/5.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/amenities/6.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/amenities/7.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/amenities/8.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/amenities/9.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/amenities/10.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/amenities/11.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/amenities/12.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
+                        )}
                     </Slider>
                 )}
-                {activeTab === 'community-tab' && (
+                {/* {activeTab === 'community-tab' && (
                     <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
-                                <img src="../assets/images/wg3/amenities/9.jpg" className="img-fluid radius-image" alt="image" />
+                                <img src="../assets/images/wg3/amenities/wg3-Amenities9.jpg" className="img-fluid radius-image" alt="image" />
                             </div>
                         </div>
                         <div className="item">
                             <div className="card">
-                                <img src="../assets/images/wg3/amenities/10.jpg" className="img-fluid radius-image" alt="image" />
+                                <img src="../assets/images/wg3/amenities/wg3-Amenities10.jpg" className="img-fluid radius-image" alt="image" />
                             </div>
                         </div>
                         <div className="item">
                             <div className="card">
-                                <img src="../assets/images/wg3/amenities/11.jpg" className="img-fluid radius-image" alt="image" />
+                                <img src="../assets/images/wg3/amenities/wg3-Amenities11.jpg" className="img-fluid radius-image" alt="image" />
                             </div>
                         </div>
                         <div className="item">
                             <div className="card">
-                                <img src="../assets/images/wg3/amenities/12.jpg" className="img-fluid radius-image" alt="image" />
+                                <img src="../assets/images/wg3/amenities/wg3-Amenities12.jpg" className="img-fluid radius-image" alt="image" />
                             </div>
                         </div>
                     </Slider>
-                )}
+                )} */}
                 {activeTab === 'location-tab' && (
-                    <Slider {...sliderSettings}>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/wg3-location.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                            <div className='view-map-btn text-center'>
-                                <button className='btn btn-style btn-primary mt-2'
-                                    onClick={() => { window.open('https://www.google.com/maps/dir//Dubailand,+Weybridge+Gardens+2+-+Dubai/@25.0954867,55.2901528,12z/data=!4m8!4m7!1m0!1m5!1m1!1s0x3e5f65b33c6a5e25:0xbd33168c8138d508!2m2!1d55.3725543!2d25.0955095?entry=ttu&g_ep=EgoyMDI0MTExNy4wIKXMDSoASAFQAw%3D%3D', '_blank'); }}>
-                                    View on Map
-                                </button>
-                            </div>
-                            
+                    <>
+                    {locationImage.length > 0 ? (
+                      locationImage.map((image, index) => (
+                        <div className="item" key={index}>
+                          <div className="card">
+                            <img src={image.url} alt={`Exterior ${index + 1}`} />
+                          </div>
                         </div>
-                    </Slider>
+                      ))
+                    ) : (
+                      <div className="item">
+                        <div className="card">
+                          <p>No images available.</p>
+                        </div>
+                      </div>
+                    )}
+                    <div className="button-container text-center">
+                      <button
+                        className="btn btn-style btn-primary mt-3"
+                        onClick={() =>
+                          window.open(
+                            'https://www.google.com/maps/dir//Dubailand,+Weybridge+Gardens+2+-+Dubai/@25.0954867,55.2901528,12z/data=!4m8!4m7!1m0!1m5!1m1!1s0x3e5f65b33c6a5e25:0xbd33168c8138d508!2m2!1d55.3725543!2d25.0955095?entry=ttu&g_ep=EgoyMDI0MTExOS4yIKXMDSoASAFQAw%3D%3D',
+                            '_blank'
+                          )
+                        }
+                      >
+                        VIEW ON MAP
+                      </button>
+                    </div>
+                  </>
                 )}
                 {activeTab === 'construction-progress-tab' && (
                     <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
-                                <img src="../assets/images/wg3/amenities/5.jpg" className="img-fluid radius-image" alt="image" />
+                                <img src="../assets/images/wg3/amenities/wg3-Amenities5.jpg" className="img-fluid radius-image" alt="image" />
                             </div>
                         </div>
                         <div className="item">
                             <div className="card">
-                                <img src="../assets/images/wg3/amenities/6.jpg" className="img-fluid radius-image" alt="image" />
+                                <img src="../assets/images/wg3/amenities/wg3-Amenities6.jpg" className="img-fluid radius-image" alt="image" />
                             </div>
                         </div>
                         <div className="item">
                             <div className="card">
-                                <img src="../assets/images/wg3/amenities/7.jpg" className="img-fluid radius-image" alt="image" />
+                                <img src="../assets/images/wg3/amenities/wg3-Amenities7.jpg" className="img-fluid radius-image" alt="image" />
                             </div>
                         </div>
                         <div className="item">
                             <div className="card">
-                                <img src="../assets/images/wg3/amenities/8.jpg" className="img-fluid radius-image" alt="image" />
+                                <img src="../assets/images/wg3/amenities/wg3-Amenities8.jpg" className="img-fluid radius-image" alt="image" />
                             </div>
                         </div>
                     </Slider>
@@ -685,7 +691,7 @@ const SingleProjectTabs = () => {
                     <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
-                                <img src="../assets/images/wg3/floor-plan/studio-1.jpg" className="img-fluid radius-image" alt="image" />
+                                <img src="../assets/images/wg3/floor-plan/wg3-studio-1.jpg" className="img-fluid radius-image" alt="image" />
                             </div>
                         </div>
                     </Slider>
@@ -694,7 +700,7 @@ const SingleProjectTabs = () => {
                     <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
-                                <img src="../assets/images/wg3/floor-plan/studio-2.jpg" className="img-fluid radius-image" alt="image" />
+                                <img src="../assets/images/wg3/floor-plan/wg3-studio-2.jpg" className="img-fluid radius-image" alt="image" />
                             </div>
                         </div>
                     </Slider>
@@ -703,7 +709,7 @@ const SingleProjectTabs = () => {
                     <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
-                                <img src="../assets/images/wg3/floor-plan/1br-01.jpg" className="img-fluid radius-image" alt="image" />
+                                <img src="../assets/images/wg3/floor-plan/wg3-1br-01.jpg" className="img-fluid radius-image" alt="image" />
                             </div>
                         </div>
                     </Slider>
@@ -712,7 +718,7 @@ const SingleProjectTabs = () => {
                     <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
-                                <img src="../assets/images/wg3/floor-plan/1br-02.jpg" className="img-fluid radius-image" alt="image" />
+                                <img src="../assets/images/wg3/floor-plan/wg3-1br-02.jpg" className="img-fluid radius-image" alt="image" />
                             </div>
                         </div>
                     </Slider>
@@ -721,7 +727,7 @@ const SingleProjectTabs = () => {
                     <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
-                                <img src="../assets/images/wg3/floor-plan/3br-01.jpg" className="img-fluid radius-image" alt="image" />
+                                <img src="../assets/images/wg3/floor-plan/wg3-3br-01.jpg" className="img-fluid radius-image" alt="image" />
                             </div>
                         </div>
                     </Slider>
@@ -730,7 +736,7 @@ const SingleProjectTabs = () => {
                     <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
-                                <img src="../assets/images/wg3/floor-plan/3br-02.jpg" className="img-fluid radius-image" alt="image" />
+                                <img src="../assets/images/wg3/floor-plan/wg3-3br-02.jpg" className="img-fluid radius-image" alt="image" />
                             </div>
                         </div>
                     </Slider>
@@ -739,7 +745,7 @@ const SingleProjectTabs = () => {
                     <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
-                                <img src="../assets/images/wg3/floor-plan/3br-03.jpg" className="img-fluid radius-image" alt="image" />
+                                <img src="../assets/images/wg3/floor-plan/wg3-3br-03.jpg" className="img-fluid radius-image" alt="image" />
                             </div>
                         </div>
                     </Slider>
@@ -748,7 +754,7 @@ const SingleProjectTabs = () => {
                     <Slider {...sliderSettings}>
                         <div className="item">
                             <div className="card">
-                                <img src="../assets/images/wg3/floor-plan/3br-04.jpg" className="img-fluid radius-image" alt="image" />
+                                <img src="../assets/images/wg3/floor-plan/wg3-3br-04.jpg" className="img-fluid radius-image" alt="image" />
                             </div>
                         </div>
                     </Slider>
@@ -825,16 +831,7 @@ const SingleProjectTabs = () => {
                             )}
                         </div>
 
-
                         {/* Modal for Unit Details */}
-                        
-                        {/* <PopupModal
-                            show={modalStates['unitDetails']}
-                            onHide={closeModal}
-                            title={modalTitle}
-                            contentType={modalContentType}
-                            selectedUnit={selectedUnit}
-                        /> */}
                         <Modal show={showModal} onHide={closeModal} centered dialogClassName="custom-modal-80">
                             <Modal.Header closeButton className="justify-content-center bg-color">
                                 <Modal.Title className="w-100 text-center text-uppercase">

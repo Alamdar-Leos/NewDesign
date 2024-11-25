@@ -18,34 +18,61 @@ const getProjectImage = (media) => {
 };
 
 const Home = () => {
-  const [groupedProjects, setGroupedProjects] = useState({});
+  // const [groupedProjects, setGroupedProjects] = useState({});
+  // const [selectedFilters] = useContext(FilterContext);
+  const [projects, setProjects] = useState([]);
   const [selectedFilters] = useContext(FilterContext);
 
-  useEffect(() => {
-    const groupByCommunity = (projects) => {
-      return projects.reduce((acc, project) => {
-        const community = project.master_community || 'Unspecified Location';
-        acc[community] = acc[community] || [];
-        acc[community].push(project);
-        return acc;
-      }, {});
-    };
+  // useEffect(() => {
+  //   const groupByCommunity = (projects) => {
+  //     return projects.reduce((acc, project) => {
+  //       const community = project.master_community || 'Unspecified Location';
+  //       acc[community] = acc[community] || [];
+  //       acc[community].push(project);
+  //       return acc;
+  //     }, {});
+  //   };
 
+  //   const fetchAndFilterProjects = async () => {
+  //     try {
+  //       const projects = await fetchProjectsAPI();
+
+  //       const sortedProjects = projects.sort(
+  //         (a, b) => new Date(b.created_at) - new Date(a.created_at)
+  //       );
+
+  //       const filteredProjects = sortedProjects.filter((project) => {
+  //         return (
+  //           !selectedFilters.community || project.master_community === selectedFilters.community
+  //         );
+  //       });
+
+  //       setGroupedProjects(groupByCommunity(filteredProjects));
+  //     } catch (error) {
+  //       console.error('Error fetching and filtering projects:', error);
+  //     }
+  //   };
+
+  //   fetchAndFilterProjects();
+  // }, [selectedFilters]);
+  useEffect(() => {
     const fetchAndFilterProjects = async () => {
       try {
         const projects = await fetchProjectsAPI();
 
+        // Sort projects in descending order based on creation date
         const sortedProjects = projects.sort(
           (a, b) => new Date(b.created_at) - new Date(a.created_at)
         );
 
+        // Apply filters if any
         const filteredProjects = sortedProjects.filter((project) => {
           return (
             !selectedFilters.community || project.master_community === selectedFilters.community
           );
         });
 
-        setGroupedProjects(groupByCommunity(filteredProjects));
+        setProjects(filteredProjects);
       } catch (error) {
         console.error('Error fetching and filtering projects:', error);
       }
@@ -54,13 +81,57 @@ const Home = () => {
     fetchAndFilterProjects();
   }, [selectedFilters]);
 
-  // const saveData = (projectname) => {
-  //   localStorage.setItem(`currentSelectedProjectName`, projectname);
-
-  //   console.log(localStorage.getItem('currentSelectedProjectName'));
-  // }
-
   return (
+    // <section className="locations-1" id="locations">
+    //   <div className="locations py-2">
+    //     <div className="container py-lg-5 py-md-4 py-2">
+    //       <div className="heading text-center mx-auto">
+    //         <h3 className="title-big heading-gold">OUR PROJECTS</h3>
+    //       </div>
+
+    //       {Object.keys(groupedProjects).length > 0 ? (
+    //         Object.keys(groupedProjects).map((community) => (
+    //           <div key={community}>
+    //             <div className="heading mx-auto mt-5">
+    //               <h4 className="title-medium heading-gold">{community}</h4>
+    //             </div>
+    //             <div className="row pt-md-1 pt-1">
+    //               {groupedProjects[community].map((project) => (
+    //                 <div key={project._id} className="col-lg-4 col-md-6 mt-4">
+
+    //                   <Link to={`/${project._id}`}>
+    //                     <div className="box16">
+    //                       <img
+    //                         className="img-fluid"
+    //                         src={getProjectImage(project.media)}
+    //                         alt={project.name || 'Project Image'}
+    //                         onError={(e) => {
+    //                           e.target.onerror = null;
+    //                           e.target.src = '/assets/images/default.jpg';
+    //                         }}
+    //                       />
+    //                       <div className="box-content">
+    //                         <h3 className="title">{project.name}</h3>
+    //                         {/* <span className="post">
+    //                           {`${project.type} - ${project.property_status || 'Available'}`}
+    //                         </span> */}
+    //                       </div>
+    //                     </div>
+    //                   </Link>
+    //                 </div>
+    //               ))}
+    //             </div>
+    //           </div>
+    //         ))
+    //       ) : (
+    //         <div className="text-center">
+    //           <h4>No Projects Available</h4>
+    //         </div>
+    //       )}
+    //     </div>
+    //   </div>
+    // </section>
+
     <section className="locations-1" id="locations">
       <div className="locations py-2">
         <div className="container py-lg-5 py-md-4 py-2">
@@ -68,40 +139,30 @@ const Home = () => {
             <h3 className="title-big heading-gold">OUR PROJECTS</h3>
           </div>
 
-          {Object.keys(groupedProjects).length > 0 ? (
-            Object.keys(groupedProjects).map((community) => (
-              <div key={community}>
-                <div className="heading mx-auto mt-5">
-                  <h4 className="title-medium heading-gold">{community}</h4>
-                </div>
-                <div className="row pt-md-1 pt-1">
-                  {groupedProjects[community].map((project) => (
-                    <div key={project._id} className="col-lg-4 col-md-6 mt-4">
-
-                      <Link to={`/${project._id}`}>
-                        <div className="box16">
-                          <img
-                            className="img-fluid"
-                            src={getProjectImage(project.media)}
-                            alt={project.name || 'Project Image'}
-                            onError={(e) => {
-                              e.target.onerror = null;
-                              e.target.src = '/assets/images/default.jpg';
-                            }}
-                          />
-                          <div className="box-content">
-                            <h3 className="title">{project.name}</h3>
-                            {/* <span className="post">
-                              {`${project.type} - ${project.property_status || 'Available'}`}
-                            </span> */}
-                          </div>
-                        </div>
-                      </Link>
+          {projects.length > 0 ? (
+            <div className="row pt-3">
+              {projects.map((project) => (
+                <div key={project._id} className="col-lg-3 col-md-6 my-4">
+                  <Link to={`/${project._id}`}>
+                    <div className="box16">
+                      <img
+                        className="img-fluid"
+                        src={getProjectImage(project.media)}
+                        alt={project.name || 'Project Image'}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = '/assets/images/default.jpg';
+                        }}
+                      />
+                      <div className="box-content">
+                        {/* <h3 className="title">{project.name}</h3> */}
+                        <span className="post">{project.master_community}</span>
+                      </div>
                     </div>
-                  ))}
+                  </Link>
                 </div>
-              </div>
-            ))
+              ))}
+            </div>
           ) : (
             <div className="text-center">
               <h4>No Projects Available</h4>
@@ -110,6 +171,7 @@ const Home = () => {
         </div>
       </div>
     </section>
+
   );
 };
 

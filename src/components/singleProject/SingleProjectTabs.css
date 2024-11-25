@@ -3,9 +3,21 @@
     background-color: #272727;
     color: #ffffff;
 }
+.tab-content .slick-list {
+    height: 75vh;
+}
+.tab-content img {
+    height: 75vh;
+    object-fit: cover;
+}
 .tab-buttons {
     display: flex;
-    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+.tab-buttons {
+    display: flex;
+    flex-wrap: wrap;
     margin-bottom: 20px;
 }
 .tab-button {
@@ -17,6 +29,7 @@
     text-transform: uppercase;
     transition: background-color 0.3s;
     margin-right: 20px;
+    margin-bottom: 15px;
     font-size: 14px;
 }
 .tab-button.active {
@@ -26,10 +39,6 @@
 .tab-button:hover {
     background-color: #d0a85f;
     color: #ffffff;
-}
-.tab-content {
-    height: 600px;
-    /* overflow: hidden; */
 }
 .wg3-tabs-container {
     /* overflow: hidden; */
@@ -42,7 +51,6 @@
     align-items: center;
     height: 600px;
 }
-
 /* Responsive adjustments */
 @media only screen and (max-width: 768px) {
 .wg3-tabs-container {
@@ -52,7 +60,6 @@
     padding: 6px 12px;
     font-size: 13px;
     margin-right: 10px;
-    margin-bottom: 10px;
 }
 .tab-content {
     height: auto;
@@ -70,7 +77,6 @@
     padding: 10px 15px;
     font-size: 13px;
     margin-right: 10px;
-    margin-bottom: 15px;
 }
 }
 
