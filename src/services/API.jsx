@@ -96,6 +96,10 @@ export const fetchProjectImagesAPI = async (projectId) => {
     const amenitiesImages = media
       .filter((item) => item.fileType === 'IMAGE' && item.subType === 'AMENITIES_DESKTOP')
       .map((item) => ({ url: item.filePath }));
+
+    const constructionImages = media
+      .filter((item) => item.fileType === 'IMAGE' && item.subType === 'CONSTRUCTION_PROGRESS_DESKTOP')
+      .map((item) => ({ url: item.filePath }));
     
     const locationImage = media
       .filter((item) => item.fileType === 'IMAGE' && item.subType === 'LOCATIONS_DESKTOP')
@@ -135,6 +139,7 @@ export const fetchProjectImagesAPI = async (projectId) => {
       exteriorImages,
       interiorImages,
       amenitiesImages,
+      constructionImages,
       locationImage,
       Brochure_ENGLISH,
       Brochure_ARABIC,

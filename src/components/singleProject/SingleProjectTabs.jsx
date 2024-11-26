@@ -51,6 +51,7 @@ const SingleProjectTabs = () => {
     const [exteriorImages, setExteriorImages] = useState([]);
     const [interiorImages, setInteriorImages] = useState([]);
     const [amenitiesImages, setAmenitiesImages] = useState([]);
+    const [constructionImages, setConstructionImages] = useState([]);
     const [locationImage, setLocationImage] = useState([]);
 
     //Project Brochures
@@ -66,11 +67,12 @@ const SingleProjectTabs = () => {
     useEffect(() => {
     const fetchImages = async () => {
         try {
-        const { exteriorImages, interiorImages, amenitiesImages, locationImage, Brochure_ENGLISH, Brochure_ARABIC, Brochure_RUSSIAN, Brochure_FRENCH, Brochure_MANDARIN, floorPlans, } = await fetchProjectImagesAPI(projectId);
+        const { exteriorImages, interiorImages, amenitiesImages, constructionImages, locationImage, Brochure_ENGLISH, Brochure_ARABIC, Brochure_RUSSIAN, Brochure_FRENCH, Brochure_MANDARIN, floorPlans, } = await fetchProjectImagesAPI(projectId);
         //Images
         setExteriorImages(exteriorImages);
         setInteriorImages(interiorImages);
         setAmenitiesImages(amenitiesImages);
+        setConstructionImages(constructionImages);
         setLocationImage(locationImage);
         
         //Brochures
@@ -585,26 +587,21 @@ const SingleProjectTabs = () => {
                 )}
                 {activeTab === 'construction-progress-tab' && (
                     <Slider {...sliderSettings}>
+                        {constructionImages.length > 0 ? (
+                        constructionImages.map((image, index) => (
+                            <div className="item" key={index}>
+                            <div className="card">
+                                <img src={image.url} alt={`Exterior ${index + 1}`} />
+                            </div>
+                            </div>
+                        ))
+                        ) : (
                         <div className="item">
                             <div className="card">
-                                <img src="../assets/images/wg3/amenities/wg3-Amenities5.jpg" className="img-fluid radius-image" alt="image" />
+                            <p>No images available.</p>
                             </div>
                         </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/amenities/wg3-Amenities6.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/amenities/wg3-Amenities7.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/amenities/wg3-Amenities8.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
+                        )}
                     </Slider>
                 )}
                 {floorPlans.map((plan) =>
