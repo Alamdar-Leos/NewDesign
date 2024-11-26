@@ -49,7 +49,40 @@ export const fetchProjectImagesAPI = async (projectId) => {
       headers: { Authorization: `Bearer 5ATh6co8WUuhaWp4_$45FGFGDFK%44*&23DF` },
     });
 
+    //console.log('API Response:', response.data); // Log full API response for debugging
+
     const media = response.data.media || [];
+
+    const rawFloorPlans = response.data.floor_plans || [];
+    //console.log('Raw Floor Plans:', rawFloorPlans);
+
+    // Parse and filter floor plans
+    let floorPlans = [];
+    if (rawFloorPlans.length > 0) {
+      try {
+        // Parse the stringified JSON inside the array
+        const parsedPlans = JSON.parse(rawFloorPlans[0] || '[]');
+        //console.log('Parsed Floor Plans (Before Filter):', parsedPlans);
+
+        // Filter active plans and map images
+        floorPlans = parsedPlans
+          .filter((plan) => plan.Active)
+          .map((plan) => {
+            const images = media
+              .filter(
+                (item) =>
+                  item.fileType === 'IMAGE' &&
+                  item.subType === 'FLOOR_PLAN' &&
+                  item.Unit_Type === plan.Unit_Type
+              )
+              .map((item) => ({ url: item.filePath }));
+
+            return { ...plan, images };
+          });
+      } catch (err) {
+        console.error('Error parsing floor plans:', err.message);
+      }
+    }
 
     // Filter images based on subType
     const exteriorImages = media
@@ -86,16 +119,17 @@ export const fetchProjectImagesAPI = async (projectId) => {
       .filter((item) => item.fileType === 'PDF' && item.subType === 'BROCHURE_EN')
       .map((item) => ({ url: item.filePath }));
 
-    console.log('Exterior Images:', exteriorImages);
-    console.log('Interior Images:', interiorImages);
-    console.log('Amenities Images:', amenitiesImages);
-    console.log('Location Images:', locationImage);
+    // console.log('Exterior Images:', exteriorImages);
+    // console.log('Interior Images:', interiorImages);
+    // console.log('Amenities Images:', amenitiesImages);
+    // console.log('Location Images:', locationImage);
 
-    console.log('English Brochures:', Brochure_ENGLISH);
-    console.log('Arabic Brochures:', Brochure_ARABIC);
-    console.log('Russian Brochures:', Brochure_RUSSIAN);
-    console.log('French Brochures:', Brochur_FRENCH);
-    console.log('Madarin Brochures:', Brochure_MANDARIN);
+    // console.log('English Brochures:', Brochure_ENGLISH);
+    // console.log('Arabic Brochures:', Brochure_ARABIC);
+    // console.log('Russian Brochures:', Brochure_RUSSIAN);
+    // console.log('French Brochures:', Brochur_FRENCH);
+    // console.log('Madarin Brochures:', Brochure_MANDARIN);
+    //console.log('Floor Plans:', floorPlans);
 
     return {
       exteriorImages,
@@ -107,6 +141,7 @@ export const fetchProjectImagesAPI = async (projectId) => {
       Brochure_RUSSIAN,
       Brochur_FRENCH,
       Brochure_MANDARIN,
+      floorPlans, 
 
     };
   } catch (error) {

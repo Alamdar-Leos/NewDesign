@@ -60,32 +60,29 @@ const SingleProjectTabs = () => {
     const [Brochure_FRENCH, setBrochure_FRENCH] = useState([]);
     const [Brochure_MANDARIN, setBrochure_MANDARIN] = useState([]);
 
+    //Floor Plans
+    const [floorPlans, setFloorPlans] = useState([]);
+
     useEffect(() => {
     const fetchImages = async () => {
         try {
-        const { exteriorImages, interiorImages, amenitiesImages, locationImage, Brochure_ENGLISH, Brochure_ARABIC, Brochure_RUSSIAN, Brochure_FRENCH, Brochure_MANDARIN } = await fetchProjectImagesAPI(projectId);
+        const { exteriorImages, interiorImages, amenitiesImages, locationImage, Brochure_ENGLISH, Brochure_ARABIC, Brochure_RUSSIAN, Brochure_FRENCH, Brochure_MANDARIN, floorPlans, } = await fetchProjectImagesAPI(projectId);
+        //Images
         setExteriorImages(exteriorImages);
         setInteriorImages(interiorImages);
         setAmenitiesImages(amenitiesImages);
         setLocationImage(locationImage);
-
+        
+        //Brochures
         setBrochure_ENGLISH(Brochure_ENGLISH);
         setBrochure_ARABIC(Brochure_ARABIC);
         setBrochure_RUSSIAN(Brochure_RUSSIAN);
         setBrochure_FRENCH(Brochure_FRENCH);
         setBrochure_MANDARIN(Brochure_MANDARIN);
 
-        console.log('Set Exterior Images:', exteriorImages); // Debugging state
-        console.log('Set Interior Images:', interiorImages); // Debugging state
-        console.log('Set Amenities Images:', amenitiesImages); // Debugging state
-        console.log('Set Location Image:', locationImage); // Debugging state
-
-        console.log('Set English Brochure:', Brochure_ENGLISH); // Debugging state
-        console.log('Set Arabic Brochure:', Brochure_ARABIC); // Debugging state
-        console.log('Set Russian Brochure:', Brochure_RUSSIAN); // Debugging state
-        console.log('Set French Brochure:', Brochure_FRENCH); // Debugging state
-        console.log('Set Madarin Brochure:', Brochure_MANDARIN); // Debugging state
-
+        //Floor Plans
+        setFloorPlans(floorPlans);
+        
         } catch (error) {
         console.error(error.message);
         }
@@ -337,16 +334,6 @@ const SingleProjectTabs = () => {
                     </li>
                     {/* Amenities Tab Section End */}
 
-                    {/* Community Tab Section Start */}
-                    {/* <li>
-                        <button
-                            className={`tab-button ${activeTab === 'community-tab' ? 'active' : ''}`}
-                            onClick={() => handleTabClick('community-tab')}>
-                            Community
-                        </button>
-                    </li> */}
-                    {/* Community Tab Section End */}
-
                     {/* Location Tab Section Start */}
                     <li>
                         <button
@@ -406,64 +393,21 @@ const SingleProjectTabs = () => {
                             }}>
                             Floor Plans
                         </button>
-                        <ul className={`dropdown-menu ${activeDropdown === 'floorPlans' ? 'show' : ''}`}>
-                            <li>
-                                <button
-                                    className={`tab-button ${activeTab === 'studio-type1-tab' ? 'active' : ''}`}
-                                    onClick={() => handleTabClick('studio-type1-tab')}>
-                                    Studio Type 01
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className={`tab-button ${activeTab === 'studio-type2-tab' ? 'active' : ''}`}
-                                    onClick={() => handleTabClick('studio-type2-tab')}>
-                                    Studio Type 02
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className={`tab-button ${activeTab === '1br-type1-tab' ? 'active' : ''}`}
-                                    onClick={() => handleTabClick('1br-type1-tab')}>
-                                    1 BR Type 01
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className={`tab-button ${activeTab === '1br-type2-tab' ? 'active' : ''}`}
-                                    onClick={() => handleTabClick('1br-type2-tab')}>
-                                    1 BR Type 02
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className={`tab-button ${activeTab === '3br-type1-tab' ? 'active' : ''}`}
-                                    onClick={() => handleTabClick('3br-type1-tab')}>
-                                    3 BR Type 01
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className={`tab-button ${activeTab === '3br-type2-tab' ? 'active' : ''}`}
-                                    onClick={() => handleTabClick('3br-type2-tab')}>
-                                    3 BR Type 02
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className={`tab-button ${activeTab === '3br-type3-tab' ? 'active' : ''}`}
-                                    onClick={() => handleTabClick('3br-type3-tab')}>
-                                    3 BR Type 03
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className={`tab-button ${activeTab === '3br-type4-tab' ? 'active' : ''}`}
-                                    onClick={() => handleTabClick('3br-type4-tab')}>
-                                    3 BR Type 04
-                                </button>
-                            </li>
-                        </ul>
+                        {floorPlans.length > 0 ? (
+                                <ul className={`dropdown-menu ${activeDropdown === 'floorPlans' ? 'show' : ''}`}>
+                                    {floorPlans.map((plan, index) => (
+                                        <li key={index}>
+                                            <button
+                                                className={`tab-button ${activeTab === plan.Unit_Type ? 'active' : ''}`}
+                                                onClick={() => handleTabClick(plan.Unit_Type)}>
+                                                {plan.Unit_Type}
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p className="no-data">No floor plans available for this project.</p>
+                        )}
                     </li>
                     {/* Dropdown for Floor Plans End */}
 
@@ -607,30 +551,6 @@ const SingleProjectTabs = () => {
                         )}
                     </Slider>
                 )}
-                {/* {activeTab === 'community-tab' && (
-                    <Slider {...sliderSettings}>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/amenities/wg3-Amenities9.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/amenities/wg3-Amenities10.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/amenities/wg3-Amenities11.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/amenities/wg3-Amenities12.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                    </Slider>
-                )} */}
                 {activeTab === 'location-tab' && (
                     <>
                     {locationImage.length > 0 ? (
@@ -687,78 +607,32 @@ const SingleProjectTabs = () => {
                         </div>
                     </Slider>
                 )}
-                {activeTab === 'studio-type1-tab' && (
-                    <Slider {...sliderSettings}>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/floor-plan/wg3-studio-1.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                    </Slider>
+                {floorPlans.map((plan) =>
+                    activeTab === plan.Unit_Type ? (
+                        <Slider {...sliderSettings} key={plan.Unit_Type}>
+                            {plan.images && plan.images.length > 0 ? (
+                            plan.images.map((image, index) => (
+                                <div className="item" key={index}>
+                                <div className="card">
+                                    <img
+                                    src={image.url}
+                                    className="img-fluid radius-image"
+                                    alt={`${plan.Unit_Type} Floor Plan`}
+                                    onError={(e) => {
+                                        e.target.src = "/assets/images/default.jpg"; // Fallback image
+                                        e.target.alt = "Image not found";
+                                    }}
+                                    />
+                                </div>
+                                </div>
+                            ))
+                            ) : (
+                            <p>No images available for this floor plan.</p>
+                            )}
+                        </Slider>
+                    ) : null
                 )}
-                {activeTab === 'studio-type2-tab' && (
-                    <Slider {...sliderSettings}>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/floor-plan/wg3-studio-2.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                    </Slider>
-                )}
-                {activeTab === '1br-type1-tab' && (
-                    <Slider {...sliderSettings}>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/floor-plan/wg3-1br-01.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                    </Slider>
-                )}
-                {activeTab === '1br-type2-tab' && (
-                    <Slider {...sliderSettings}>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/floor-plan/wg3-1br-02.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                    </Slider>
-                )}
-                {activeTab === '3br-type1-tab' && (
-                    <Slider {...sliderSettings}>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/floor-plan/wg3-3br-01.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                    </Slider>
-                )}
-                {activeTab === '3br-type2-tab' && (
-                    <Slider {...sliderSettings}>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/floor-plan/wg3-3br-02.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                    </Slider>
-                )}
-                {activeTab === '3br-type3-tab' && (
-                    <Slider {...sliderSettings}>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/floor-plan/wg3-3br-03.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                    </Slider>
-                )}
-                {activeTab === '3br-type4-tab' && (
-                    <Slider {...sliderSettings}>
-                        <div className="item">
-                            <div className="card">
-                                <img src="../assets/images/wg3/floor-plan/wg3-3br-04.jpg" className="img-fluid radius-image" alt="image" />
-                            </div>
-                        </div>
-                    </Slider>
-                )}
+
                 {activeTab === 'available-units-tab' && (
                     <div className="single-bg-white">
                         {/* Search Filter for Available Units */}
