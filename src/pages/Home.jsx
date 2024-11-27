@@ -68,7 +68,7 @@ const Home = () => {
         // Apply filters if any
         const filteredProjects = sortedProjects.filter((project) => {
           return (
-            !selectedFilters.community || project.master_community === selectedFilters.community
+            !selectedFilters.community || project.Master_Community_Marketing === selectedFilters.community
           );
         });
 
