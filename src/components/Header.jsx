@@ -20,7 +20,7 @@ const Header = ({ selectedUnit }) => {
       try {
         const projects = await fetchProjectsAPI();
         const communityNames = [
-          ...new Set(projects.map((item) => item.master_community).filter(Boolean)),
+          ...new Set(projects.map((item) => item.Master_Community_Marketing).filter(Boolean)),
         ];
         setCommunities(communityNames);
       } catch (error) {
