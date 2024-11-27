@@ -3,18 +3,14 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './SingleProjectTabs.css';
-import { Link, useParams } from 'react-router-dom';
-// import Units from '../../json/Units.json';
-// import Projects from '../../json/Projects.json';
+import { useParams } from 'react-router-dom';
 import { Modal, Tab, Nav } from 'react-bootstrap/';
-import Button from 'react-bootstrap/Button';
 import PopupModal from '../modal/PopupModal.jsx';
 
 
 import { AvailableUnitsAPI } from '../../services/API.jsx';
 import {fetchProjectsAPI} from '../../services/API.jsx';
 import { fetchProjectImagesAPI } from '../../services/API.jsx';
-
 
 const SingleProjectTabs = () => {
     // Tab and Dropdown States
@@ -28,7 +24,6 @@ const SingleProjectTabs = () => {
     const [selectedUnit, setSelectedUnit] = useState(null);
     const [modalContentType, setModalContentType] = useState('brochure');
     const [modalTitle, setModalTitle] = useState('');
-    const [brochureSrc, setBrochureSrc] = useState('');
 
     // Filter States
     const [floors, setFloors] = useState([]);
@@ -215,27 +210,8 @@ const SingleProjectTabs = () => {
           console.warn('Brochure not found for language:', language);
         }
       };
-    // const showBrochureModal = (language) => {
-    //     const selectedBrochure = brochures.find(
-    //       (brochure) => brochure.language === language.toUpperCase()
-    //     );
-      
-    //     if (selectedBrochure) {
-    //       setModalTitle(`${language} Brochure`); // Show Title
-    //       setModalFile(selectedBrochure.url); // Set the file URL
-    //       showUnitModal(true);
-    //       toggleModal('brochureModal'); // Open the modal
-
-    //     } else {
-    //       console.error(`No brochure found for language: ${language}`);
-    //     }
-    // };
-
-    // const handleUnitClick = async (unit) => {
-    //     setSelectedUnit(unit);
-    //     setShowModal(true);
-    // };
-
+    
+    // For Available Units Modal Details
     const handleUnitClick = async (unitId) => {
         const fetchunit = await fetch(
           `https://backend.leosdevelopments.com/api/v1/units/unit/${unitId}?device=WEB`,
@@ -263,7 +239,6 @@ const SingleProjectTabs = () => {
         setModalContentType('unitDetails');
         toggleModal('unitDetails');
     };
-
     const closeModal = () => {
         setShowModal(false);
         setSelectedUnit(null);
@@ -299,11 +274,11 @@ const SingleProjectTabs = () => {
         return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     };
 
-    // Open brochure modal
-    const openBrochure = (brochurePath) => {
-        setBrochureSrc(brochurePath);
-        setShowModal(true);
-    };
+    // // Open brochure modal
+    // const openBrochure = (brochurePath) => {
+    //     setBrochureSrc(brochurePath);
+    //     setShowModal(true);
+    // };
 
     // Custom slider arrows
     const PrevArrow = ({ className, style, onClick }) => (

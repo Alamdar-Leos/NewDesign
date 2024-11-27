@@ -262,7 +262,8 @@ p.unit-price {
     margin-top: 10px;
 }
 .custom-modal-80.modal-dialog {
-    max-width: 80%;
+    max-width: 85%;
+
 }
 .modal-header .btn-close {
     width: 25px;

@@ -125,3 +125,59 @@ export const fetchProjectImagesAPI = async (projectId) => {
   }
 };
 
+// Fetch Payment Plans for a Project
+export const paymentPlanAPI = async (projectId) => {
+  if (!projectId) {
+    throw new Error('Project ID is required to fetch payment plans.');
+  }
+
+  try {
+    const response = await axios.get(`${BASE_URL}/projects/project/payment_plans/${projectId}`, {
+      headers: { Authorization: `Bearer 5ATh6co8WUuhaWp4_$45FGFGDFK%44*&23DF` },
+    });
+
+    const paymentPlans = response.data.data.map((plan) => {
+      let afterCompletion = [];
+      let beforeCompletion = [];
+
+      // Parse 'After_Completion' if available
+      if (plan.After_Completion?.length > 0) {
+        try {
+          afterCompletion = JSON.parse(plan.After_Completion[0] || '[]');
+        } catch (err) {
+          console.error('Error parsing After_Completion:', err.message);
+        }
+      }
+
+      // Parse 'Before_Completion' if available
+      if (plan.Before_Completion?.length > 0) {
+        try {
+          beforeCompletion = JSON.parse(plan.Before_Completion[0] || '[]');
+        } catch (err) {
+          console.error('Error parsing Before_Completion:', err.message);
+        }
+      }
+
+      return {
+        id: plan._id,
+        name: plan.Name,
+        project: plan.Project,
+        bookingDeposit: plan.Booking_Deposit,
+        onCompletion: plan.On_Completion,
+        paymentPlanMethod: plan.Payment_Plan_Method,
+        status: plan.Status,
+        afterCompletion,
+        beforeCompletion,
+      };
+    });
+
+    console.log('Payment plans are here Alamdar : ', paymentPlans);
+
+    return paymentPlans;
+  } catch (error) {
+    console.error('Error fetching payment plans:', error);
+    throw new Error('Failed to fetch payment plans.');
+  }
+};
+
+

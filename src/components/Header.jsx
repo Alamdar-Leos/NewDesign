@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { FilterContext } from '../context/FilterContext';
 import { fetchProjectsAPI } from '../services/API.jsx';
-import { FaInstagram, FaYoutube } from 'react-icons/fa';
+import { FaYoutube } from 'react-icons/fa';
 
 const Header = ({ selectedUnit }) => {
   const location = useLocation();
@@ -134,9 +134,6 @@ const Header = ({ selectedUnit }) => {
               {/* Header Right Section */}
               <div className="col-lg-4 col-md-4 col-sm-6 d-flex justify-content-center justify-content-lg-end justify-content-sm-end">
                 <div className="social-icon d-flex justify-content-center mx-5">
-                  <Link className="pt-md-2 pt-0 px-2" to="https://www.instagram.com/leosinternational/" target="_blank">
-                    <FaInstagram size={30} color="##d0a85f" />
-                  </Link>
                   <Link className="pt-md-2 pt-0 px-2" to="https://www.youtube.com/@leosinternational" target="_blank">
                     <FaYoutube size={30} color="##d0a85f" />
                   </Link>
