@@ -13497,6 +13497,7 @@ span.slick-arrow:before {
 
 
 /* Set up the layout for the page */
+
 .layout {
   display: flex;
   flex-direction: column;

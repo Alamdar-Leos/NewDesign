@@ -55,6 +55,9 @@ const SingleProjectTabs = () => {
     const [constructionImages, setConstructionImages] = useState([]);
     const [locationImage, setLocationImage] = useState([]);
 
+    //Location Url
+    const [locationUrl, setLocationUrl] = useState('');
+
     //Project Brochures
     const [brochures, setBrochures] = useState([]);
     const [modalFile, setModalFile] = useState('');
@@ -65,18 +68,19 @@ const SingleProjectTabs = () => {
     useEffect(() => {
     const fetchImages = async () => {
         try {
-        const { exteriorImages, interiorImages, amenitiesImages, constructionImages, locationImage, brochures, floorPlans, } = await fetchProjectImagesAPI(projectId);
+        const { exteriorImages, interiorImages, amenitiesImages, constructionImages, locationImage, locationUrl, brochures, floorPlans, } = await fetchProjectImagesAPI(projectId);
         //Images
         setExteriorImages(exteriorImages);
         setInteriorImages(interiorImages);
         setAmenitiesImages(amenitiesImages);
         setConstructionImages(constructionImages);
         setLocationImage(locationImage);
+        setLocationUrl(locationUrl);
         
         //Brochures
         setBrochures(brochures);
-
         //console.log('Brochures fetched:', brochures);
+
         //Floor Plans
         setFloorPlans(floorPlans);
         
@@ -508,10 +512,8 @@ const SingleProjectTabs = () => {
                     title={modalTitle}
                     contentType={modalContentType}
                     file={modalFile}
-                    />
-                    
+                    />    
                     {/* Dropdown for Brochures End */}
-
 
                     {/* Available Units Start */}
                     <li>
@@ -603,17 +605,10 @@ const SingleProjectTabs = () => {
                       </div>
                     )}
                     <div className="button-container text-center">
-                      <button
-                        className="btn btn-style btn-primary mt-3"
-                        onClick={() =>
-                          window.open(
-                            'https://www.google.com/maps/dir//Dubailand,+Weybridge+Gardens+2+-+Dubai/@25.0954867,55.2901528,12z/data=!4m8!4m7!1m0!1m5!1m1!1s0x3e5f65b33c6a5e25:0xbd33168c8138d508!2m2!1d55.3725543!2d25.0955095?entry=ttu&g_ep=EgoyMDI0MTExOS4yIKXMDSoASAFQAw%3D%3D',
-                            '_blank'
-                          )
-                        }
-                      >
+                        <button className="btn btn-style btn-primary mt-3"
+                        onClick={() => window.open(locationUrl, '_blank')}>
                         VIEW ON MAP
-                      </button>
+                        </button>
                     </div>
                   </>
                 )}

@@ -53,6 +53,9 @@ export const fetchProjectImagesAPI = async (projectId) => {
 
     const media = response.data.media || [];
     const rawFloorPlans = response.data.floor_plans || [];
+    const locationUrl = response.data.location_url || '';
+
+    console.log('Location url is here. Alamdar: ',locationUrl);
     //console.log('Raw Floor Plans:', rawFloorPlans);
 
     // Parse and filter floor plans
@@ -115,6 +118,7 @@ export const fetchProjectImagesAPI = async (projectId) => {
       amenitiesImages,
       constructionImages,
       locationImage,
+      locationUrl,
       brochures,
       floorPlans, 
     };
