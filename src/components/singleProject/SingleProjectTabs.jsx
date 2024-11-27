@@ -4,11 +4,12 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './SingleProjectTabs.css';
 import { Link, useParams } from 'react-router-dom';
-import Units from '../../json/Units.json';
-import Projects from '../../json/Projects.json';
+// import Units from '../../json/Units.json';
+// import Projects from '../../json/Projects.json';
 import { Modal, Tab, Nav } from 'react-bootstrap/';
 import Button from 'react-bootstrap/Button';
 import PopupModal from '../modal/PopupModal.jsx';
+
 
 import { AvailableUnitsAPI } from '../../services/API.jsx';
 import {fetchProjectsAPI} from '../../services/API.jsx';
@@ -55,11 +56,8 @@ const SingleProjectTabs = () => {
     const [locationImage, setLocationImage] = useState([]);
 
     //Project Brochures
-    const [Brochure_ENGLISH, setBrochure_ENGLISH] = useState([]);
-    const [Brochure_ARABIC, setBrochure_ARABIC] = useState([]);
-    const [Brochure_RUSSIAN, setBrochure_RUSSIAN] = useState([]);
-    const [Brochure_FRENCH, setBrochure_FRENCH] = useState([]);
-    const [Brochure_MANDARIN, setBrochure_MANDARIN] = useState([]);
+    const [brochures, setBrochures] = useState([]);
+    const [modalFile, setModalFile] = useState('');
 
     //Floor Plans
     const [floorPlans, setFloorPlans] = useState([]);
@@ -67,7 +65,7 @@ const SingleProjectTabs = () => {
     useEffect(() => {
     const fetchImages = async () => {
         try {
-        const { exteriorImages, interiorImages, amenitiesImages, constructionImages, locationImage, Brochure_ENGLISH, Brochure_ARABIC, Brochure_RUSSIAN, Brochure_FRENCH, Brochure_MANDARIN, floorPlans, } = await fetchProjectImagesAPI(projectId);
+        const { exteriorImages, interiorImages, amenitiesImages, constructionImages, locationImage, brochures, floorPlans, } = await fetchProjectImagesAPI(projectId);
         //Images
         setExteriorImages(exteriorImages);
         setInteriorImages(interiorImages);
@@ -76,12 +74,9 @@ const SingleProjectTabs = () => {
         setLocationImage(locationImage);
         
         //Brochures
-        setBrochure_ENGLISH(Brochure_ENGLISH);
-        setBrochure_ARABIC(Brochure_ARABIC);
-        setBrochure_RUSSIAN(Brochure_RUSSIAN);
-        setBrochure_FRENCH(Brochure_FRENCH);
-        setBrochure_MANDARIN(Brochure_MANDARIN);
+        setBrochures(brochures);
 
+        //console.log('Brochures fetched:', brochures);
         //Floor Plans
         setFloorPlans(floorPlans);
         
@@ -89,17 +84,16 @@ const SingleProjectTabs = () => {
         console.error(error.message);
         }
     };
-
     if (projectId) {
-        console.log('Fetching images for projectId:', projectId); // Debug projectId
+        //console.log('Fetching images for projectId:', projectId); // Debug projectId
         fetchImages();
     }
     }, [projectId]);
 
-    useEffect(() => {
-        const projectDetails = Projects.data.find((proj) => proj.projectId === projectId);
-        setProject(projectDetails);
-    }, [projectId]);
+    // useEffect(() => {
+    //     const projectDetails = Projects.data.find((proj) => proj.projectId === projectId);
+    //     setProject(projectDetails);
+    // }, [projectId]);
 
     // Fetch units based on the projectId
     const fetchUnits = async (projectId) => {
@@ -201,11 +195,37 @@ const SingleProjectTabs = () => {
         }));
     };
 
+    // Function of Modal for Brochures
     const showBrochureModal = (language) => {
-        setModalTitle(language);
-        setModalContentType('brochure');
-        toggleModal('brochureModal');
-    };
+        console.log('Opening brochure modal for language:', language);
+        const selectedBrochure = brochures.find(
+          (brochure) => brochure.language === language.toUpperCase()
+        );
+        if (selectedBrochure) {
+          console.log('Selected Brochure:', selectedBrochure);
+          setModalTitle(`${language} Brochure`);
+          setModalFile(selectedBrochure.url);
+          setModalContentType('brochure');
+          toggleModal('brochureModal');
+        } else {
+          console.warn('Brochure not found for language:', language);
+        }
+      };
+    // const showBrochureModal = (language) => {
+    //     const selectedBrochure = brochures.find(
+    //       (brochure) => brochure.language === language.toUpperCase()
+    //     );
+      
+    //     if (selectedBrochure) {
+    //       setModalTitle(`${language} Brochure`); // Show Title
+    //       setModalFile(selectedBrochure.url); // Set the file URL
+    //       showUnitModal(true);
+    //       toggleModal('brochureModal'); // Open the modal
+
+    //     } else {
+    //       console.error(`No brochure found for language: ${language}`);
+    //     }
+    // };
 
     // const handleUnitClick = async (unit) => {
     //     setSelectedUnit(unit);
@@ -456,30 +476,42 @@ const SingleProjectTabs = () => {
                     {/* Dropdown for Brochures Start */}
                     <li className="dropdown">
                         <button
-                            className={`tab-button dropdown-toggle ${activeDropdown === 'brochures' || modalStates['brochures'] ? 'active' : ''}`}
+                            className={`tab-button dropdown-toggle ${
+                            activeDropdown === 'brochures' || modalStates['brochures'] ? 'active' : ''
+                            }`}
                             onClick={(e) => {
-                                e.preventDefault();
-                                toggleDropdown('brochures');
+                            e.preventDefault();
+                            toggleDropdown('brochures');
                             }}>
                             Brochures
                         </button>
                         <ul className={`dropdown-menu ${activeDropdown === 'brochures' || modalStates['brochures'] ? 'show' : ''}`}>
-                            {['English', 'Arabic', 'Russian', 'French', 'Mandarin'].map((language) => (
-                                <li key={language}>
-                                    <button className="tab-button" onClick={() => showBrochureModal(language)}>
-                                        {language}
+                            {brochures.length > 0 ? (
+                                brochures.map((brochure) => (
+                                <li key={brochure.language}>
+                                    <button
+                                    className="tab-button"
+                                    onClick={() => showBrochureModal(brochure.language)}
+                                    >
+                                    {brochure.language}
                                     </button>
                                 </li>
-                            ))}
+                                ))
+                            ) : (
+                                <li>No brochures available</li>
+                            )}
                         </ul>
                     </li>
                     <PopupModal
-                        show={modalStates['brochureModal']}
-                        onHide={() => toggleModal('brochureModal')}
-                        title={modalTitle}
-                        contentType={modalContentType}
-                    />  
+                    show={modalStates['brochureModal']}
+                    onHide={() => toggleModal('brochureModal')}
+                    title={modalTitle}
+                    contentType={modalContentType}
+                    file={modalFile}
+                    />
+                    
                     {/* Dropdown for Brochures End */}
+
 
                     {/* Available Units Start */}
                     <li>

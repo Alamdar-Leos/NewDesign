@@ -2,7 +2,7 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-const PopupModel = ({ show, onHide, title, contentType, selectedUnit }) => {
+const PopupModal = ({ show, onHide, title, contentType, file }) => {
     
     const formatPrice = (price) => {
         return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -11,20 +11,19 @@ const PopupModel = ({ show, onHide, title, contentType, selectedUnit }) => {
     return (
         <Modal show={show} onHide={onHide} centered dialogClassName="custom-modal-80">
             <Modal.Header closeButton className="justify-content-center bg-color">
-                <Modal.Title className="w-100 text-center text-uppercase">
-                    {title || 'NA'}
-                </Modal.Title>
+                <Modal.Title className="w-100 text-center text-uppercase">{title || 'NA'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {contentType === 'brochure' && (
+                {contentType === 'brochure' && file && (
                     <iframe
-                        src={`../assets/brochures/WG3_${title}.pdf`}
+                        src={file}
                         width="100%"
+                        height="600px"
                         title={`${title} Brochure`}
                         style={{ border: 'none' }}
                     />
                 )}
-                {contentType === 'unitDetails' && selectedUnit && (
+                {/* {contentType === 'unitDetails' && selectedUnit && (
                     <div className="row">
                         <div className="col-12 col-md-7">
                             <div className="image-container">
@@ -79,7 +78,7 @@ const PopupModel = ({ show, onHide, title, contentType, selectedUnit }) => {
                             </div>
                         </div>
                     </div>
-                )}
+                )} */}
             </Modal.Body>
             {/* <Modal.Footer>
                 <Button variant="primary" onClick={onHide}>Close</Button>
@@ -88,5 +87,4 @@ const PopupModel = ({ show, onHide, title, contentType, selectedUnit }) => {
     );
 };
 
-export default PopupModel;
- 
+export default PopupModal;

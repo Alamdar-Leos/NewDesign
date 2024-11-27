@@ -52,7 +52,6 @@ export const fetchProjectImagesAPI = async (projectId) => {
     //console.log('API Response:', response.data); // Log full API response for debugging
 
     const media = response.data.media || [];
-
     const rawFloorPlans = response.data.floor_plans || [];
     //console.log('Raw Floor Plans:', rawFloorPlans);
 
@@ -88,66 +87,36 @@ export const fetchProjectImagesAPI = async (projectId) => {
     const exteriorImages = media
       .filter((item) => item.fileType === 'IMAGE' && item.subType === 'EXTERIOR_DESKTOP')
       .map((item) => ({ url: item.filePath }));
-
     const interiorImages = media
       .filter((item) => item.fileType === 'IMAGE' && item.subType === 'INTERIOR_DESKTOP')
       .map((item) => ({ url: item.filePath }));
-
     const amenitiesImages = media
       .filter((item) => item.fileType === 'IMAGE' && item.subType === 'AMENITIES_DESKTOP')
       .map((item) => ({ url: item.filePath }));
-
     const constructionImages = media
       .filter((item) => item.fileType === 'IMAGE' && item.subType === 'CONSTRUCTION_PROGRESS_DESKTOP')
       .map((item) => ({ url: item.filePath }));
-    
     const locationImage = media
       .filter((item) => item.fileType === 'IMAGE' && item.subType === 'LOCATIONS_DESKTOP')
       .map((item) => ({ url: item.filePath }));
+
+    // Filter and Display Brochures 
+    const brochures = media
+    .filter((item) => item.fileType === 'PDF' && item.class.startsWith('BROCHURE_'))
+    .map((item) => {
+      const language = item.class.replace('BROCHURE_', '').toUpperCase(); // Extract language from the class
+      return { language, url: item.filePath };
+    });
+    //console.log('Filtered Brochures:', brochures);
     
-
-    // Brochures Files
-    const Brochure_ENGLISH = media
-      .filter((item) => item.fileType === 'PDF' && item.subType === 'BROCHURE_EN')
-      .map((item) => ({ url: item.filePath }));
-    const Brochure_ARABIC = media
-      .filter((item) => item.fileType === 'PDF' && item.subType === 'BROCHURE_AR')
-      .map((item) => ({ url: item.filePath }));
-    const Brochure_RUSSIAN = media
-      .filter((item) => item.fileType === 'PDF' && item.subType === 'BROCHURE_RUS')
-      .map((item) => ({ url: item.filePath }));
-    const Brochur_FRENCH = media
-      .filter((item) => item.fileType === 'PDF' && item.subType === 'BROCHURE_EN')
-      .map((item) => ({ url: item.filePath }));
-    const Brochure_MANDARIN = media
-      .filter((item) => item.fileType === 'PDF' && item.subType === 'BROCHURE_EN')
-      .map((item) => ({ url: item.filePath }));
-
-    // console.log('Exterior Images:', exteriorImages);
-    // console.log('Interior Images:', interiorImages);
-    // console.log('Amenities Images:', amenitiesImages);
-    // console.log('Location Images:', locationImage);
-
-    // console.log('English Brochures:', Brochure_ENGLISH);
-    // console.log('Arabic Brochures:', Brochure_ARABIC);
-    // console.log('Russian Brochures:', Brochure_RUSSIAN);
-    // console.log('French Brochures:', Brochur_FRENCH);
-    // console.log('Madarin Brochures:', Brochure_MANDARIN);
-    //console.log('Floor Plans:', floorPlans);
-
     return {
       exteriorImages,
       interiorImages,
       amenitiesImages,
       constructionImages,
       locationImage,
-      Brochure_ENGLISH,
-      Brochure_ARABIC,
-      Brochure_RUSSIAN,
-      Brochur_FRENCH,
-      Brochure_MANDARIN,
+      brochures,
       floorPlans, 
-
     };
   } catch (error) {
     console.error('Error fetching project images:', error);
