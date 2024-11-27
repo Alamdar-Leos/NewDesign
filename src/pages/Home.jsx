@@ -156,7 +156,7 @@ const Home = () => {
                       />
                       <div className="box-content">
                         {/* <h3 className="title">{project.name}</h3> */}
-                        <span className="post">{project.master_community}</span>
+                        <span className="post">{project.Master_Community_Marketing}</span>
                       </div>
                     </div>
                   </Link>
