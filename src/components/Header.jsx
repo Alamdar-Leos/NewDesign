@@ -66,10 +66,10 @@ const Header = ({ selectedUnit }) => {
           <header id="site-header" className="fixed-top" selectedUnit={selectedUnit} >
             <div className="container">
               <div className="row">
-                <div className="col-lg-4 col-md-3 col-sm-2 d-flex justify-content-md-start justify-content-sm-end mb-3 mb-md-0">
-                  <Link to="/">
-                    <img src="/assets/images/logo.png" alt="Logo" />
-                  </Link>
+                <div className="col-lg-4 col-md-3 col-sm-2 d-flex align-items-center justify-content-md-start justify-content-sm-end mb-3 mb-md-0">
+                    <Link to="/">
+                        <img src="/assets/images/logo.png" alt="Logo" />
+                    </Link>
                 </div>
 
                 <div className="col-lg-8 col-md-9 col-sm-9 d-flex justify-content-md-end justify-content-sm-end">

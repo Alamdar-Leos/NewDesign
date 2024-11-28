@@ -82,56 +82,6 @@ const Home = () => {
   }, [selectedFilters]);
 
   return (
-    // <section className="locations-1" id="locations">
-    //   <div className="locations py-2">
-    //     <div className="container py-lg-5 py-md-4 py-2">
-    //       <div className="heading text-center mx-auto">
-    //         <h3 className="title-big heading-gold">OUR PROJECTS</h3>
-    //       </div>
-
-    //       {Object.keys(groupedProjects).length > 0 ? (
-    //         Object.keys(groupedProjects).map((community) => (
-    //           <div key={community}>
-    //             <div className="heading mx-auto mt-5">
-    //               <h4 className="title-medium heading-gold">{community}</h4>
-    //             </div>
-    //             <div className="row pt-md-1 pt-1">
-    //               {groupedProjects[community].map((project) => (
-    //                 <div key={project._id} className="col-lg-4 col-md-6 mt-4">
-
-    //                   <Link to={`/${project._id}`}>
-    //                     <div className="box16">
-    //                       <img
-    //                         className="img-fluid"
-    //                         src={getProjectImage(project.media)}
-    //                         alt={project.name || 'Project Image'}
-    //                         onError={(e) => {
-    //                           e.target.onerror = null;
-    //                           e.target.src = '/assets/images/default.jpg';
-    //                         }}
-    //                       />
-    //                       <div className="box-content">
-    //                         <h3 className="title">{project.name}</h3>
-    //                         {/* <span className="post">
-    //                           {`${project.type} - ${project.property_status || 'Available'}`}
-    //                         </span> */}
-    //                       </div>
-    //                     </div>
-    //                   </Link>
-    //                 </div>
-    //               ))}
-    //             </div>
-    //           </div>
-    //         ))
-    //       ) : (
-    //         <div className="text-center">
-    //           <h4>No Projects Available</h4>
-    //         </div>
-    //       )}
-    //     </div>
-    //   </div>
-    // </section>
-
     <section className="locations-1" id="locations">
       <div className="locations py-2">
         <div className="container py-lg-5 py-md-4 py-2">
@@ -140,7 +90,7 @@ const Home = () => {
           </div>
 
           {projects.length > 0 ? (
-            <div className="row pt-3">
+            <div className="row pt-4">
               {projects.map((project) => (
                 <div key={project._id} className="col-lg-3 col-md-6 my-4">
                   <Link to={`/${project._id}`}>

@@ -358,177 +358,197 @@ const SingleProjectTabs = () => {
             <ul className="nav nav-tabs mb-4" id="myTab" role="tablist">
                 <div className="tab-buttons">
                     {/* Exteriors Tab Section Start */}
-                    <li>
-                        <button
-                            className={`tab-button ${activeTab === 'exteriors-tab' ? 'active' : ''}`}
-                            onClick={() => handleTabClick('exteriors-tab')}>
-                            Exteriors
-                        </button>
-                    </li>
+                    {exteriorImages.length > 0 && (
+                        <li>
+                            <button
+                                className={`tab-button ${activeTab === 'exteriors-tab' ? 'active' : ''}`}
+                                onClick={() => handleTabClick('exteriors-tab')}>
+                                Exteriors
+                            </button>
+                        </li>
+                    )}
                     {/* Exteriors Tab Section End */}
 
                     {/* Interiors Tab Section Start */}
-                    <li>
-                        <button
-                            className={`tab-button ${activeTab === 'interiors-tab' ? 'active' : ''}`}
-                            onClick={() => handleTabClick('interiors-tab')}>
-                            Interiors
-                        </button>
-                    </li>
+                    {interiorImages.length > 0 && (
+                        <li>
+                            <button
+                                className={`tab-button ${activeTab === 'interiors-tab' ? 'active' : ''}`}
+                                onClick={() => handleTabClick('interiors-tab')}>
+                                Interiors
+                            </button>
+                        </li>
+                    )}
                     {/* Interiors Tab Section End */}
 
                     {/* Amenities Tab Section Start */}
-                    <li>
-                        <button
-                            className={`tab-button ${activeTab === 'amenities-tab' ? 'active' : ''}`}
-                            onClick={() => handleTabClick('amenities-tab')}>
-                            Amenities
-                        </button>
-                    </li>
+                    {amenitiesImages.length > 0 && (
+                        <li>
+                            <button
+                                className={`tab-button ${activeTab === 'amenities-tab' ? 'active' : ''}`}
+                                onClick={() => handleTabClick('amenities-tab')}>
+                                Amenities
+                            </button>
+                        </li>
+                    )}
                     {/* Amenities Tab Section End */}
 
                     {/* Location Tab Section Start */}
-                    <li>
-                        <button
-                            className={`tab-button ${activeTab === 'location-tab' ? 'active' : ''}`}
-                            onClick={() => handleTabClick('location-tab')}>
-                            Location
-                        </button>
-                    </li>
+                    {locationImage.length > 0 && (
+                        <li>
+                            <button
+                                className={`tab-button ${activeTab === 'location-tab' ? 'active' : ''}`}
+                                onClick={() => handleTabClick('location-tab')}>
+                                Location
+                            </button>
+                        </li>
+                    )}
                     {/* Location Tab Section End */}
 
                     {/* Construction Progress Tab Section Start */}
-                    <li>
-                        <button
-                            className={`tab-button ${activeTab === 'construction-progress-tab' ? 'active' : ''}`}
-                            onClick={() => handleTabClick('construction-progress-tab')}>
-                            Construction Progress
-                        </button>
-                    </li>
+                    {constructionImages.length > 0 && (
+                        <li>
+                            <button
+                                className={`tab-button ${activeTab === 'construction-progress-tab' ? 'active' : ''}`}
+                                onClick={() => handleTabClick('construction-progress-tab')}>
+                                Construction Progress
+                            </button>
+                        </li>
+                    )}
                     {/* Construction Progress Section End */}
 
                     {/* Dropdown for Floor Plans Start */}
-                    <li className="dropdown">
-                         <button
-                            className={`tab-button dropdown-toggle ${activeDropdown === 'floorPlans' ? 'active' : ''}`}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                toggleDropdown('floorPlans');
-                            }}>
-                            Floor Plans
-                        </button>
-                        {floorPlans.length > 0 ? (
-                                <ul className={`dropdown-menu ${activeDropdown === 'floorPlans' ? 'show' : ''}`}>
-                                    {floorPlans.map((plan, index) => (
-                                        <li key={index}>
-                                            <button
-                                                className={`tab-button ${activeTab === plan.Unit_Type ? 'active' : ''}`}
-                                                onClick={() => handleTabClick(plan.Unit_Type)}>
-                                                {plan.Unit_Type}
-                                            </button>
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p className="no-data">No floor plans available for this project.</p>
-                        )}
-                    </li>
+                    {floorPlans.length > 0 && (
+                        <li className="dropdown">
+                            <button
+                                className={`tab-button dropdown-toggle ${activeDropdown === 'floorPlans' ? 'active' : ''}`}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    toggleDropdown('floorPlans');
+                                }}>
+                                Floor Plans
+                            </button>
+                            {floorPlans.length > 0 ? (
+                                    <ul className={`dropdown-menu ${activeDropdown === 'floorPlans' ? 'show' : ''}`}>
+                                        {floorPlans.map((plan, index) => (
+                                            <li key={index}>
+                                                <button
+                                                    className={`tab-button ${activeTab === plan.Unit_Type ? 'active' : ''}`}
+                                                    onClick={() => handleTabClick(plan.Unit_Type)}>
+                                                    {plan.Unit_Type}
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p className="no-data">No floor plans available for this project.</p>
+                            )}
+                        </li>
+                    )}
                     {/* Dropdown for Floor Plans End */}
 
                     {/* Dropdown for Videos Start */}
-                    <li className="dropdown">
-                        <button
-                        className={`tab-button dropdown-toggle ${activeDropdown === 'videos' ? 'active' : ''}`}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            toggleDropdown('videos');
-                        }}>
-                        Videos
-                        </button>
-                        <ul className={`dropdown-menu ${activeDropdown === 'videos' ? 'show' : ''}`}>
-                        {videosUrl.length > 0 ? (
-                            videosUrl.map((video, index) => (
-                            <li key={index}>
-                                <button
-                                className="tab-button"
-                                onClick={() => {
-                                    toggleDropdown('videos');
-                                    openFullScreenModal(video.url); // Pass the video URL to the modal
-                                }}>
-                                {video.title || `Video ${index + 1}`}
-                                </button>
-                            </li>
-                            ))
-                        ) : (
-                            <li>No videos available</li>
-                        )}
-                        </ul>
-                        {isFullScreenModalOpen && selectedVideoUrl && (
-                        <div className="video-modal">
-                            <div className="video-modal-content">
-                            <span className="close-button" onClick={closeFullScreenModal}>
-                                &times;
-                            </span>
-                            <iframe
-                                width="100%"
-                                height="100%"
-                                src={selectedVideoUrl}
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen>
-                            </iframe>
-                            </div>
-                        </div>
-                        )}
-                    </li>
-                    {/* Dropdown for Videos End */}
-
-                    {/* Dropdown for Brochures Start */}
-                    <li className="dropdown">
-                        <button
-                            className={`tab-button dropdown-toggle ${
-                            activeDropdown === 'brochures' || modalStates['brochures'] ? 'active' : ''
-                            }`}
+                    {videosUrl.length > 0 && (
+                        <li className="dropdown">
+                            <button
+                            className={`tab-button dropdown-toggle ${activeDropdown === 'videos' ? 'active' : ''}`}
                             onClick={(e) => {
-                            e.preventDefault();
-                            toggleDropdown('brochures');
+                                e.preventDefault();
+                                toggleDropdown('videos');
                             }}>
-                            Brochures
-                        </button>
-                        <ul className={`dropdown-menu ${activeDropdown === 'brochures' || modalStates['brochures'] ? 'show' : ''}`}>
-                            {brochures.length > 0 ? (
-                                brochures.map((brochure) => (
-                                <li key={brochure.language}>
+                            Videos
+                            </button>
+                            <ul className={`dropdown-menu ${activeDropdown === 'videos' ? 'show' : ''}`}>
+                            {videosUrl.length > 0 ? (
+                                videosUrl.map((video, index) => (
+                                <li key={index}>
                                     <button
                                     className="tab-button"
-                                    onClick={() => showBrochureModal(brochure.language)}
-                                    >
-                                    {brochure.language}
+                                    onClick={() => {
+                                        toggleDropdown('videos');
+                                        openFullScreenModal(video.url); // Pass the video URL to the modal
+                                    }}>
+                                    {video.title || `Video ${index + 1}`}
                                     </button>
                                 </li>
                                 ))
                             ) : (
-                                <li>No brochures available</li>
+                                <li>No videos available</li>
                             )}
-                        </ul>
-                    </li>
-                    <PopupModal
-                    show={modalStates['brochureModal']}
-                    onHide={() => toggleModal('brochureModal')}
-                    title={modalTitle}
-                    contentType={modalContentType}
-                    file={modalFile}
-                    />    
+                            </ul>
+                            {isFullScreenModalOpen && selectedVideoUrl && (
+                            <div className="video-modal">
+                                <div className="video-modal-content">
+                                <span className="close-button" onClick={closeFullScreenModal}>
+                                    &times;
+                                </span>
+                                <iframe
+                                    width="100%"
+                                    height="100%"
+                                    src={selectedVideoUrl}
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen>
+                                </iframe>
+                                </div>
+                            </div>
+                            )}
+                        </li>
+                    )}
+                    {/* Dropdown for Videos End */}
+
+                    {/* Dropdown for Brochures Start */}
+                    {brochures.length > 0 && (
+                        <>
+                        <li className="dropdown">
+                            <button
+                                className={`tab-button dropdown-toggle ${
+                                activeDropdown === 'brochures' || modalStates['brochures'] ? 'active' : ''
+                                }`}
+                                onClick={(e) => {
+                                e.preventDefault();
+                                toggleDropdown('brochures');
+                                }}>
+                                Brochures
+                            </button>
+                            <ul className={`dropdown-menu ${activeDropdown === 'brochures' || modalStates['brochures'] ? 'show' : ''}`}>
+                                {brochures.length > 0 ? (
+                                    brochures.map((brochure) => (
+                                    <li key={brochure.language}>
+                                        <button
+                                        className="tab-button"
+                                        onClick={() => showBrochureModal(brochure.language)}
+                                        >
+                                        {brochure.language}
+                                        </button>
+                                    </li>
+                                    ))
+                                ) : (
+                                    <li>No brochures available</li>
+                                )}
+                            </ul>
+                        </li>
+                        <PopupModal
+                        show={modalStates['brochureModal']}
+                        onHide={() => toggleModal('brochureModal')}
+                        title={modalTitle}
+                        contentType={modalContentType}
+                        file={modalFile}
+                        />
+                        </>
+                    )}
                     {/* Dropdown for Brochures End */}
 
                     {/* Available Units Start */}
-                    <li>
-                        <button
-                        className={`tab-button ${activeTab === 'available-units-tab' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('available-units-tab')}>
-                        Available Units
-                        </button>
-                    </li>
+                    {filteredUnits.length > 0 && (
+                        <li>
+                            <button
+                            className={`tab-button ${activeTab === 'available-units-tab' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('available-units-tab')}>
+                            Available Units
+                            </button>
+                        </li>
+                    )}
                     {/* Available Units End */}
                     
                 </div>
