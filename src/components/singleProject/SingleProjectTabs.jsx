@@ -541,7 +541,7 @@ const SingleProjectTabs = () => {
                         exteriorImages.map((image, index) => (
                             <div className="item" key={index}>
                             <div className="card">
-                                <img src={image.url} alt={`Exterior ${index + 1}`} />
+                                <img src={image.url} alt={`Exterior ${index + 1}`} class="img-fluid radius-image" />
                             </div>
                             </div>
                         ))
@@ -560,7 +560,7 @@ const SingleProjectTabs = () => {
                         interiorImages.map((image, index) => (
                             <div className="item" key={index}>
                             <div className="card">
-                                <img src={image.url} alt={`Exterior ${index + 1}`} />
+                                <img src={image.url} alt={`Exterior ${index + 1}`} class="img-fluid radius-image" />
                             </div>
                             </div>
                         ))
@@ -580,7 +580,7 @@ const SingleProjectTabs = () => {
                         amenitiesImages.map((image, index) => (
                             <div className="item" key={index}>
                             <div className="card">
-                                <img src={image.url} alt={`Exterior ${index + 1}`} />
+                                <img src={image.url} alt={`Exterior ${index + 1}`} class="img-fluid radius-image" />
                             </div>
                             </div>
                         ))
@@ -599,7 +599,7 @@ const SingleProjectTabs = () => {
                       locationImage.map((image, index) => (
                         <div className="item" key={index}>
                           <div className="card">
-                            <img src={image.url} alt={`Exterior ${index + 1}`} />
+                            <img src={image.url} alt={`Exterior ${index + 1}`} class="img-fluid radius-image" />
                           </div>
                         </div>
                       ))
@@ -624,7 +624,7 @@ const SingleProjectTabs = () => {
                         constructionImages.map((image, index) => (
                             <div className="item" key={index}>
                             <div className="card">
-                                <img src={image.url} alt={`Exterior ${index + 1}`} />
+                                <img src={image.url} alt={`Exterior ${index + 1}`} class="img-fluid radius-image" />
                             </div>
                             </div>
                         ))
