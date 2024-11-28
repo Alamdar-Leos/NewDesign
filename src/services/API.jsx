@@ -37,6 +37,7 @@ export const AvailableUnitsAPI = async (projectId) => {
   }
 };
 
+// Fetch Project Media(Images, Videos and Brochures)
 export const fetchProjectMediaFilesAPI = async (projectId) => {
   if (!projectId) {
     throw new Error('Project ID is required to fetch media files.');
@@ -61,25 +62,40 @@ export const fetchProjectMediaFilesAPI = async (projectId) => {
     let floorPlans = [];
     if (rawFloorPlans.length > 0) {
       try {
-        const parsedPlans = JSON.parse(rawFloorPlans[0] || '[]');
-        floorPlans = parsedPlans
+        // Parse the outer string to extract the JSON array
+        const parsedOuter = JSON.parse(rawFloorPlans[0]);
+
+        // Ensure it's an array and process
+        floorPlans = parsedOuter
           .filter((plan) => plan.Active)
           .map((plan) => {
+            // Filter media to get the relevant images for this unit type
             const images = media
               .filter(
                 (item) =>
                   item.fileType === 'IMAGE' &&
-                  item.subType === 'FLOOR_PLAN' &&
-                  item.Unit_Type === plan.Unit_Type
+                  item.subType === 'FLOOR_PLANS_DESKTOP' &&
+                  item.class === plan.Unit_Type
               )
-              .map((item) => ({ url: item.filePath }));
+              .map((item) => ({
+                url: item.filePath, // Add the URL of the image
+                alt: `${plan.Unit_Type} Floor Plan`, // Add an alt text
+              }));
 
+            // Log each floor plan and its relevant images for debugging
+            console.log(`Floor Plan: ${plan.Unit_Type}`);
+            console.log('Images:', images);
+
+            // Return the floor plan along with the relevant images
             return { ...plan, images };
           });
       } catch (err) {
         console.error('Error parsing floor plans:', err.message);
       }
     }
+    // Log the final floorPlans with images
+    console.log('Final Floor Plans with Images:', floorPlans);
+
 
     // Filter media by type and subtype
     const filterMediaByTypeAndSubType = (fileType, subType) =>
@@ -103,8 +119,6 @@ export const fetchProjectMediaFilesAPI = async (projectId) => {
 
     if (videosUrl.length === 0) {
       console.warn('No videos found for the project.');
-    } else {
-      console.log('Video URLs is here:', videosUrl);
     }
 
     // Filter and extract brochures

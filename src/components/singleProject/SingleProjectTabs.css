@@ -6,10 +6,10 @@
 .tab-content .slick-list {
     height: 75vh;
 }
-.tab-content img {
+/* .tab-content img {
     height: 75vh;
     object-fit: cover;
-}
+} */
 .tab-buttons {
     display: flex;
     flex-wrap: wrap;

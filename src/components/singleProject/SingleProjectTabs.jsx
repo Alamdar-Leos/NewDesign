@@ -91,6 +91,7 @@ const SingleProjectTabs = () => {
 
         //Floor Plans
         setFloorPlans(floorPlans);
+       // console.log('Fetched Floor Plans:', floorPlans);
         
         } catch (error) {
         console.error(error.message);
@@ -640,23 +641,23 @@ const SingleProjectTabs = () => {
                     activeTab === plan.Unit_Type ? (
                         <Slider {...sliderSettings} key={plan.Unit_Type}>
                             {plan.images && plan.images.length > 0 ? (
-                            plan.images.map((image, index) => (
-                                <div className="item" key={index}>
-                                <div className="card">
-                                    <img
-                                    src={image.url}
-                                    className="img-fluid radius-image"
-                                    alt={`${plan.Unit_Type} Floor Plan`}
-                                    onError={(e) => {
-                                        e.target.src = "/assets/images/default.jpg"; // Fallback image
-                                        e.target.alt = "Image not found";
-                                    }}
-                                    />
-                                </div>
-                                </div>
-                            ))
+                                plan.images.map((image, index) => (
+                                    <div className="item" key={index}>
+                                        <div className="card">
+                                            <img
+                                                src={image.url}
+                                                className="img-fluid radius-image"
+                                                alt={image.alt} // Use alt text from the image object
+                                                onError={(e) => {
+                                                    e.target.src = "/assets/images/default.jpg"; // Fallback image
+                                                    e.target.alt = "Image not found";
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                ))
                             ) : (
-                            <p>No images available for this floor plan.</p>
+                                <p>No images available for this floor plan.</p>
                             )}
                         </Slider>
                     ) : null
