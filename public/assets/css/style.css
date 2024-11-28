@@ -4270,7 +4270,7 @@ a.close.disabled {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 85vh;
+  height: 90vh;
   pointer-events: auto;
   background-color: #333333;
   background-clip: padding-box;

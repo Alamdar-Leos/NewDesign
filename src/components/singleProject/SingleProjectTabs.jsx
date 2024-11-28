@@ -10,7 +10,8 @@ import PopupModal from '../modal/PopupModal.jsx';
 
 import { AvailableUnitsAPI } from '../../services/API.jsx';
 import {fetchProjectsAPI} from '../../services/API.jsx';
-import { fetchProjectImagesAPI } from '../../services/API.jsx';
+import { fetchProjectMediaFilesAPI } from '../../services/API.jsx';
+import { paymentPlanAPI } from '../../services/API.jsx';
 
 const SingleProjectTabs = () => {
     // Tab and Dropdown States
@@ -53,6 +54,11 @@ const SingleProjectTabs = () => {
     //Location Url
     const [locationUrl, setLocationUrl] = useState('');
 
+    //
+    const [videosUrl, setVideosUrl] = useState([]);
+    const [selectedVideoUrl, setSelectedVideoUrl] = useState('');
+
+
     //Project Brochures
     const [brochures, setBrochures] = useState([]);
     const [modalFile, setModalFile] = useState('');
@@ -60,10 +66,14 @@ const SingleProjectTabs = () => {
     //Floor Plans
     const [floorPlans, setFloorPlans] = useState([]);
 
+    //Payment Plan
+    const [paymentPlans, setPaymentPlans] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
     useEffect(() => {
     const fetchImages = async () => {
         try {
-        const { exteriorImages, interiorImages, amenitiesImages, constructionImages, locationImage, locationUrl, brochures, floorPlans, } = await fetchProjectImagesAPI(projectId);
+        const { exteriorImages, interiorImages, amenitiesImages, constructionImages, locationImage, locationUrl, videosUrl, brochures, floorPlans, } = await fetchProjectMediaFilesAPI(projectId);
         //Images
         setExteriorImages(exteriorImages);
         setInteriorImages(interiorImages);
@@ -71,6 +81,9 @@ const SingleProjectTabs = () => {
         setConstructionImages(constructionImages);
         setLocationImage(locationImage);
         setLocationUrl(locationUrl);
+
+        //Videos
+        setVideosUrl(videosUrl);
         
         //Brochures
         setBrochures(brochures);
@@ -253,10 +266,48 @@ const SingleProjectTabs = () => {
     const toggleDropdown = (dropdown) => {
         setActiveDropdown(prevDropdown => (prevDropdown === dropdown ? '' : dropdown));
     };
+    const openFullScreenModal = (videoUrl) => {
+        setSelectedVideoUrl(videoUrl); // Set the selected video URL
+        setIsFullScreenModalOpen(true);
+    };
+
+    const closeFullScreenModal = () => {
+    setSelectedVideoUrl(''); // Clear the selected video URL
+    setIsFullScreenModalOpen(false);
+    };
+
+    useEffect(() => {
+        const fetchPaymentPlans = async () => {
+          setIsLoading(true); // Set loading to true before API call
+          setError(null); // Clear any previous errors
+    
+          try {
+            const plans = await paymentPlanAPI(projectId);
+            setPaymentPlans(plans); // Set the fetched payment plans
+          } catch (err) {
+            console.error('Error fetching payment plans:', err.message);
+            setError('Failed to fetch payment plans.');
+          } finally {
+            setIsLoading(false); // Stop loading after API call
+          }
+        };
+    
+        if (projectId) {
+          fetchPaymentPlans();
+        }
+    }, [projectId]); // Re-fetch if the project ID changes
+
+
+    const [activePlan, setActivePlan] = useState(null); // Keeps track of the currently active accordion
+
+    // Toggles the accordion open or closed
+    const toggleAccordion = (index) => {
+        setActivePlan(activePlan === index ? null : index);
+    };
 
     // Full-screen modal functions
-    const openFullScreenModal = () => setIsFullScreenModalOpen(true);
-    const closeFullScreenModal = () => setIsFullScreenModalOpen(false);
+    // const openFullScreenModal = () => //setIsFullScreenModalOpen(true);
+    // const closeFullScreenModal = () => //setIsFullScreenModalOpen(false);
 
     // Close dropdowns when clicking outside
     useEffect(() => {
@@ -355,35 +406,6 @@ const SingleProjectTabs = () => {
                     </li>
                     {/* Construction Progress Section End */}
 
-                    {/* Dropdown for Social Media Start */}
-                    {/* <li className="dropdown">
-                         <button
-                            className={`tab-button dropdown-toggle ${activeDropdown === 'social-media' ? 'active' : ''}`}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                toggleDropdown('social-media');
-                            }}>
-                            Social Media
-                        </button>
-                        <ul className={`dropdown-menu ${activeDropdown === 'social-media' ? 'show' : ''}`}>
-                            <li>
-                                <button
-                                    className={`tab-button ${activeTab === 'facebook' ? 'active' : ''}`}
-                                    onClick={() => { window.open('https://www.facebook.com/', '_blank'); }}>
-                                    FACEBOOK
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className={`tab-button ${activeTab === 'instagram' ? 'active' : ''}`}
-                                    onClick={() => { window.open('https://www.instagram.com/', '_blank'); }}>
-                                    INSTAGRAM
-                                </button>
-                            </li>
-                        </ul>
-                    </li> */}
-                    {/* Dropdown for Social Media End */}
-
                     {/* Dropdown for Floor Plans Start */}
                     <li className="dropdown">
                          <button
@@ -415,39 +437,47 @@ const SingleProjectTabs = () => {
                     {/* Dropdown for Videos Start */}
                     <li className="dropdown">
                         <button
-                            className={`tab-button dropdown-toggle ${activeDropdown === 'videos' ? 'active' : ''}`}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                toggleDropdown('videos');
-                            }}>
-                            Videos
+                        className={`tab-button dropdown-toggle ${activeDropdown === 'videos' ? 'active' : ''}`}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            toggleDropdown('videos');
+                        }}>
+                        Videos
                         </button>
                         <ul className={`dropdown-menu ${activeDropdown === 'videos' ? 'show' : ''}`}>
-                            <li>
+                        {videosUrl.length > 0 ? (
+                            videosUrl.map((video, index) => (
+                            <li key={index}>
                                 <button
-                                    className="tab-button"
-                                    onClick={() => {
-                                        toggleDropdown('videos');
-                                        openFullScreenModal();
-                                    }}>
-                                    First Video
+                                className="tab-button"
+                                onClick={() => {
+                                    toggleDropdown('videos');
+                                    openFullScreenModal(video.url); // Pass the video URL to the modal
+                                }}>
+                                {video.title || `Video ${index + 1}`}
                                 </button>
                             </li>
+                            ))
+                        ) : (
+                            <li>No videos available</li>
+                        )}
                         </ul>
-                        {isFullScreenModalOpen && (
-                            <div className="video-modal">
-                                <div className="video-modal-content">
-                                    <span className="close-button" onClick={closeFullScreenModal}>&times;</span>
-                                    <iframe
-                                        width="100%"
-                                        height="100%"
-                                        src="https://www.youtube.com/embed/WLmXBuS1UHQ?si=XGU8ElyrZXiXpB99"
-                                        frameBorder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen>
-                                    </iframe>
-                                </div>
+                        {isFullScreenModalOpen && selectedVideoUrl && (
+                        <div className="video-modal">
+                            <div className="video-modal-content">
+                            <span className="close-button" onClick={closeFullScreenModal}>
+                                &times;
+                            </span>
+                            <iframe
+                                width="100%"
+                                height="100%"
+                                src={selectedVideoUrl}
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen>
+                            </iframe>
                             </div>
+                        </div>
                         )}
                     </li>
                     {/* Dropdown for Videos End */}
@@ -631,7 +661,6 @@ const SingleProjectTabs = () => {
                         </Slider>
                     ) : null
                 )}
-
                 {activeTab === 'available-units-tab' && (
                     <div className="single-bg-white">
                         {/* Search Filter for Available Units */}
@@ -794,29 +823,54 @@ const SingleProjectTabs = () => {
 
                                         {/* Payment Plan Tab */}
                                         <Tab.Pane eventKey="payment-plan">
-                                            {selectedUnit && (
-                                                <div className="payment-plan-container">
-                                                    <h4 className="text-center mb-4">Payment Plan</h4>
-                                                    <table className="table table-striped table-bordered">
-                                                        <tbody>
-                                                            {selectedUnit?.PaymentPlan ? (
-                                                                selectedUnit.PaymentPlan.map((plan, index) => (
-                                                                    <tr key={index}>
-                                                                        <th className="text-start">{plan.stage || `Stage ${index + 1}`}</th>
-                                                                        <td className="text-end">{plan.amount ? `AED ${formatPrice(plan.amount)}` : 'NA'}</td>
+                                        <div className="payment-plan-container">
+                                            {isLoading ? (
+                                                <p className="text-center">Loading payment plans...</p>
+                                            ) : paymentPlans.length > 0 ? (
+                                                paymentPlans.map((plan, index) => (
+                                                <div key={plan.id} className="payment-plan">
+                                                    {/* Accordion Header */}
+                                                    <div
+                                                    className="payment-plan-header"
+                                                    onClick={() => toggleAccordion(index)}
+                                                    >
+                                                    <h4>{plan.name}</h4>
+                                                    <span>{activePlan === index ? '-' : '+'}</span>
+                                                    </div>
+
+                                                    {/* Accordion Content (Only shown if active) */}
+                                                    {activePlan === index && (
+                                                        <div className="row">
+                                                            {/* Payment Plan Details */}
+                                                            <div className="col-12">
+                                                            <div className="payment-plan-detail-card">
+                                                            <table className="table table-striped table-bordered">
+                                                                <tbody>
+                                                                    {/* Payment Plan General Details */}
+                                                                    <tr>
+                                                                        <th className="text-start">Booking Deposit</th>
+                                                                        <th className="text-start">On Completion</th>
+                                                                        <th className="text-start">Reservation</th>
+                                                                        <th className="text-start">Payment Plan Method</th>
                                                                     </tr>
-                                                                ))
-                                                            ) : (
-                                                                <tr>
-                                                                    <td colSpan="2" className="text-center">
-                                                                        No Payment Plan available.
-                                                                    </td>
-                                                                </tr>
-                                                            )}
-                                                        </tbody>
-                                                    </table>
+                                                                    <tr>
+                                                                        <td className="text-end">{plan.bookingDeposit || 'NA'}%</td>
+                                                                        <td className="text-end">{plan.onCompletion || 'NA'}%</td>
+                                                                        <td className="text-end">{plan.Percentage_from_Reservation || 'NA'}</td>
+                                                                        <td className="text-end">{plan.paymentPlanMethod || 'NA'}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                 </div>
+                                                ))
+                                            ) : (
+                                                <p className="text-center">No Payment Plan available.</p>
                                             )}
+                                        </div>
                                         </Tab.Pane>
                                     </Tab.Content>
                                 </Tab.Container>

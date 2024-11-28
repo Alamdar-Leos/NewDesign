@@ -73,6 +73,9 @@ const Header = ({ selectedUnit }) => {
                 </div>
 
                 <div className="col-lg-8 col-md-9 col-sm-9 d-flex justify-content-md-end justify-content-sm-end">
+                  <Link className="pt-md-2 pt-0 mx-3 px-3" to="https://www.youtube.com/@leosinternational" target="_blank">
+                    <FaYoutube size={30} color="##d0a85f" />
+                  </Link>
                   <section className="w3l-cover-3">
                     <div className="search-icon" onClick={toggleForm}>
                       <i className="fas fa-search"></i>

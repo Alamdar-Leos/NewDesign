@@ -344,3 +344,34 @@ span.price-filter-color {
         width: calc(25% - 15px); /* Four columns on desktops */
     }
 }
+
+
+.payment-plan-container {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.payment-plan {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.payment-plan-header {
+  background-color: #d0a85f;
+  padding: 2px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+.payment-plan-header h4 {
+  margin: 0;
+  font-size: 16px;
+}
+.payment-plan-header span {
+  font-size: 30px;
+}
+.payment-plan-detail-card table th, .payment-plan-detail-card table td {
+    text-align: center;
+}

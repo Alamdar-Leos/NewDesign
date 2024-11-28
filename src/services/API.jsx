@@ -37,33 +37,31 @@ export const AvailableUnitsAPI = async (projectId) => {
   }
 };
 
-// Fetch Images for Project Single Page Tabs
-export const fetchProjectImagesAPI = async (projectId) => {
+export const fetchProjectMediaFilesAPI = async (projectId) => {
   if (!projectId) {
-    throw new Error('Project ID is required to fetch images.');
+    throw new Error('Project ID is required to fetch media files.');
   }
 
   try {
+    // Make the API call
     const response = await axios.get(`${BASE_URL}/projects/project/${projectId}`, {
       params: { device: 'WEB' },
       headers: { Authorization: `Bearer 5ATh6co8WUuhaWp4_$45FGFGDFK%44*&23DF` },
     });
 
-    //console.log('API Response:', response.data); // Log full API response for debugging
+    // Log the complete response for debugging
+    //console.log('API Response:', response.data);
 
+    // Extract media and other data
     const media = response.data.media || [];
     const rawFloorPlans = response.data.floor_plans || [];
     const locationUrl = response.data.location_url || '';
 
-    // Parse and filter floor plans
+    // Parse and process floor plans
     let floorPlans = [];
     if (rawFloorPlans.length > 0) {
       try {
-        // Parse the stringified JSON inside the array
         const parsedPlans = JSON.parse(rawFloorPlans[0] || '[]');
-        //console.log('Parsed Floor Plans (Before Filter):', parsedPlans);
-
-        // Filter active plans and map images
         floorPlans = parsedPlans
           .filter((plan) => plan.Active)
           .map((plan) => {
@@ -83,32 +81,40 @@ export const fetchProjectImagesAPI = async (projectId) => {
       }
     }
 
-    // Filter images based on subType
-    const exteriorImages = media
-      .filter((item) => item.fileType === 'IMAGE' && item.subType === 'EXTERIOR_DESKTOP')
-      .map((item) => ({ url: item.filePath }));
-    const interiorImages = media
-      .filter((item) => item.fileType === 'IMAGE' && item.subType === 'INTERIOR_DESKTOP')
-      .map((item) => ({ url: item.filePath }));
-    const amenitiesImages = media
-      .filter((item) => item.fileType === 'IMAGE' && item.subType === 'AMENITIES_DESKTOP')
-      .map((item) => ({ url: item.filePath }));
-    const constructionImages = media
-      .filter((item) => item.fileType === 'IMAGE' && item.subType === 'CONSTRUCTION_PROGRESS_DESKTOP')
-      .map((item) => ({ url: item.filePath }));
-    const locationImage = media
-      .filter((item) => item.fileType === 'IMAGE' && item.subType === 'LOCATIONS_DESKTOP')
-      .map((item) => ({ url: item.filePath }));
+    // Filter media by type and subtype
+    const filterMediaByTypeAndSubType = (fileType, subType) =>
+      media
+        .filter((item) => item.fileType === fileType && item.subType === subType)
+        .map((item) => ({ url: item.filePath }));
 
-    // Filter and Display Brochures 
+    const exteriorImages = filterMediaByTypeAndSubType('IMAGE', 'EXTERIOR_DESKTOP');
+    const interiorImages = filterMediaByTypeAndSubType('IMAGE', 'INTERIOR_DESKTOP');
+    const amenitiesImages = filterMediaByTypeAndSubType('IMAGE', 'AMENITIES_DESKTOP');
+    const constructionImages = filterMediaByTypeAndSubType('IMAGE', 'CONSTRUCTION_PROGRESS_DESKTOP');
+    const locationImage = filterMediaByTypeAndSubType('IMAGE', 'LOCATIONS_DESKTOP');
+
+    // Filter and extract videos
+    const videosUrl = media
+      .filter((item) => item.fileType === 'VIDEO' && item.subType === 'VIDEOS')
+      .map((item) => ({
+        url: item.filePath,
+        title: item.title.replace(/\.[^/.]+$/, ''), // Remove the file extension
+      }));
+
+    if (videosUrl.length === 0) {
+      console.warn('No videos found for the project.');
+    } else {
+      console.log('Video URLs is here:', videosUrl);
+    }
+
+    // Filter and extract brochures
     const brochures = media
-    .filter((item) => item.fileType === 'PDF' && item.class.startsWith('BROCHURE_'))
-    .map((item) => {
-      const language = item.class.replace('BROCHURE_', '').toUpperCase(); // Extract language from the class
-      return { language, url: item.filePath };
-    });
-    //console.log('Filtered Brochures:', brochures);
-    
+      .filter((item) => item.fileType === 'PDF' && item.class?.startsWith('BROCHURE_'))
+      .map((item) => {
+        const language = item.class.replace('BROCHURE_', '').toUpperCase();
+        return { language, url: item.filePath };
+      });
+
     return {
       exteriorImages,
       interiorImages,
@@ -116,12 +122,13 @@ export const fetchProjectImagesAPI = async (projectId) => {
       constructionImages,
       locationImage,
       locationUrl,
+      videosUrl,
       brochures,
-      floorPlans, 
+      floorPlans,
     };
   } catch (error) {
-    console.error('Error fetching project images:', error);
-    throw new Error('Failed to fetch project images.');
+    console.error('Error fetching project media files:', error.message);
+    throw new Error('Failed to fetch project media files.');
   }
 };
 
@@ -136,42 +143,38 @@ export const paymentPlanAPI = async (projectId) => {
       headers: { Authorization: `Bearer 5ATh6co8WUuhaWp4_$45FGFGDFK%44*&23DF` },
     });
 
-    const paymentPlans = response.data.data.map((plan) => {
-      let afterCompletion = [];
-      let beforeCompletion = [];
+    // Filter and structure payment plans specifically for the provided project
+    const paymentPlans = (response.data.data || [])
+      .filter((plan) => plan.Project === projectId) // Ensure the plan belongs to the specified project
+      .map((plan) => {
+        const afterCompletion = plan.After_Completion?.length
+          ? JSON.parse(plan.After_Completion[0] || '[]')
+          : [];
+        const beforeCompletion = plan.Before_Completion?.length
+          ? JSON.parse(plan.Before_Completion[0] || '[]')
+          : [];
 
-      // Parse 'After_Completion' if available
-      if (plan.After_Completion?.length > 0) {
-        try {
-          afterCompletion = JSON.parse(plan.After_Completion[0] || '[]');
-        } catch (err) {
-          console.error('Error parsing After_Completion:', err.message);
-        }
-      }
+        return {
+          id: plan._id,
+          name: plan.Name,
+          bookingDeposit: plan.Booking_Deposit,
+          onCompletion: plan.On_Completion,
+          paymentPlanMethod: plan.Payment_Plan_Method,
+          status: plan.Status,
+          stages: [
+            ...beforeCompletion.map((stage, index) => ({
+              stage: `Before Completion - Stage ${index + 1}`,
+              amount: stage.amount,
+            })),
+            ...afterCompletion.map((stage, index) => ({
+              stage: `After Completion - Stage ${index + 1}`,
+              amount: stage.amount,
+            })),
+          ],
+        };
+      });
 
-      // Parse 'Before_Completion' if available
-      if (plan.Before_Completion?.length > 0) {
-        try {
-          beforeCompletion = JSON.parse(plan.Before_Completion[0] || '[]');
-        } catch (err) {
-          console.error('Error parsing Before_Completion:', err.message);
-        }
-      }
-
-      return {
-        id: plan._id,
-        name: plan.Name,
-        project: plan.Project,
-        bookingDeposit: plan.Booking_Deposit,
-        onCompletion: plan.On_Completion,
-        paymentPlanMethod: plan.Payment_Plan_Method,
-        status: plan.Status,
-        afterCompletion,
-        beforeCompletion,
-      };
-    });
-
-    console.log('Payment plans are here Alamdar : ', paymentPlans);
+    // console.log('Filtered Payment Plans for Project:', paymentPlans);
 
     return paymentPlans;
   } catch (error) {
@@ -179,5 +182,6 @@ export const paymentPlanAPI = async (projectId) => {
     throw new Error('Failed to fetch payment plans.');
   }
 };
+
 
 
