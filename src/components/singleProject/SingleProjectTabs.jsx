@@ -51,9 +51,12 @@ const SingleProjectTabs = () => {
     const [interiorImages, setInteriorImages] = useState([]);
     const [amenitiesImages, setAmenitiesImages] = useState([]);
     const [constructionImages, setConstructionImages] = useState([]);
-    const [locationImage, setLocationImage] = useState([]);
 
-    //Location Url
+    // Master Plan Image
+    const [masterPlanImage, setMasterPlanImage] = useState([]);
+
+    // Location Image and URL
+    const [locationImage, setLocationImage] = useState([]);
     const [locationUrl, setLocationUrl] = useState('');
 
     //
@@ -75,12 +78,17 @@ const SingleProjectTabs = () => {
     useEffect(() => {
     const fetchImages = async () => {
         try {
-        const { exteriorImages, interiorImages, amenitiesImages, constructionImages, locationImage, locationUrl, videosUrl, brochures, floorPlans, } = await fetchProjectMediaFilesAPI(projectId);
+        const { exteriorImages, interiorImages, amenitiesImages, constructionImages, masterPlanImage, locationImage, locationUrl, videosUrl, brochures, floorPlans, } = await fetchProjectMediaFilesAPI(projectId);
         //Images
         setExteriorImages(exteriorImages);
         setInteriorImages(interiorImages);
         setAmenitiesImages(amenitiesImages);
         setConstructionImages(constructionImages);
+
+        //Master Plan
+        setMasterPlanImage(masterPlanImage);
+        
+        //Location
         setLocationImage(locationImage);
         setLocationUrl(locationUrl);
 
@@ -378,47 +386,47 @@ const SingleProjectTabs = () => {
     return (
         <>
         {/* Header Section Start */}
-      <header id="site-header" className="single-property">
-        <div className="container">
-          <div className="row d-flex align-items-center">
-            {/* Header Left Sidebar Section Start */}
-            <div className="col-lg-4 col-md-4 col-sm-12 d-flex justify-content-center justify-content-md-start mb-3 mb-md-0">
-              <Link to="/">
-                <img src="/assets/images/logo.png" alt="Logo" />
-              </Link>
-            </div>
-            {/* Header Left Sidebar Section End */}
-
-            {/* Header Middle Section */}
-            <div className="col-lg-4 col-md-4 col-sm-6 d-flex justify-content-center mb-3 mb-md-0">
-              <div className="post-content text-center">
-                <h1 className="title-medium heading-gold text-uppercase">{projectName}</h1>
-              </div>
-            </div>
-            {/* Header Middle Section End */}
-
-            {/* Header Right Section */}
-            <div className="col-lg-4 col-md-4 col-sm-6 d-flex justify-content-center justify-content-lg-end justify-content-sm-end">
-              <div className="social-icon d-flex justify-content-center mx-5">
-                <Link
-                  className="pt-md-2 pt-0 px-2"
-                  to="https://www.youtube.com/@leosinternational"
-                  target="_blank"
-                >
-                  <FaYoutube size={30} color="##d0a85f" />
+        <header id="site-header" className="single-property">
+            <div className="container">
+            <div className="row d-flex align-items-center">
+                {/* Header Left Sidebar Section Start */}
+                <div className="col-lg-4 col-md-4 col-sm-12 d-flex justify-content-center justify-content-md-start mb-3 mb-md-0">
+                <Link to="/">
+                    <img src="/assets/images/logo.png" alt="Logo" />
                 </Link>
-              </div>
-              <div className="post-content text-center text-md-right">
-                <Link to="/" className="btn btn-style btn-primary">
-                  <span className="fa fa-home"></span> HOME
-                </Link>
-              </div>
+                </div>
+                {/* Header Left Sidebar Section End */}
+
+                {/* Header Middle Section */}
+                <div className="col-lg-4 col-md-4 col-sm-6 d-flex justify-content-center mb-3 mb-md-0">
+                <div className="post-content text-center">
+                    <h1 className="title-medium heading-gold text-uppercase">{projectName}</h1>
+                </div>
+                </div>
+                {/* Header Middle Section End */}
+
+                {/* Header Right Section */}
+                <div className="col-lg-4 col-md-4 col-sm-6 d-flex justify-content-center justify-content-lg-end justify-content-sm-end">
+                <div className="social-icon d-flex justify-content-center mx-5">
+                    <Link
+                    className="pt-md-2 pt-0 px-2"
+                    to="https://www.youtube.com/@leosinternational"
+                    target="_blank"
+                    >
+                    <FaYoutube size={30} color="##d0a85f" />
+                    </Link>
+                </div>
+                <div className="post-content text-center text-md-right">
+                    <Link to="/" className="btn btn-style btn-primary">
+                    <span className="fa fa-home"></span> HOME
+                    </Link>
+                </div>
+                </div>
+                {/* Header Right Section End */}
             </div>
-            {/* Header Right Section End */}
-          </div>
-        </div>
-      </header>
-      {/* Header Section End */}
+            </div>
+        </header>
+        {/* Header Section End */}
 
         <div className="wg3-tabs-container">
             <ul className="nav nav-tabs mb-4" id="myTab" role="tablist">
@@ -458,6 +466,18 @@ const SingleProjectTabs = () => {
                         </li>
                     )}
                     {/* Amenities Tab Section End */}
+
+                    {/* Master Plan Tab Section Start */}
+                    {masterPlanImage.length > 0 && (
+                        <li>
+                            <button
+                                className={`tab-button ${activeTab === 'masterPlan-tab' ? 'active' : ''}`}
+                                onClick={() => handleTabClick('masterPlan-tab')}>
+                                Master Plan
+                            </button>
+                        </li>
+                    )}
+                    {/* Master Plan Tab Section End */}
 
                     {/* Location Tab Section Start */}
                     {locationImage.length > 0 && (
@@ -678,6 +698,25 @@ const SingleProjectTabs = () => {
                         </div>
                         )}
                     </Slider>
+                )}
+                {activeTab === 'masterPlan-tab' && (
+                    <>
+                    {masterPlanImage.length > 0 ? (
+                      masterPlanImage.map((image, index) => (
+                        <div className="item" key={index}>
+                          <div className="card">
+                            <img src={image.url} alt={`Exterior ${index + 1}`} class="img-fluid radius-image" />
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="item">
+                        <div className="card">
+                          <p>No images available.</p>
+                        </div>
+                      </div>
+                    )}
+                    </>
                 )}
                 {activeTab === 'location-tab' && (
                     <>

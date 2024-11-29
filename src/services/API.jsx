@@ -101,6 +101,7 @@ export const fetchProjectMediaFilesAPI = async (projectId) => {
     const interiorImages = filterMediaByTypeAndSubType('IMAGE', 'INTERIOR_DESKTOP');
     const amenitiesImages = filterMediaByTypeAndSubType('IMAGE', 'AMENITIES_DESKTOP');
     const constructionImages = filterMediaByTypeAndSubType('IMAGE', 'CONSTRUCTION_PROGRESS_DESKTOP');
+    const masterPlanImage = filterMediaByTypeAndSubType('IMAGE', 'MASTERPLAN_DESKTOP');
     const locationImage = filterMediaByTypeAndSubType('IMAGE', 'LOCATIONS_DESKTOP');
 
     // Filter and extract videos
@@ -128,6 +129,7 @@ export const fetchProjectMediaFilesAPI = async (projectId) => {
       interiorImages,
       amenitiesImages,
       constructionImages,
+      masterPlanImage,
       locationImage,
       locationUrl,
       videosUrl,
