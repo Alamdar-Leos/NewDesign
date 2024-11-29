@@ -2469,7 +2469,8 @@ input[type="button"].btn-block {
   .dropdown-item.disabled, .dropdown-item:disabled {
     color: #6c757d;
     pointer-events: none;
-    background-color: transparent; }
+    background-color: transparent; 
+  }
 
 .dropdown-menu.show {
   display: block;
@@ -11107,6 +11108,7 @@ a.title-small {
   color: #eee; 
 }
 .box16 img {
+  width: 100%;
   height: 230px;
   object-fit: cover;
 } 
@@ -13470,6 +13472,9 @@ h3.post-content-title {
 /*# sourceMappingURL=style-starter.css.map */
 
 
+img.home-partnerImage {
+  width: 280px;
+}
 .icon-box {
   margin-bottom: 20px;
 }
@@ -13497,7 +13502,6 @@ span.slick-arrow:before {
 
 
 /* Set up the layout for the page */
-
 .layout {
   display: flex;
   flex-direction: column;

@@ -86,11 +86,12 @@ const Home = () => {
       <div className="locations py-2">
         <div className="container py-lg-5 py-md-4 py-2">
           <div className="heading text-center mx-auto">
-            <h3 className="title-big heading-gold">OUR PROJECTS</h3>
+            {/* <h3 className="title-big heading-gold">OUR PROJECTS</h3> */}
+            <img src="/assets/images/brand-partner.png" className="home-partnerImage" />
           </div>
 
           {projects.length > 0 ? (
-            <div className="row pt-4">
+            <div className="row pt-5">
               {projects.map((project) => (
                 <div key={project._id} className="col-lg-3 col-md-6 my-4">
                   <Link to={`/${project._id}`}>

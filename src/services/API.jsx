@@ -82,10 +82,6 @@ export const fetchProjectMediaFilesAPI = async (projectId) => {
                 alt: `${plan.Unit_Type} Floor Plan`, // Add an alt text
               }));
 
-            // Log each floor plan and its relevant images for debugging
-            console.log(`Floor Plan: ${plan.Unit_Type}`);
-            console.log('Images:', images);
-
             // Return the floor plan along with the relevant images
             return { ...plan, images };
           });
@@ -93,8 +89,6 @@ export const fetchProjectMediaFilesAPI = async (projectId) => {
         console.error('Error parsing floor plans:', err.message);
       }
     }
-    // Log the final floorPlans with images
-    console.log('Final Floor Plans with Images:', floorPlans);
 
 
     // Filter media by type and subtype
