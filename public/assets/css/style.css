@@ -488,10 +488,19 @@ pre {
   max-height: 340px;
   overflow-y: scroll; }
 
-.container {
-  max-width: 100%;
+
+header#site-header,
+.wg3-tabs-container {
+    padding: 20px 40px;
+}
+.locations.py-2 {
   padding: 0px 40px;
 }
+.container {
+  max-width: 100%;
+  /* padding: 0px 40px; */
+}
+
 .bg-color {
   background-color: #d0a85f;
 }
@@ -9757,7 +9766,7 @@ a.more:hover {
     font-size: 32px !important;
     line-height: 40px; }
   .title-medium {
-      font-size: 28px !important;
+      font-size: 22px !important;
       line-height: 38px; }
 }
 @media (max-width: 850px) {

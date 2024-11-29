@@ -7,7 +7,7 @@ const SingleProject = () => {
   return (
     <>
     <section className="w3l-blog">
-      <div className="container pt-lg-4 pt-md-3 pt-sm-2">
+      <div className="container">
         <div className="row">
           <div className="col-lg-12">
               {/* Testing Tabs Start */}

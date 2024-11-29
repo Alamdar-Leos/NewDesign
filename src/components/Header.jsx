@@ -31,14 +31,14 @@ const Header = ({ selectedUnit }) => {
   }, []);
 
   // Fetch project title for a specific project (if projectId exists)
-  useEffect(() => {
-    if (selectedUnit?.Projects?.name) {
-      setProjectTitle(selectedUnit.Projects.name);
-      console.log(setProjectTitle);
-    } else {
-      setProjectTitle('Project Title'); // Default title if no project name exists
-    }
-  }, [selectedUnit]);
+  // useEffect(() => {
+  //   if (selectedUnit?.Projects?.name) {
+  //     setProjectTitle(selectedUnit.Projects.name);
+  //     console.log(setProjectTitle);
+  //   } else {
+  //     setProjectTitle('Project Title'); // Default title if no project name exists
+  //   }
+  // }, [selectedUnit]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -49,7 +49,6 @@ const Header = ({ selectedUnit }) => {
     setSelectedFilters(filters);
   };
 
-  
   return (
     <>
       {/* Header Home Start */}
@@ -111,48 +110,6 @@ const Header = ({ selectedUnit }) => {
         </>
       )}
       {/* Header Home End */}
-
-      {/* Header Single Property Start */}
-      {/^\/\w+/.test(location.pathname) && (
-        <header id="site-header" className="single-property">
-          <div className="container">
-            <div className="row d-flex align-items-center">
-              {/* Header Left Sidebar Section Start */}
-              <div className="col-lg-4 col-md-4 col-sm-12 d-flex justify-content-center justify-content-md-start mb-3 mb-md-0">
-                <Link to="/">
-                  <img src="/assets/images/logo.png" alt="Logo" />
-                </Link>
-              </div>
-              {/* Header Left Sidebar Section End */}
-
-              {/* Header Middle Section */}
-              <div className="col-lg-4 col-md-4 col-sm-6 d-flex justify-content-center mb-3 mb-md-0">
-                <div className="post-content text-center">
-                  {/* <h1 className="title-medium heading-gold">{projectTitle || 'Project Title Alamdar'}</h1> */}
-                  {/* Dynamically set project title */}
-                </div>
-              </div>
-              {/* Header Middle Section End */}
-
-              {/* Header Right Section */}
-              <div className="col-lg-4 col-md-4 col-sm-6 d-flex justify-content-center justify-content-lg-end justify-content-sm-end">
-                <div className="social-icon d-flex justify-content-center mx-5">
-                  <Link className="pt-md-2 pt-0 px-2" to="https://www.youtube.com/@leosinternational" target="_blank">
-                    <FaYoutube size={30} color="##d0a85f" />
-                  </Link>
-                </div>
-                <div className="post-content text-center text-md-right">
-                  <Link to="/" className="btn btn-style btn-primary">
-                    <span className="fa fa-home"></span> HOME
-                  </Link>
-                </div>
-              </div>
-              {/* Header Right Section End */}
-            </div>
-          </div>
-        </header>
-      )}
-      {/* Header Single Property End */}
     </>
   );
 };

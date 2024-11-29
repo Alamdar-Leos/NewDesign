@@ -3,10 +3,10 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './SingleProjectTabs.css';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Modal, Tab, Nav } from 'react-bootstrap/';
 import PopupModal from '../modal/PopupModal.jsx';
-
+import { FaYoutube } from 'react-icons/fa';
 
 import { AvailableUnitsAPI } from '../../services/API.jsx';
 import {fetchProjectsAPI} from '../../services/API.jsx';
@@ -43,6 +43,8 @@ const SingleProjectTabs = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [project, setProject] = useState(null);
+    // const [projectTitle, setProjectTitle] = useState('');
+    const [projectName, setProjectName] = useState("Loading...");
 
     // Project Single Page Images
     const [exteriorImages, setExteriorImages] = useState([]);
@@ -107,6 +109,27 @@ const SingleProjectTabs = () => {
     //     const projectDetails = Projects.data.find((proj) => proj.projectId === projectId);
     //     setProject(projectDetails);
     // }, [projectId]);
+
+    // Fetch Current Project Name
+    useEffect(() => {
+        const fetchProjectName = async () => {
+          try {
+            // Fetch all projects
+            const projects = await fetchProjectsAPI();
+            // Find the project matching the current ID
+            const currentProject = projects.find(
+              (project) => project._id === projectId
+            );
+            // Set the project name or fallback to "Not Found"
+            setProjectName(currentProject?.name || "Project Not Found");
+          } catch (error) {
+            console.error("Error fetching project name:", error);
+            setProjectName("Error loading project");
+          }
+        };
+    
+        fetchProjectName();
+    }, [projectId]);
 
     // Fetch units based on the projectId
     const fetchUnits = async (projectId) => {
@@ -242,9 +265,8 @@ const SingleProjectTabs = () => {
           console.log(response);
           setSelectedUnit(response);
         }
-        
         setShowModal(true);
-      };
+    };
 
 
     const showUnitModal = (unit) => {
@@ -354,6 +376,50 @@ const SingleProjectTabs = () => {
     };
 
     return (
+        <>
+        {/* Header Section Start */}
+      <header id="site-header" className="single-property">
+        <div className="container">
+          <div className="row d-flex align-items-center">
+            {/* Header Left Sidebar Section Start */}
+            <div className="col-lg-4 col-md-4 col-sm-12 d-flex justify-content-center justify-content-md-start mb-3 mb-md-0">
+              <Link to="/">
+                <img src="/assets/images/logo.png" alt="Logo" />
+              </Link>
+            </div>
+            {/* Header Left Sidebar Section End */}
+
+            {/* Header Middle Section */}
+            <div className="col-lg-4 col-md-4 col-sm-6 d-flex justify-content-center mb-3 mb-md-0">
+              <div className="post-content text-center">
+                <h1 className="title-medium heading-gold text-uppercase">{projectName}</h1>
+              </div>
+            </div>
+            {/* Header Middle Section End */}
+
+            {/* Header Right Section */}
+            <div className="col-lg-4 col-md-4 col-sm-6 d-flex justify-content-center justify-content-lg-end justify-content-sm-end">
+              <div className="social-icon d-flex justify-content-center mx-5">
+                <Link
+                  className="pt-md-2 pt-0 px-2"
+                  to="https://www.youtube.com/@leosinternational"
+                  target="_blank"
+                >
+                  <FaYoutube size={30} color="##d0a85f" />
+                </Link>
+              </div>
+              <div className="post-content text-center text-md-right">
+                <Link to="/" className="btn btn-style btn-primary">
+                  <span className="fa fa-home"></span> HOME
+                </Link>
+              </div>
+            </div>
+            {/* Header Right Section End */}
+          </div>
+        </div>
+      </header>
+      {/* Header Section End */}
+
         <div className="wg3-tabs-container">
             <ul className="nav nav-tabs mb-4" id="myTab" role="tablist">
                 <div className="tab-buttons">
@@ -902,6 +968,7 @@ const SingleProjectTabs = () => {
             
             </div>
         </div>
+        </>
     );
 };
 

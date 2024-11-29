@@ -23,38 +23,6 @@ const Home = () => {
   const [projects, setProjects] = useState([]);
   const [selectedFilters] = useContext(FilterContext);
 
-  // useEffect(() => {
-  //   const groupByCommunity = (projects) => {
-  //     return projects.reduce((acc, project) => {
-  //       const community = project.master_community || 'Unspecified Location';
-  //       acc[community] = acc[community] || [];
-  //       acc[community].push(project);
-  //       return acc;
-  //     }, {});
-  //   };
-
-  //   const fetchAndFilterProjects = async () => {
-  //     try {
-  //       const projects = await fetchProjectsAPI();
-
-  //       const sortedProjects = projects.sort(
-  //         (a, b) => new Date(b.created_at) - new Date(a.created_at)
-  //       );
-
-  //       const filteredProjects = sortedProjects.filter((project) => {
-  //         return (
-  //           !selectedFilters.community || project.master_community === selectedFilters.community
-  //         );
-  //       });
-
-  //       setGroupedProjects(groupByCommunity(filteredProjects));
-  //     } catch (error) {
-  //       console.error('Error fetching and filtering projects:', error);
-  //     }
-  //   };
-
-  //   fetchAndFilterProjects();
-  // }, [selectedFilters]);
   useEffect(() => {
     const fetchAndFilterProjects = async () => {
       try {
@@ -91,7 +59,7 @@ const Home = () => {
           </div>
 
           {projects.length > 0 ? (
-            <div className="row pt-5">
+            <div className="row pt-4">
               {projects.map((project) => (
                 <div key={project._id} className="col-lg-3 col-md-6 my-4">
                   <Link to={`/${project._id}`}>
