@@ -345,12 +345,13 @@ span.price-filter-color {
     }
 }
 
-
+.selected-floor-unit-img img {
+    width: 70% !important;
+}
 .payment-plan-container {
   width: 100%;
   margin: 0 auto;
 }
-
 .payment-plan {
   border: 1px solid #ddd;
   border-radius: 5px;

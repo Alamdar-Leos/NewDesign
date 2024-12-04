@@ -4280,7 +4280,7 @@ a.close.disabled {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 90vh;
+  height: 95vh;
   pointer-events: auto;
   background-color: #333333;
   background-clip: padding-box;
@@ -4324,7 +4324,8 @@ a.close.disabled {
   padding: 2rem; 
 }
 .modal-body iframe {
-  height: 68vh;
+  height: 80vh;
+  overflow: hidden;
 }
 
 .modal-footer {

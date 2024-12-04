@@ -129,7 +129,7 @@ const SingleProjectTabs = () => {
               (project) => project._id === projectId
             );
             // Set the project name or fallback to "Not Found"
-            setProjectName(currentProject?.name || "Project Not Found");
+            setProjectName(currentProject?.Project_Name_Marketing || "Project Not Found");
           } catch (error) {
             console.error("Error fetching project name:", error);
             setProjectName("Error loading project");
@@ -716,7 +716,7 @@ const SingleProjectTabs = () => {
                         </div>
                       </div>
                     )}
-                    </>
+                        </>
                 )}
                 {activeTab === 'location-tab' && (
                     <>
@@ -793,17 +793,19 @@ const SingleProjectTabs = () => {
                         <div className="filter-form text-center mb-5">
                             <div className="row">
                                 <div className="col-10">
-                                    <select
-                                    className="tab-button text-center"
-                                    value={selectedFloor}
-                                    onChange={(e) => setSelectedFloor(e.target.value)}>
-                                    <option value="">Select Floor</option>
-                                    {floors
-                                        .sort((a, b) => a - b)  // Sort floors in ascending order
-                                        .map((floor, index) => (
-                                        <option key={index} value={floor}>{floor}</option>
-                                    ))}
-                                    </select>
+                                    {floors.length > 0 && ( 
+                                        <select
+                                        className="tab-button text-center"
+                                        value={selectedFloor}
+                                        onChange={(e) => setSelectedFloor(e.target.value)}>
+                                        <option value="">Select Floor</option>
+                                        {floors
+                                            .sort((a, b) => a - b)  // Sort floors in ascending order
+                                            .map((floor, index) => (
+                                            <option key={index} value={floor}>{floor}</option>
+                                        ))}
+                                        </select>
+                                    )}
                                     <select
                                         className="tab-button text-center"
                                         value={selectedUnitType}
@@ -884,65 +886,69 @@ const SingleProjectTabs = () => {
                                         <Tab.Pane eventKey="unit-details">
                                             {selectedUnit && (
                                                 <div className="row">
-                                                    {/* Left Column: Image */}
-                                                    <div className="col-12 col-md-7">
-                                                        <div className="image-container">
-                                                            <img
-                                                                src={selectedUnit?.image || '../assets/images/2d-floor.png'}
-                                                                alt={selectedUnit?.Product_Name}
-                                                                className="unit-2d-img rounded"
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    {/* Right Column: Unit Details */}
-                                                    <div className="col-12 col-md-5">
+                                                    
+                                                    {/* Table: Unit Details */}
+                                                    <div className="col-12 col-md-12">
                                                         <div className="unit-detail-card">
-                                                            <h3 className="text-center mb-4">{selectedUnit?.Product_Name || 'NA'}</h3>
+                                                            {/* <h3 className="text-center mb-4">{selectedUnit?.Product_Name || 'NA'}</h3> */}
                                                             <table className="table table-striped table-bordered">
                                                                 <tbody>
-                                                                    <tr>
-                                                                        <th className="text-start">Unit Type</th>
-                                                                        <td className="text-end">{selectedUnit?.Unit_Type || 'NA'}</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th className="text-start">Availability</th>
-                                                                        <td className="text-end" style={{ color: selectedUnit?.Unit_Status ? 'green' : 'red' }}>
-                                                                            {selectedUnit?.Unit_Status ? 'Available' : 'Not Available'}
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th className="text-start">View</th>
-                                                                        <td className="text-end">{selectedUnit?.View || 'NA'}</td>
-                                                                    </tr>
-                                                                    <tr>
+                                                                    <tr className="text-center">
+                                                                        <th className="text-start">Unit Name</th>
                                                                         <th className="text-start">Floor</th>
-                                                                        <td className="text-end">{selectedUnit?.Floor || 'NA'}</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th className="text-start">Bedroom</th>
-                                                                        <td className="text-end">{selectedUnit?.Bedroom || 'NA'}</td>
-                                                                    </tr>
-                                                                    <tr>
+                                                                        <th className="text-start">Unit Type</th>
+                                                                        
+                                                                        
                                                                         <th className="text-start">Suite Area</th>
-                                                                        <td className="text-end">{selectedUnit?.Suite_Area_Sq_ft ? `${selectedUnit?.Suite_Area_Sq_ft} sq ft` : 'NA'}</td>
-                                                                    </tr>
-                                                                    <tr>
                                                                         <th className="text-start">Balcony Size</th>
-                                                                        <td className="text-end">{selectedUnit?.Balcony_Area_Sq_ft ? `${selectedUnit?.Balcony_Area_Sq_ft} sq ft` : 'NA'}</td>
-                                                                    </tr>
-                                                                    <tr>
                                                                         <th className="text-start">Total Area</th>
-                                                                        <td className="text-end">{selectedUnit?.Total_Area_Sq_ft ? `${selectedUnit?.Total_Area_Sq_ft} sq ft` : 'NA'}</td>
-                                                                    </tr>
-                                                                    <tr>
                                                                         <th className="text-start">Price</th>
+                                                                        <th className="text-start">View</th>
+                                                                    </tr>
+                                                                    <tr className="text-center">
+                                                                        <td className="text-end text-bold">{selectedUnit?.Product_Name || 'NA'}</td>
+                                                                        <td className="text-end">{selectedUnit?.Floor || 'NA'}</td>
+                                                                        <td className="text-end">{selectedUnit?.Unit_Type || 'NA'}</td>
+                                                                        <td className="text-end">{selectedUnit?.Suite_Area_Sq_ft ? `${selectedUnit?.Suite_Area_Sq_ft} sq ft` : 'NA'}</td>
+                                                                        <td className="text-end">{selectedUnit?.Balcony_Area_Sq_ft ? `${selectedUnit?.Balcony_Area_Sq_ft} sq ft` : 'NA'}</td>
+                                                                        <td className="text-end">{selectedUnit?.Total_Area_Sq_ft ? `${selectedUnit?.Total_Area_Sq_ft} sq ft` : 'NA'}</td>
                                                                         <td className="text-end">{selectedUnit?.Unit_Price ? `AED ${formatPrice(selectedUnit?.Unit_Price)}` : 'NA'}</td>
+                                                                        <td className="text-end">{selectedUnit?.View || 'NA'}</td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
                                                         </div>
                                                     </div>
+
+                                                    {/* Selected Unit Image */}
+                                                    <div className="col-12 col-md-12">
+                                                        <div className="image-container selected-floor-unit-img d-flex justify-content-center">
+                                                            {floorPlans.some((plan) => plan.Unit_Type === selectedUnit?.Unit_Type && plan.images?.length > 0) ? (
+                                                                floorPlans
+                                                                    .filter((plan) => plan.Unit_Type === selectedUnit?.Unit_Type) // Filter floor plans by Unit_Type
+                                                                    .flatMap((plan) => plan.images.slice(0, 1)) // Select only the first image of the matching floor plan
+                                                                    .map((image, index) => (
+                                                                        <img
+                                                                            key={index}
+                                                                            src={image.url}
+                                                                            alt={image.alt || "Floor Plan"} // Use alt text or fallback
+                                                                            className="unit-2d-img rounded img-fluid"
+                                                                            onError={(e) => {
+                                                                                e.target.src = "/assets/images/default.jpg"; // Fallback image
+                                                                                e.target.alt = "Image not found";
+                                                                            }}
+                                                                        />
+                                                                    ))
+                                                            ) : (
+                                                                <img
+                                                                    src={selectedUnit?.image || "../assets/images/default.jpg"}
+                                                                    alt={selectedUnit?.Product_Name || "Default Image"}
+                                                                    className="unit-2d-img rounded img-fluid"
+                                                                />
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    
                                                 </div>
                                             )}
                                         </Tab.Pane>
@@ -976,14 +982,16 @@ const SingleProjectTabs = () => {
                                                                     <tr>
                                                                         <th className="text-start">Booking Deposit</th>
                                                                         <th className="text-start">On Completion</th>
-                                                                        <th className="text-start">Reservation</th>
+                                                                        <th className="text-start">Name</th>
                                                                         <th className="text-start">Payment Plan Method</th>
+                                                                        <th className="text-start">Status</th>
                                                                     </tr>
                                                                     <tr>
                                                                         <td className="text-end">{plan.bookingDeposit || 'NA'}%</td>
                                                                         <td className="text-end">{plan.onCompletion || 'NA'}%</td>
-                                                                        <td className="text-end">{plan.Percentage_from_Reservation || 'NA'}</td>
+                                                                        <td className="text-end">{plan.Name || 'NA'}</td>
                                                                         <td className="text-end">{plan.paymentPlanMethod || 'NA'}</td>
+                                                                        <td className="text-end">{plan.status || 'NA'}</td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
