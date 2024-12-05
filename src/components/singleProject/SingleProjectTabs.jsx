@@ -720,28 +720,30 @@ const SingleProjectTabs = () => {
                 )}
                 {activeTab === 'location-tab' && (
                     <>
-                    {locationImage.length > 0 ? (
-                      locationImage.map((image, index) => (
-                        <div className="item" key={index}>
-                          <div className="card">
-                            <img src={image.url} alt={`Exterior ${index + 1}`} class="img-fluid radius-image" />
-                          </div>
+                    <Slider {...sliderSettings}>
+                        {locationImage.length > 0 ? (
+                        locationImage.map((image, index) => (
+                            <div className="item" key={index}>
+                            <div className="card">
+                                <img src={image.url} alt={`Exterior ${index + 1}`} class="img-fluid radius-image" />
+                            </div>
+                            </div>
+                        ))
+                        ) : (
+                        <div className="item">
+                            <div className="card">
+                            <p>No images available.</p>
+                            </div>
                         </div>
-                      ))
-                    ) : (
-                      <div className="item">
-                        <div className="card">
-                          <p>No images available.</p>
-                        </div>
-                      </div>
-                    )}
+                        )}
+                    </Slider>
                     <div className="button-container text-center">
                         <button className="btn btn-style btn-primary mt-3"
                         onClick={() => window.open(locationUrl, '_blank')}>
                         VIEW ON MAP
                         </button>
                     </div>
-                  </>
+                    </>
                 )}
                 {activeTab === 'construction-progress-tab' && (
                     <Slider {...sliderSettings}>

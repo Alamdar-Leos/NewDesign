@@ -346,7 +346,9 @@ span.price-filter-color {
 }
 
 .selected-floor-unit-img img {
-    width: 70% !important;
+    width: 100% !important;
+    height: auto !important;
+    padding-top: 2%;
 }
 .payment-plan-container {
   width: 100%;
