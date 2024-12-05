@@ -700,23 +700,23 @@ const SingleProjectTabs = () => {
                     </Slider>
                 )}
                 {activeTab === 'masterPlan-tab' && (
-                    <>
-                    {masterPlanImage.length > 0 ? (
-                      masterPlanImage.map((image, index) => (
-                        <div className="item" key={index}>
-                          <div className="card">
-                            <img src={image.url} alt={`Exterior ${index + 1}`} class="img-fluid radius-image" />
-                          </div>
+                    <Slider {...sliderSettings}>
+                        {masterPlanImage.length > 0 ? (
+                        masterPlanImage.map((image, index) => (
+                            <div className="item" key={index}>
+                            <div className="card">
+                                <img src={image.url} alt={`Exterior ${index + 1}`} class="img-fluid radius-image" />
+                            </div>
+                            </div>
+                        ))
+                        ) : (
+                        <div className="item">
+                            <div className="card">
+                            <p>No images available.</p>
+                            </div>
                         </div>
-                      ))
-                    ) : (
-                      <div className="item">
-                        <div className="card">
-                          <p>No images available.</p>
-                        </div>
-                      </div>
-                    )}
-                        </>
+                        )}
+                    </Slider>
                 )}
                 {activeTab === 'location-tab' && (
                     <>
@@ -897,8 +897,6 @@ const SingleProjectTabs = () => {
                                                                         <th className="text-start">Unit Name</th>
                                                                         <th className="text-start">Floor</th>
                                                                         <th className="text-start">Unit Type</th>
-                                                                        
-                                                                        
                                                                         <th className="text-start">Suite Area</th>
                                                                         <th className="text-start">Balcony Size</th>
                                                                         <th className="text-start">Total Area</th>
@@ -906,13 +904,13 @@ const SingleProjectTabs = () => {
                                                                         <th className="text-start">View</th>
                                                                     </tr>
                                                                     <tr className="text-center">
-                                                                        <td className="text-end text-bold">{selectedUnit?.Product_Name || 'NA'}</td>
+                                                                        <td className="text-end font-weight-bold">{selectedUnit?.Product_Name || 'NA'}</td>
                                                                         <td className="text-end">{selectedUnit?.Floor || 'NA'}</td>
                                                                         <td className="text-end">{selectedUnit?.Unit_Type || 'NA'}</td>
-                                                                        <td className="text-end">{selectedUnit?.Suite_Area_Sq_ft ? `${selectedUnit?.Suite_Area_Sq_ft} sq ft` : 'NA'}</td>
+                                                                        <td className="text-end">{selectedUnit?.Suite_Area_Sq_M ? `${selectedUnit?.Suite_Area_Sq_M} sq ft` : 'NA'}</td>
                                                                         <td className="text-end">{selectedUnit?.Balcony_Area_Sq_ft ? `${selectedUnit?.Balcony_Area_Sq_ft} sq ft` : 'NA'}</td>
                                                                         <td className="text-end">{selectedUnit?.Total_Area_Sq_ft ? `${selectedUnit?.Total_Area_Sq_ft} sq ft` : 'NA'}</td>
-                                                                        <td className="text-end">{selectedUnit?.Unit_Price ? `AED ${formatPrice(selectedUnit?.Unit_Price)}` : 'NA'}</td>
+                                                                        <td className="text-end font-weight-bold">{selectedUnit?.Unit_Price ? `AED ${formatPrice(selectedUnit?.Unit_Price)}` : 'NA'}</td>
                                                                         <td className="text-end">{selectedUnit?.View || 'NA'}</td>
                                                                     </tr>
                                                                 </tbody>
@@ -984,14 +982,14 @@ const SingleProjectTabs = () => {
                                                                         <th className="text-start">On Completion</th>
                                                                         <th className="text-start">Name</th>
                                                                         <th className="text-start">Payment Plan Method</th>
-                                                                        <th className="text-start">Status</th>
+                                                                        <th className="text-start">Before Complition</th>
                                                                     </tr>
                                                                     <tr>
                                                                         <td className="text-end">{plan.bookingDeposit || 'NA'}%</td>
                                                                         <td className="text-end">{plan.onCompletion || 'NA'}%</td>
                                                                         <td className="text-end">{plan.Name || 'NA'}</td>
                                                                         <td className="text-end">{plan.paymentPlanMethod || 'NA'}</td>
-                                                                        <td className="text-end">{plan.status || 'NA'}</td>
+                                                                        <td className="text-end">{plan.beforeCompletion || 'NA'}</td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
