@@ -907,7 +907,7 @@ const SingleProjectTabs = () => {
                                                                         <td className="text-end font-weight-bold">{selectedUnit?.Product_Name || 'NA'}</td>
                                                                         <td className="text-end">{selectedUnit?.Floor || 'NA'}</td>
                                                                         <td className="text-end">{selectedUnit?.Unit_Type || 'NA'}</td>
-                                                                        <td className="text-end">{selectedUnit?.Suite_Area_Sq_M ? `${selectedUnit?.Suite_Area_Sq_M} sq ft` : 'NA'}</td>
+                                                                        <td className="text-end">{selectedUnit?.Internal_Area_Sq_ft ? `${selectedUnit?.Internal_Area_Sq_ft} sq ft` : 'NA'}</td>
                                                                         <td className="text-end">{selectedUnit?.Balcony_Area_Sq_ft ? `${selectedUnit?.Balcony_Area_Sq_ft} sq ft` : 'NA'}</td>
                                                                         <td className="text-end">{selectedUnit?.Total_Area_Sq_ft ? `${selectedUnit?.Total_Area_Sq_ft} sq ft` : 'NA'}</td>
                                                                         <td className="text-end font-weight-bold">{selectedUnit?.Unit_Price ? `AED ${formatPrice(selectedUnit?.Unit_Price)}` : 'NA'}</td>
