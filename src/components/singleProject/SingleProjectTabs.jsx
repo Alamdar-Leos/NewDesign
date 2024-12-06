@@ -720,27 +720,29 @@ const SingleProjectTabs = () => {
                 )}
                 {activeTab === 'location-tab' && (
                     <>
-                    <Slider {...sliderSettings}>
-                        {locationImage.length > 0 ? (
-                        locationImage.map((image, index) => (
-                            <div className="item" key={index}>
-                            <div className="card">
-                                <img src={image.url} alt={`Exterior ${index + 1}`} class="img-fluid radius-image" />
+                    <div className="slider-container position-relative">
+                        <Slider {...sliderSettings}>
+                            {locationImage.length > 0 ? (
+                            locationImage.map((image, index) => (
+                                <div className="item" key={index}>
+                                <div className="card position-relative">
+                                    <img src={image.url} alt={`Exterior ${index + 1}`} className="img-fluid radius-image" />
+                                </div>
+                                </div>
+                            ))
+                            ) : (
+                            <div className="item">
+                                <div className="card">
+                                <p>No images available.</p>
+                                </div>
                             </div>
-                            </div>
-                        ))
-                        ) : (
-                        <div className="item">
-                            <div className="card">
-                            <p>No images available.</p>
-                            </div>
-                        </div>
-                        )}
-                    </Slider>
-                    <div className="button-container text-center">
-                        <button className="btn btn-style btn-primary mt-3"
-                        onClick={() => window.open(locationUrl, '_blank')}>
-                        VIEW ON MAP
+                            )}
+                        </Slider>
+                        {/* VIEW ON MAP Button */}
+                        <button
+                            className="btn btn-style btn-primary view-on-map-button"
+                            onClick={() => window.open(locationUrl, '_blank')}>
+                            VIEW ON MAP
                         </button>
                     </div>
                     </>
@@ -922,7 +924,7 @@ const SingleProjectTabs = () => {
 
                                                     {/* Selected Unit Image */}
                                                     <div className="col-12 col-md-12">
-                                                        <div className="image-container selected-floor-unit-img d-flex justify-content-center">
+                                                        <div className="image-container selected-floor-unit-img">
                                                             {floorPlans.some((plan) => plan.Unit_Type === selectedUnit?.Unit_Type && plan.images?.length > 0) ? (
                                                                 floorPlans
                                                                     .filter((plan) => plan.Unit_Type === selectedUnit?.Unit_Type) // Filter floor plans by Unit_Type

@@ -314,7 +314,7 @@ span.price-filter-color {
 }
 .unit-2d-img.rounded {
     width: 85%;
-    height: 530px;
+    height: 580px;
     object-fit: contain;
 }
 
@@ -347,7 +347,6 @@ span.price-filter-color {
 
 .selected-floor-unit-img img {
     width: 100% !important;
-    height: auto !important;
     padding-top: 2%;
 }
 .payment-plan-container {
@@ -377,4 +376,14 @@ span.price-filter-color {
 }
 .payment-plan-detail-card table th, .payment-plan-detail-card table td {
     text-align: center;
+}
+
+.slider-container {
+    position: relative;
+}  
+.view-on-map-button {
+    position: absolute;
+    top: 10px; /* Adjust as needed */
+    right: 10px; /* Adjust as needed */
+    /* z-index: 10; Ensure it stays above the images */
 }
