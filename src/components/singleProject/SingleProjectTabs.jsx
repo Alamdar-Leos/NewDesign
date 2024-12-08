@@ -13,6 +13,12 @@ import {fetchProjectsAPI} from '../../services/API.jsx';
 import { fetchProjectMediaFilesAPI } from '../../services/API.jsx';
 import { paymentPlanAPI } from '../../services/API.jsx';
 
+const calculatePercentageAmount = (percentage, unitPrice) => {
+    if (!percentage || !unitPrice) return "NA";
+    const amount = unitPrice * (parseFloat(percentage) / 100);
+    return amount.toFixed(2);
+};
+
 const SingleProjectTabs = () => {
     // Tab and Dropdown States
     const [activeTab, setActiveTab] = useState('exteriors-tab');
@@ -74,6 +80,10 @@ const SingleProjectTabs = () => {
     //Payment Plan
     const [paymentPlans, setPaymentPlans] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+
+    // State to store the unit price
+    const [unitPrice, setUnitPrice] = useState(null);
+
 
     useEffect(() => {
     const fetchImages = async () => {
@@ -254,28 +264,36 @@ const SingleProjectTabs = () => {
         } else {
           console.warn('Brochure not found for language:', language);
         }
-      };
-    
-    // For Available Units Modal Details
-    const handleUnitClick = async (unitId) => {
-        const fetchunit = await fetch(
-          `https://backend.leosdevelopments.com/api/v1/units/unit/${unitId}?device=WEB`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer 5ATh6co8WUuhaWp4_$45FGFGDFK%44*&23DF`,
-            },
-          }
-        );
-       console.log(fetchunit);
-        if (fetchunit.ok) {
-          const response = await fetchunit.json();
-          console.log(response);
-          setSelectedUnit(response);
-        }
-        setShowModal(true);
     };
 
+    // For Available Units Modal Details
+    const handleUnitClick = async (unitId) => {
+        try {
+        const fetchunit = await fetch(
+            `https://backend.leosdevelopments.com/api/v1/units/unit/${unitId}?device=WEB`,
+            {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer 5ATh6co8WUuhaWp4_$45FGFGDFK%44*&23DF`,
+            },
+            }
+        );
+    
+        if (fetchunit.ok) {
+            const response = await fetchunit.json();
+            //console.log(response);
+            setSelectedUnit(response);
+    
+            // Ensure unit price is retrieved and stored in state
+            const price = response?.Unit_Price || null; // Use `Unit_Price` from API response
+            setUnitPrice(price);
+        }
+    
+        setShowModal(true);
+        } catch (error) {
+        console.error("Error fetching unit details:", error);
+        }
+    };
 
     const showUnitModal = (unit) => {
         setSelectedUnit(unit);
@@ -306,7 +324,22 @@ const SingleProjectTabs = () => {
     setSelectedVideoUrl(''); // Clear the selected video URL
     setIsFullScreenModalOpen(false);
     };
-
+    
+    // Function to calculate percentage-based amounts
+    const calculatePercentageAmount = (percentage) => {
+        if (!unitPrice) {
+          console.warn("Unit price is not available");
+          return "N/A";
+        }
+      
+        // console.log("Unit Price:", unitPrice);
+        // console.log("Percentage:", percentage);
+      
+        const amount = unitPrice * (parseFloat(percentage) / 100);
+        return amount.toFixed(2);
+    };
+      
+    // For Displaying the Payment Plans 
     useEffect(() => {
         const fetchPaymentPlans = async () => {
           setIsLoading(true); // Set loading to true before API call
@@ -327,8 +360,7 @@ const SingleProjectTabs = () => {
           fetchPaymentPlans();
         }
     }, [projectId]); // Re-fetch if the project ID changes
-
-
+    
     const [activePlan, setActivePlan] = useState(null); // Keeps track of the currently active accordion
 
     // Toggles the accordion open or closed
@@ -351,16 +383,9 @@ const SingleProjectTabs = () => {
         return () => document.removeEventListener('click', handleClickOutside);
     }, []);
 
-
     const formatPrice = (price) => {
         return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     };
-
-    // // Open brochure modal
-    // const openBrochure = (brochurePath) => {
-    //     setBrochureSrc(brochurePath);
-    //     setShowModal(true);
-    // };
 
     // Custom slider arrows
     const PrevArrow = ({ className, style, onClick }) => (
@@ -955,59 +980,123 @@ const SingleProjectTabs = () => {
                                             )}
                                         </Tab.Pane>
 
+
                                         {/* Payment Plan Tab */}
                                         <Tab.Pane eventKey="payment-plan">
-                                        <div className="payment-plan-container">
-                                            {isLoading ? (
-                                                <p className="text-center">Loading payment plans...</p>
-                                            ) : paymentPlans.length > 0 ? (
-                                                paymentPlans.map((plan, index) => (
-                                                <div key={plan.id} className="payment-plan">
-                                                    {/* Accordion Header */}
-                                                    <div
-                                                    className="payment-plan-header"
-                                                    onClick={() => toggleAccordion(index)}
-                                                    >
-                                                    <h4>{plan.name}</h4>
-                                                    <span>{activePlan === index ? '-' : '+'}</span>
-                                                    </div>
+                                            <div className="payment-plan-container">
+                                                {isLoading ? (
+                                                    <p className="text-center">Loading payment plans...</p>
+                                                ) : error ? (
+                                                    <p className="text-center text-danger">{error}</p>
+                                                ) : paymentPlans.length > 0 ? (
+                                                    paymentPlans.map((plan, index) => (
+                                                        <div key={plan.id} className="payment-plan">
+                                                            {/* Accordion Header */}
+                                                            <div
+                                                                className="payment-plan-header"
+                                                                onClick={() => toggleAccordion(index)}
+                                                            >
+                                                                <h4>{plan.name}</h4>
+                                                                <span>{activePlan === index ? "-" : "+"}</span>
+                                                            </div>
 
-                                                    {/* Accordion Content (Only shown if active) */}
-                                                    {activePlan === index && (
-                                                        <div className="row">
-                                                            {/* Payment Plan Details */}
-                                                            <div className="col-12">
-                                                            <div className="payment-plan-detail-card">
-                                                            <table className="table table-striped table-bordered">
-                                                                <tbody>
-                                                                    {/* Payment Plan General Details */}
-                                                                    <tr>
-                                                                        <th className="text-start">Booking Deposit</th>
-                                                                        <th className="text-start">On Completion</th>
-                                                                        <th className="text-start">Name</th>
-                                                                        <th className="text-start">Payment Plan Method</th>
-                                                                        <th className="text-start">Before Complition</th>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td className="text-end">{plan.bookingDeposit || 'NA'}%</td>
-                                                                        <td className="text-end">{plan.onCompletion || 'NA'}%</td>
-                                                                        <td className="text-end">{plan.Name || 'NA'}</td>
-                                                                        <td className="text-end">{plan.paymentPlanMethod || 'NA'}</td>
-                                                                        <td className="text-end">{plan.beforeCompletion || 'NA'}</td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                            </div>
-                                                            </div>
+                                                            {/* Accordion Content (Only shown if active) */}
+                                                            {activePlan === index && (
+                                                                <div className="row">
+                                                                    {/* Payment Plan Details */}
+                                                                    <div className="col-12">
+                                                                        <div className="payment-plan-detail-card">
+                                                                            <table className="table table-striped table-bordered">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <th>Booking Deposit</th>
+                                                                                        <th>On Completion</th>
+                                                                                        <th>Payment Plan Method</th>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            {plan.bookingDeposit || "NA"}% (
+                                                                                            AED {formatPrice(calculatePercentageAmount(plan.bookingDeposit || 0))}
+                                                                                            )
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            {plan.onCompletion || "NA"}% (
+                                                                                            AED {formatPrice(calculatePercentageAmount(plan.onCompletion || 0))}
+                                                                                            )
+                                                                                        </td>
+                                                                                        <td>{plan.paymentPlanMethod || "NA"}</td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                            <h5>Before Completion</h5>
+                                                                            {plan.beforeCompletion.length > 0 ? (
+                                                                                <table className="table table-striped table-bordered">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th>#</th>
+                                                                                            <th>Months from Reservation</th>
+                                                                                            <th>Percentage from Reservation</th>
+                                                                                            <th>Price</th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        {plan.beforeCompletion.map((stage, idx) => (
+                                                                                            <tr key={idx}>
+                                                                                                <td>{idx + 1}</td>
+                                                                                                <td>
+                                                                                                    {stage.No_of_Months_from_Reservation} Months
+                                                                                                </td>
+                                                                                                <td>{stage.Percentage_from_Reservation}%</td>
+                                                                                                <td>
+                                                                                                    AED {formatPrice(calculatePercentageAmount(stage.Percentage_from_Reservation))}
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        ))}
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            ) : (
+                                                                                <p>No stages before completion.</p>
+                                                                            )}
+
+                                                                            <h5>After Completion</h5>
+                                                                            {plan.afterCompletion.length > 0 ? (
+                                        <table className="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Months from Completion</th>
+                                                    <th>Percentage from Completion</th>
+                                                    <th>Price</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {plan.afterCompletion.map((stage, idx) => (
+                                                    <tr key={idx}>
+                                                        <td>{idx + 1}</td>
+                                                        <td>{stage.No_of_Months_after_Completion || "N/A"} Months</td>
+                                                        <td>{stage.Percentage_after_Completion || "N/A"}%</td>
+                                                        <td>
+                                                            AED {formatPrice(calculatePercentageAmount(stage.Percentage_after_Completion || 0))}
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                                                            ) : (
+                                                                                <p>No stages after completion.</p>
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            )}
                                                         </div>
-                                                    )}
-                                                </div>
-                                                ))
-                                            ) : (
-                                                <p className="text-center">No Payment Plan available.</p>
-                                            )}
-                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <p className="text-center">No Payment Plan available.</p>
+                                                )}
+                                            </div>
                                         </Tab.Pane>
+
                                     </Tab.Content>
                                 </Tab.Container>
                             </Modal.Body>

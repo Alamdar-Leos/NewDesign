@@ -387,3 +387,13 @@ span.price-filter-color {
     top: 10px; /* Adjust as needed */
     right: 10px; /* Adjust as needed */
 }
+.payment-plan-detail-card h5 {
+    text-align: center;
+    text-transform: uppercase;
+    background: #d0a85f;
+    padding: 10px;
+}
+.payment-plan-container .payment-plan-detail-card {
+    height: 500px;
+    overflow: scroll;
+}

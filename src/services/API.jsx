@@ -142,26 +142,30 @@ export const fetchProjectMediaFilesAPI = async (projectId) => {
   }
 };
 
+
 // Fetch Payment Plans for a Project
 export const paymentPlanAPI = async (projectId) => {
   if (!projectId) {
-    throw new Error('Project ID is required to fetch payment plans.');
+    throw new Error("Project ID is required to fetch payment plans.");
   }
 
   try {
-    const response = await axios.get(`${BASE_URL}/projects/project/payment_plans/${projectId}`, {
-      headers: { Authorization: `Bearer 5ATh6co8WUuhaWp4_$45FGFGDFK%44*&23DF` },
-    });
+    const response = await axios.get(
+      `${BASE_URL}/projects/project/payment_plans/${projectId}`,
+      {
+        headers: { Authorization: `Bearer 5ATh6co8WUuhaWp4_$45FGFGDFK%44*&23DF` },
+      }
+    );
 
-    // Filter and structure payment plans specifically for the provided project
     const paymentPlans = (response.data.data || [])
-      .filter((plan) => plan.Project === projectId) // Ensure the plan belongs to the specified project
+      .filter((plan) => plan.Project === projectId)
       .map((plan) => {
+        // Parse afterCompletion and beforeCompletion fields
         const afterCompletion = plan.After_Completion?.length
-          ? JSON.parse(plan.After_Completion[0] || '[]')
+          ? JSON.parse(plan.After_Completion[0] || "[]")
           : [];
         const beforeCompletion = plan.Before_Completion?.length
-          ? JSON.parse(plan.Before_Completion[0] || '[]')
+          ? JSON.parse(plan.Before_Completion[0] || "[]")
           : [];
 
         return {
@@ -170,28 +174,14 @@ export const paymentPlanAPI = async (projectId) => {
           bookingDeposit: plan.Booking_Deposit,
           onCompletion: plan.On_Completion,
           paymentPlanMethod: plan.Payment_Plan_Method,
-          status: plan.Status,
-          stages: [
-            ...beforeCompletion.map((stage, index) => ({
-              stage: `Before Completion - Stage ${index + 1}`,
-              amount: stage.amount,
-            })),
-            ...afterCompletion.map((stage, index) => ({
-              stage: `After Completion - Stage ${index + 1}`,
-              amount: stage.amount,
-            })),
-          ],
+          beforeCompletion,
+          afterCompletion,
         };
       });
 
-    // console.log('Filtered Payment Plans for Project:', paymentPlans);
-
     return paymentPlans;
   } catch (error) {
-    console.error('Error fetching payment plans:', error);
-    throw new Error('Failed to fetch payment plans.');
+    console.error("Error fetching payment plans:", error);
+    throw new Error("Failed to fetch payment plans.");
   }
 };
-
-
-
