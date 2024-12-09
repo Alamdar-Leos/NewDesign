@@ -1058,33 +1058,35 @@ const SingleProjectTabs = () => {
                                                                                 <p>No stages before completion.</p>
                                                                             )}
 
-                                                                            <h5>After Completion</h5>
-                                                                            {plan.afterCompletion.length > 0 ? (
-                                        <table className="table table-striped table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Months from Completion</th>
-                                                    <th>Percentage from Completion</th>
-                                                    <th>Price</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {plan.afterCompletion.map((stage, idx) => (
-                                                    <tr key={idx}>
-                                                        <td>{idx + 1}</td>
-                                                        <td>{stage.No_of_Months_after_Completion || "N/A"} Months</td>
-                                                        <td>{stage.Percentage_after_Completion || "N/A"}%</td>
-                                                        <td>
-                                                            AED {formatPrice(calculatePercentageAmount(stage.Percentage_after_Completion || 0))}
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                                                            ) : (
-                                                                                <p>No stages after completion.</p>
+                                                                            
+                                                                            {plan.afterCompletion.length > 0 && (
+                                                                                <>
+                                                                                <h5>After Completion</h5>
+                                                                                <table className="table table-striped table-bordered">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th>#</th>
+                                                                                            <th>Months from Completion</th>
+                                                                                            <th>Percentage from Completion</th>
+                                                                                            <th>Price</th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        {plan.afterCompletion.map((stage, idx) => (
+                                                                                            <tr key={idx}>
+                                                                                                <td>{idx + 1}</td>
+                                                                                                <td>{stage.No_of_Months_after_Completion || "N/A"} Months</td>
+                                                                                                <td>{stage.Percentage_after_Completion || "N/A"}%</td>
+                                                                                                <td>
+                                                                                                    AED {formatPrice(calculatePercentageAmount(stage.Percentage_after_Completion || 0))}
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        ))}
+                                                                                    </tbody>
+                                                                                </table>
+                                                                                </>
                                                                             )}
+
                                                                         </div>
                                                                     </div>
                                                                 </div>
