@@ -8,14 +8,10 @@ const SingleProject = () => {
     <>
     <section className="w3l-blog">
       <div className="container">
-        <div className="row">
-          <div className="col-lg-12">
               {/* Testing Tabs Start */}
               <SingleProjectTabs />
               {/* Testing Tabs End */}
-          </div>
         </div>
-      </div>
     </section>
     </>
   );
