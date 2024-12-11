@@ -521,6 +521,13 @@ header#site-header,
   .header-social-icon a {
     margin-top: -50px;
   }
+  .tab-content .slick-list {
+    height: auto !important;
+  }
+  .img-fluid {
+    height: 300px;
+    object-fit: cover;
+  }
 }
 @media (min-width: 576px) {
   .container-sm {
@@ -9781,7 +9788,10 @@ a.more:hover {
 }
 @media (max-width: 850px) {
   .img-fluid {
-    height: 450px;
+    height: 400px;
+  }
+  .tab-content .slick-list {
+    height: auto !important;
   }
 
 }
@@ -9799,7 +9809,7 @@ a.more:hover {
 
 @media (max-width: 425px) {
   .container {
-    padding: 0px 20px;
+    padding: 0px 10px;
   }
   .title-big {
     font-size: 28px !important;
