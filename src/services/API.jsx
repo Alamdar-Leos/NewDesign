@@ -154,6 +154,7 @@ export const paymentPlanAPI = async (projectId) => {
       `${BASE_URL}/projects/project/payment_plans/${projectId}`,
       {
         headers: { Authorization: `Bearer 5ATh6co8WUuhaWp4_$45FGFGDFK%44*&23DF` },
+        params: { device: 'WEB' },
       }
     );
 
