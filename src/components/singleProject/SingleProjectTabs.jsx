@@ -1009,15 +1009,27 @@ const SingleProjectTabs = () => {
                                                                             <table className="table table-striped table-bordered">
                                                                                 <tbody>
                                                                                     <tr>
+                                                                                        {/* <th>Unit Price</th> */}
                                                                                         <th>Booking Deposit</th>
+                                                                                        <th>DLD</th>
+                                                                                        <th>Admin Fee</th>
                                                                                         <th>On Completion</th>
                                                                                         <th>Payment Plan Method</th>
                                                                                     </tr>
                                                                                     <tr>
+                                                                                        {/* <td>
+                                                                                            AED {formatPrice(plan.unitPrice || 0)}
+                                                                                        </td> */}
                                                                                         <td>
                                                                                             {plan.bookingDeposit || "NA"}% (
                                                                                             AED {formatPrice(calculatePercentageAmount(plan.bookingDeposit || 0))}
                                                                                             )
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            4% {/* 4% (AED {formatPrice((plan.unitPrice || 0) * 0.04)}) */}
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            AED 5,250 {/* Static Admin Fee */}
                                                                                         </td>
                                                                                         <td>
                                                                                             {plan.onCompletion || "NA"}% (
