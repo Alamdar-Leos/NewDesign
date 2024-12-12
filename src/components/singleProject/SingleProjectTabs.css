@@ -318,9 +318,6 @@ span.price-filter-color {
     object-fit: contain;
 }
 
-
-
-
 .icon-img {
     margin-bottom: 10px;
 }
@@ -344,7 +341,18 @@ span.price-filter-color {
         width: calc(25% - 15px); /* Four columns on desktops */
     }
 }
-
+@media (max-width: 576px) {
+    .modal-body {
+        padding: 1rem;
+    }
+    .payment-plan-header h4 {
+        font-size: 14px !important;
+    }
+    .table-striped tr th,
+    .table-striped tr td {
+        font-size: 13px !important;
+    }
+}
 .selected-floor-unit-img img {
     width: 100% !important;
     height: 100% !important;
@@ -397,3 +405,12 @@ span.price-filter-color {
     height: 500px;
     overflow: scroll;
 }
+.table-responsive {
+    overflow-x: auto; /* Allows horizontal scrolling */
+    -webkit-overflow-scrolling: touch; /* Enables smooth scrolling on iOS */
+}
+.table-responsive table {
+    width: 100%; /* Ensure the table takes full width of the scrollable container */
+    border-collapse: collapse;
+}
+  

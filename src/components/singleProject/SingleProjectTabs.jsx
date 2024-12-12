@@ -13,11 +13,11 @@ import {fetchProjectsAPI} from '../../services/API.jsx';
 import { fetchProjectMediaFilesAPI } from '../../services/API.jsx';
 import { paymentPlanAPI } from '../../services/API.jsx';
 
-const calculatePercentageAmount = (percentage, unitPrice) => {
-    if (!percentage || !unitPrice) return "NA";
-    const amount = unitPrice * (parseFloat(percentage) / 100);
-    return amount.toFixed(2);
-};
+// const calculatePercentageAmount = (percentage, unitPrice) => {
+//     if (!percentage || !unitPrice) return "NA";
+//     const amount = unitPrice * (parseFloat(percentage) / 100);
+//     return amount.toFixed(2);
+// };
 
 const SingleProjectTabs = () => {
     // Tab and Dropdown States
@@ -331,10 +331,6 @@ const SingleProjectTabs = () => {
           console.warn("Unit price is not available");
           return "N/A";
         }
-      
-        // console.log("Unit Price:", unitPrice);
-        // console.log("Percentage:", percentage);
-      
         const amount = unitPrice * (parseFloat(percentage) / 100);
         return amount.toFixed(2);
     };
@@ -918,8 +914,9 @@ const SingleProjectTabs = () => {
                                                     
                                                     {/* Table: Unit Details */}
                                                     <div className="col-12 col-md-12">
-                                                        <div className="unit-detail-card">
-                                                            {/* <h3 className="text-center mb-4">{selectedUnit?.Product_Name || 'NA'}</h3> */}
+                                                    <div className="unit-detail-card">
+                                                        {/* <h3 className="text-center mb-4">{selectedUnit?.Product_Name || 'NA'}</h3> */}
+                                                        <div className="table-responsive"> {/* Add a wrapper div for responsiveness */}
                                                             <table className="table table-striped table-bordered">
                                                                 <tbody>
                                                                     <tr className="text-center">
@@ -945,6 +942,8 @@ const SingleProjectTabs = () => {
                                                                 </tbody>
                                                             </table>
                                                         </div>
+                                                    </div>
+
                                                     </div>
 
                                                     {/* Selected Unit Image */}
@@ -1006,40 +1005,36 @@ const SingleProjectTabs = () => {
                                                                     {/* Payment Plan Details */}
                                                                     <div className="col-12">
                                                                         <div className="payment-plan-detail-card">
-                                                                            <table className="table table-striped table-bordered">
-                                                                                <tbody>
-                                                                                    <tr>
-                                                                                        {/* <th>Unit Price</th> */}
-                                                                                        <th>Booking Deposit</th>
-                                                                                        <th>DLD</th>
-                                                                                        <th>Admin Fee</th>
-                                                                                        <th>On Completion</th>
-                                                                                        <th>Payment Plan Method</th>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        {/* <td>
-                                                                                            AED {formatPrice(plan.unitPrice || 0)}
-                                                                                        </td> */}
-                                                                                        <td>
-                                                                                            {plan.bookingDeposit || "NA"}% (
-                                                                                            AED {formatPrice(calculatePercentageAmount(plan.bookingDeposit || 0))}
-                                                                                            )
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            4% {/* 4% (AED {formatPrice((plan.unitPrice || 0) * 0.04)}) */}
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            AED 5,250 {/* Static Admin Fee */}
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            {plan.onCompletion || "NA"}% (
-                                                                                            AED {formatPrice(calculatePercentageAmount(plan.onCompletion || 0))}
-                                                                                            )
-                                                                                        </td>
-                                                                                        <td>{plan.paymentPlanMethod || "NA"}</td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
+                                                                        <table className="table table-striped table-bordered">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <th>Unit Price</th>
+                                                                                    <th>Booking Deposit</th>
+                                                                                    <th>DLD</th>
+                                                                                    <th>Admin Fee</th>
+                                                                                    <th>On Completion</th>
+                                                                                    <th>Payment Plan Method</th>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>AED {formatPrice(unitPrice)}</td>
+                                                                                    <td>
+                                                                                    {plan.bookingDeposit || "NA"}% (
+                                                                                    AED {formatPrice(calculatePercentageAmount(plan.bookingDeposit || 0))}
+                                                                                    )
+                                                                                    </td>
+                                                                                    <td>
+                                                                                    4% (AED {formatPrice((unitPrice || 0) * 0.04)})
+                                                                                    </td>
+                                                                                    <td>AED 5,250</td>
+                                                                                    <td>
+                                                                                    {plan.onCompletion || "NA"}% (
+                                                                                    AED {formatPrice(calculatePercentageAmount(plan.onCompletion || 0))}
+                                                                                    )
+                                                                                    </td>
+                                                                                    <td>{plan.paymentPlanMethod || "NA"}</td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
                                                                             <h5>Before Completion</h5>
                                                                             {plan.beforeCompletion.length > 0 ? (
                                                                                 <table className="table table-striped table-bordered">
