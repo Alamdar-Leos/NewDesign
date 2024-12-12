@@ -525,8 +525,11 @@ header#site-header,
     height: auto !important;
   }
   .img-fluid {
-    height: 300px;
+    /* height: 300px; */
     object-fit: cover;
+  }
+  img.floorPlan-img {
+    height: 185px !important;
   }
 }
 @media (min-width: 576px) {

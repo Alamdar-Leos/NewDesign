@@ -797,10 +797,10 @@ const SingleProjectTabs = () => {
                             {plan.images && plan.images.length > 0 ? (
                                 plan.images.map((image, index) => (
                                     <div className="item" key={index}>
-                                        <div className="card">
+                                        <div className="card floor-plan-card">
                                             <img
                                                 src={image.url}
-                                                className="img-fluid radius-image"
+                                                className="floorPlan-img img-fluid radius-image"
                                                 alt={image.alt} // Use alt text from the image object
                                                 onError={(e) => {
                                                     e.target.src = "/assets/images/default.jpg"; // Fallback image
@@ -821,7 +821,7 @@ const SingleProjectTabs = () => {
                         {/* Search Filter for Available Units */}
                         <div className="filter-form text-center mb-5">
                             <div className="row">
-                                <div className="col-10">
+                                <div className="col-12 col-md-10 col-sm-12 col-xs-12">
                                     {floors.length > 0 && ( 
                                         <select
                                         className="tab-button text-center"
@@ -858,7 +858,7 @@ const SingleProjectTabs = () => {
                                     /> 
                                     <span className="price-filter-color"> AED {formatPrice(maxPrice)} </span>
                                 </div>
-                                <div className="col-2">
+                                <div className="col-12 col-md-2 col-sm-12 col-xs-12">
                                     {isFilterApplied && (
                                         <button className="reset-button tab-button" onClick={resetFilter}>RESET FILTER</button>
                                     )}
