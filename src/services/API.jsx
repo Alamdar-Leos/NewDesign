@@ -257,8 +257,6 @@ export const paymentPlanAPI = async (projectId) => {
       }
     );
 
-    console.log("Raw Response Data:", response.data.data);
-
     const paymentPlans = (response.data.data || []).map((plan) => {
       // console.log("Raw Payment Plan:", plan);
 
@@ -281,7 +279,6 @@ export const paymentPlanAPI = async (projectId) => {
       };
     });
 
-    console.log("Processed Payment Plans:", paymentPlans);
     return paymentPlans;
   } catch (error) {
     console.error("Error fetching payment plans:", error);

@@ -324,15 +324,35 @@ span.price-filter-color {
 .icon-box p {
     color: #d0a85f;
 }
-
 @media (min-width: 320px) and (max-width: 575px) {
     .search-icon {
         margin-top: -55px;
     }
+    span.price-filter-color {
+        font-size: 12px !important;
+    }
+    .price-range {
+        width: 30% !important;
+    }
 }
-@media (min-width: 768px) {
+@media (min-width: 768px) and (max-width: 991px) {
     .icon-box {
         width: calc(50% - 15px); /* Two columns on tablets */
+    }
+    .single-bg-white {
+        padding: 35px 20px;
+    }
+    span.price-filter-color {
+        font-size: 11px !important;
+    }
+    .price-range {
+        width: 20% !important;
+    }
+    .singlePage-filterBtn {
+        font-size: 8px;
+    }
+    .singlePage-title {
+        font-size: 18px !important;
     }
 }
 
@@ -413,4 +433,3 @@ span.price-filter-color {
     width: 100%; /* Ensure the table takes full width of the scrollable container */
     border-collapse: collapse;
 }
-  

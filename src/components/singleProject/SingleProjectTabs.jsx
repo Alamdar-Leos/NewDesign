@@ -383,6 +383,18 @@ const SingleProjectTabs = () => {
         return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     };
 
+    // State to manage sharing options visibility for each image
+    const [shareOptionsVisible, setShareOptionsVisible] = React.useState(
+        new Array(exteriorImages.length).fill(false) // Initialize with false for all images
+    );
+
+    const toggleShareOptions = (index) => {
+        setShareOptionsVisible((prevState) =>
+            prevState.map((visible, i) => (i === index ? !visible : visible))
+        );
+    };
+
+
     // Custom slider arrows
     const PrevArrow = ({ className, style, onClick }) => (
         <span className={className} style={{ ...style, display: 'block' }} onClick={onClick}>←</span>
@@ -421,7 +433,7 @@ const SingleProjectTabs = () => {
                 {/* Header Middle Section */}
                 <div className="col-lg-4 col-md-4 col-sm-6 d-flex justify-content-center mb-3 mb-md-0">
                 <div className="post-content text-center">
-                    <h1 className="title-medium heading-gold text-uppercase">{projectName}</h1>
+                    <h1 className="singlePage-title title-medium heading-gold text-uppercase">{projectName}</h1>
                 </div>
                 </div>
                 {/* Header Middle Section End */}
@@ -669,6 +681,27 @@ const SingleProjectTabs = () => {
                             <div className="item" key={index}>
                             <div className="card">
                                 <img src={image.url} alt={`Exterior ${index + 1}`} class="img-fluid radius-image" />
+                                {/* Share Buttons */}
+                                <div className="share-buttons">
+                                    <a
+                                        href={`https://wa.me/?text=${encodeURIComponent(image.url)}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="share-icon whatsapp"
+                                        title="Share on WhatsApp"
+                                    >
+                                    <i className="fab fa-whatsapp"></i> 
+                                    </a>
+                                    <a
+                                        href={`mailto:?subject=Check this image&body=${encodeURIComponent(
+                                            `Take a look at this image: ${image.url}`
+                                        )}`}
+                                        className="share-icon email"
+                                        title="Share via Email"
+                                    >
+                                        <i className="fas fa-envelope"></i>
+                                    </a>
+                                </div>
                             </div>
                             </div>
                         ))
@@ -820,7 +853,7 @@ const SingleProjectTabs = () => {
                                 <div className="col-12 col-md-10 col-sm-12 col-xs-12">
                                     {floors.length > 0 && ( 
                                         <select
-                                        className="tab-button text-center"
+                                        className="singlePage-filterBtn tab-button text-center"
                                         value={selectedFloor}
                                         onChange={(e) => setSelectedFloor(e.target.value)}>
                                         <option value="">Select Floor</option>
@@ -832,7 +865,7 @@ const SingleProjectTabs = () => {
                                         </select>
                                     )}
                                     <select
-                                        className="tab-button text-center"
+                                        className="singlePage-filterBtn tab-button text-center"
                                         value={selectedUnitType}
                                         onChange={(e) => setSelectedUnitType(e.target.value)}>
                                         <option value="">Select Unit Type</option>
