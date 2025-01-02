@@ -1175,4 +1175,3 @@ const SingleProjectTabs = () => {
 };
 
 export default SingleProjectTabs;
-// New Updates
