@@ -7,7 +7,7 @@ const Footer = () => {
     <section className="w3l-footers-20">
         <div className="container">
             <div className="text-center">
-                <p className="footer-copyright-text">© 2025 LEOS INTERNATIONAL. All rights reserved</p>
+                <p className="footer-copyright-text">© 2025 LEOS INTERNATIONAL. All rights reserved(Alamdar)</p>
             </div>
         </div>
     {/*move top */}
