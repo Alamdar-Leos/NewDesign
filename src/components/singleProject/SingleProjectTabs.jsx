@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -12,9 +12,6 @@ import { AvailableUnitsAPI } from '../../services/API.jsx';
 import {fetchProjectsAPI} from '../../services/API.jsx';
 import { fetchProjectMediaFilesAPI } from '../../services/API.jsx';
 import { paymentPlanAPI } from '../../services/API.jsx';
-
-import Lightbox from "react-awesome-lightbox";
-import "react-awesome-lightbox/build/style.css"; // Optional: Default styles
 
 // const calculatePercentageAmount = (percentage, unitPrice) => {
 //     if (!percentage || !unitPrice) return "NA";
@@ -90,7 +87,7 @@ const SingleProjectTabs = () => {
     // For Image Lightbox(Image Zoom-in)
     const [isLightboxOpen, setIsLightboxOpen] = useState(false);
     const [currentImage, setCurrentImage] = useState("");
-
+    const [zoomLevel, setZoomLevel] = useState(1);
 
 
     useEffect(() => {
@@ -402,10 +399,30 @@ const SingleProjectTabs = () => {
         );
     };
 
-    const openLightbox = (imageUrl) => {
-        setCurrentImage(imageUrl);
-        setIsLightboxOpen(true);
-    };    
+   // Open Lightbox
+const openLightbox = (imageUrl) => {
+    setCurrentImage(imageUrl);
+    setIsLightboxOpen(true);
+    setZoomLevel(1);
+};
+
+// Close Lightbox
+const closeLightbox = () => {
+    setIsLightboxOpen(false);
+    setCurrentImage(null);
+    setZoomLevel(1);
+};
+
+// Double-click to zoom in/out
+const handleDoubleClick = () => {
+    setZoomLevel((prevZoom) => (prevZoom === 1 ? 2 : 1));
+};
+
+// Zoom in/out buttons
+const zoomIn = () => setZoomLevel((prevZoom) => Math.min(prevZoom * 1.1, 5));
+const zoomOut = () => setZoomLevel((prevZoom) => Math.max(prevZoom / 1.1, 1));
+
+
 
     // Custom slider arrows
     const PrevArrow = ({ className, style, onClick }) => (
@@ -1160,13 +1177,28 @@ const SingleProjectTabs = () => {
                     </div>
                 )}
 
+
                 {/* Lightbox */}
                 {isLightboxOpen && (
-                    <Lightbox
-                    image={currentImage}
-                    onClose={() => setIsLightboxOpen(false)}
-                    />
+                    <div className="lightbox">
+                        <div className="lightbox-content">
+                            <img
+                                src={currentImage}
+                                alt="Lightbox"
+                                className="lightbox-image"
+                                onDoubleClick={handleDoubleClick}
+                                style={{
+                                    transform: `scale(${zoomLevel})`,
+                                    cursor: zoomLevel > 1 ? "zoom-out" : "zoom-in",
+                                }}
+                            />
+                            <button className="zoom-in" onClick={zoomIn}>+</button>
+                            <button className="zoom-out" onClick={zoomOut}>-</button>
+                            <span className="close" onClick={closeLightbox}>&times;</span>
+                        </div>
+                    </div>
                 )}
+
             
             </div>
         </div>

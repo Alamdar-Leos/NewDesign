@@ -437,3 +437,68 @@ span.price-filter-color {
     width: 100%; /* Ensure the table takes full width of the scrollable container */
     border-collapse: collapse;
 }
+
+
+
+
+/* Lightbox Styles */
+.lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    overflow: hidden;
+  }
+  
+  .lightbox-content {
+    position: relative;
+    max-width: 80%;
+    max-height: 80%;
+  }
+  
+  .lightbox-image {
+    max-width: 100%;
+    max-height: 100%;
+    transition: transform 0.2s ease-in-out;
+    cursor: grab;
+  }
+  
+  .lightbox-image:active {
+    cursor: grabbing;
+  }
+  
+  .zoom-in,
+  .zoom-out {
+    position: absolute;
+    top: 20px;
+    font-size: 30px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .zoom-in {
+    right: 120px;
+  }
+  
+  .zoom-out {
+    right: 80px;
+  }
+  
+  .close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 45px;
+    color: white;
+    cursor: pointer;
+  }
+  
