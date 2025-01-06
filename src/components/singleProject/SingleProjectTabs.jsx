@@ -13,12 +13,6 @@ import {fetchProjectsAPI} from '../../services/API.jsx';
 import { fetchProjectMediaFilesAPI } from '../../services/API.jsx';
 import { paymentPlanAPI } from '../../services/API.jsx';
 
-// const calculatePercentageAmount = (percentage, unitPrice) => {
-//     if (!percentage || !unitPrice) return "NA";
-//     const amount = unitPrice * (parseFloat(percentage) / 100);
-//     return amount.toFixed(2);
-// };
-
 const SingleProjectTabs = () => {
     // Tab and Dropdown States
     const [activeTab, setActiveTab] = useState('exteriors-tab');
@@ -68,7 +62,6 @@ const SingleProjectTabs = () => {
     //
     const [videosUrl, setVideosUrl] = useState([]);
     const [selectedVideoUrl, setSelectedVideoUrl] = useState('');
-
 
     //Project Brochures
     const [brochures, setBrochures] = useState([]);
@@ -399,30 +392,25 @@ const SingleProjectTabs = () => {
         );
     };
 
-   // Open Lightbox
-const openLightbox = (imageUrl) => {
-    setCurrentImage(imageUrl);
-    setIsLightboxOpen(true);
-    setZoomLevel(1);
-};
-
-// Close Lightbox
-const closeLightbox = () => {
-    setIsLightboxOpen(false);
-    setCurrentImage(null);
-    setZoomLevel(1);
-};
-
-// Double-click to zoom in/out
-const handleDoubleClick = () => {
-    setZoomLevel((prevZoom) => (prevZoom === 1 ? 2 : 1));
-};
-
-// Zoom in/out buttons
-const zoomIn = () => setZoomLevel((prevZoom) => Math.min(prevZoom * 1.1, 5));
-const zoomOut = () => setZoomLevel((prevZoom) => Math.max(prevZoom / 1.1, 1));
-
-
+    // Open Lightbox
+    const openLightbox = (imageUrl) => {
+        setCurrentImage(imageUrl);
+        setIsLightboxOpen(true);
+        setZoomLevel(1);
+    };
+    // Close Lightbox
+    const closeLightbox = () => {
+        setIsLightboxOpen(false);
+        setCurrentImage(null);
+        setZoomLevel(1);
+    };
+    // Double-click to zoom in/out
+    const handleDoubleClick = () => {
+        setZoomLevel((prevZoom) => (prevZoom === 1 ? 2 : 1));
+    };
+    // Zoom in/out buttons
+    const zoomIn = () => setZoomLevel((prevZoom) => Math.min(prevZoom * 1.1, 5));
+    const zoomOut = () => setZoomLevel((prevZoom) => Math.max(prevZoom / 1.1, 1));
 
     // Custom slider arrows
     const PrevArrow = ({ className, style, onClick }) => (
@@ -647,44 +635,46 @@ const zoomOut = () => setZoomLevel((prevZoom) => Math.max(prevZoom / 1.1, 1));
 
                     {/* Dropdown for Brochures Start */}
                     {brochures.length > 0 && (
-                        <>
-                        <li className="dropdown">
+    <>
+        <li className="dropdown">
+            <button
+                className={`tab-button dropdown-toggle ${
+                    activeDropdown === 'brochures' || modalStates['brochures'] ? 'active' : ''
+                }`}
+                onClick={(e) => {
+                    e.preventDefault();
+                    toggleDropdown('brochures');
+                }}
+            >
+                Brochures
+            </button>
+            <ul className={`dropdown-menu ${activeDropdown === 'brochures' || modalStates['brochures'] ? 'show' : ''}`}>
+                {brochures.length > 0 ? (
+                    brochures.map((brochure) => (
+                        <li key={brochure.language}>
                             <button
-                                className={`tab-button dropdown-toggle ${
-                                activeDropdown === 'brochures' || modalStates['brochures'] ? 'active' : ''
-                                }`}
-                                onClick={(e) => {
-                                e.preventDefault();
-                                toggleDropdown('brochures');
-                                }}>
-                                Brochures
+                                className="tab-button"
+                                onClick={() => showBrochureModal(brochure.language, brochure.file)}
+                            >
+                                {brochure.language}
                             </button>
-                            <ul className={`dropdown-menu ${activeDropdown === 'brochures' || modalStates['brochures'] ? 'show' : ''}`}>
-                                {brochures.length > 0 ? (
-                                    brochures.map((brochure) => (
-                                    <li key={brochure.language}>
-                                        <button
-                                        className="tab-button"
-                                        onClick={() => showBrochureModal(brochure.language)}
-                                        >
-                                        {brochure.language}
-                                        </button>
-                                    </li>
-                                    ))
-                                ) : (
-                                    <li>No brochures available</li>
-                                )}
-                            </ul>
                         </li>
-                        <PopupModal
-                        show={modalStates['brochureModal']}
-                        onHide={() => toggleModal('brochureModal')}
-                        title={modalTitle}
-                        contentType={modalContentType}
-                        file={modalFile}
-                        />
-                        </>
-                    )}
+                    ))
+                ) : (
+                    <li>No brochures available</li>
+                )}
+            </ul>
+        </li>
+        <PopupModal
+            show={modalStates['brochureModal']}
+            onHide={() => toggleModal('brochureModal')}
+            title={modalTitle}
+            contentType={modalContentType}
+            file={modalFile}
+        />
+    </>
+)}
+
                     {/* Dropdown for Brochures End */}
 
                     {/* Available Units Start */}
