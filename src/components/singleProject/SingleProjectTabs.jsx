@@ -442,7 +442,7 @@ const SingleProjectTabs = () => {
                 {/* Header Left Sidebar Section Start */}
                 <div className="col-lg-4 col-md-4 col-sm-12 d-flex justify-content-center justify-content-md-start mb-3 mb-md-0">
                 <Link to="/">
-                    <img src="/assets/images/logo.png" alt="Logo" />
+                    <img src="/assets/images/logo.png" alt="Logo" className="headerLogo" />
                 </Link>
                 </div>
                 {/* Header Left Sidebar Section End */}
@@ -457,20 +457,20 @@ const SingleProjectTabs = () => {
 
                 {/* Header Right Section */}
                 <div className="col-lg-4 col-md-4 col-sm-6 d-flex justify-content-center justify-content-lg-end justify-content-sm-end">
-                <div className="social-icon d-flex justify-content-center mx-5">
-                    <Link
-                    className="pt-md-2 pt-0 px-2"
-                    to="https://www.youtube.com/@leosinternational"
-                    target="_blank"
-                    >
-                    <FaYoutube size={30} color="##d0a85f" />
-                    </Link>
-                </div>
-                <div className="post-content text-center text-md-right">
-                    <Link to="/" className="btn btn-style btn-primary">
-                    <span className="fa fa-home"></span> HOME
-                    </Link>
-                </div>
+                    <div className="social-icon d-flex justify-content-center mx-5">
+                        <Link
+                        className="pt-md-2 pt-0 px-2"
+                        to="https://www.youtube.com/@leosinternational"
+                        target="_blank"
+                        >
+                        <FaYoutube size={30} color="##d0a85f" />
+                        </Link>
+                    </div>
+                    <div className="post-content text-center text-md-right">
+                        <Link to="/" className="btn btn-style btn-primary">
+                        <span className="fa fa-home"></span> HOME
+                        </Link>
+                    </div>
                 </div>
                 {/* Header Right Section End */}
             </div>
@@ -635,46 +635,45 @@ const SingleProjectTabs = () => {
 
                     {/* Dropdown for Brochures Start */}
                     {brochures.length > 0 && (
-    <>
-        <li className="dropdown">
-            <button
-                className={`tab-button dropdown-toggle ${
-                    activeDropdown === 'brochures' || modalStates['brochures'] ? 'active' : ''
-                }`}
-                onClick={(e) => {
-                    e.preventDefault();
-                    toggleDropdown('brochures');
-                }}
-            >
-                Brochures
-            </button>
-            <ul className={`dropdown-menu ${activeDropdown === 'brochures' || modalStates['brochures'] ? 'show' : ''}`}>
-                {brochures.length > 0 ? (
-                    brochures.map((brochure) => (
-                        <li key={brochure.language}>
-                            <button
-                                className="tab-button"
-                                onClick={() => showBrochureModal(brochure.language, brochure.file)}
-                            >
-                                {brochure.language}
-                            </button>
-                        </li>
-                    ))
-                ) : (
-                    <li>No brochures available</li>
-                )}
-            </ul>
-        </li>
-        <PopupModal
-            show={modalStates['brochureModal']}
-            onHide={() => toggleModal('brochureModal')}
-            title={modalTitle}
-            contentType={modalContentType}
-            file={modalFile}
-        />
-    </>
-)}
-
+                        <>
+                            <li className="dropdown">
+                                <button
+                                    className={`tab-button dropdown-toggle ${
+                                        activeDropdown === 'brochures' || modalStates['brochures'] ? 'active' : ''
+                                    }`}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        toggleDropdown('brochures');
+                                    }}
+                                >
+                                    Brochures
+                                </button>
+                                <ul className={`dropdown-menu ${activeDropdown === 'brochures' || modalStates['brochures'] ? 'show' : ''}`}>
+                                    {brochures.length > 0 ? (
+                                        brochures.map((brochure) => (
+                                            <li key={brochure.language}>
+                                                <button
+                                                    className="tab-button"
+                                                    onClick={() => showBrochureModal(brochure.language, brochure.file)}
+                                                >
+                                                    {brochure.language}
+                                                </button>
+                                            </li>
+                                        ))
+                                    ) : (
+                                        <li>No brochures available</li>
+                                    )}
+                                </ul>
+                            </li>
+                            <PopupModal
+                                show={modalStates['brochureModal']}
+                                onHide={() => toggleModal('brochureModal')}
+                                title={modalTitle}
+                                contentType={modalContentType}
+                                file={modalFile}
+                            />
+                        </>
+                    )}
                     {/* Dropdown for Brochures End */}
 
                     {/* Available Units Start */}

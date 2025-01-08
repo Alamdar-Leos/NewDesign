@@ -67,7 +67,7 @@ const Header = ({ selectedUnit }) => {
               <div className="row">
                 <div className="col-lg-4 col-md-3 col-sm-2 d-flex align-items-center justify-content-md-start justify-content-sm-start mb-3 mb-md-0">
                     <Link to="/">
-                        <img src="/assets/images/logo.png" alt="Logo" />
+                        <img src="/assets/images/logo.png" alt="Logo" className="headerLogo" />
                     </Link>
                 </div>
 

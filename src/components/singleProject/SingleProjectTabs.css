@@ -498,7 +498,7 @@ span.price-filter-color {
     top: 20px;
     right: 20px;
     font-size: 45px;
-    color: white;
     cursor: pointer;
+    background-color: #ffa500;
   }
   

@@ -13535,7 +13535,9 @@ span.slick-arrow:before {
   color: #d0a85f;
 }
 
-
+img.headerLogo {
+  width: 170px;
+}
 /* Set up the layout for the page */
 .layout {
   display: flex;
