@@ -3,17 +3,14 @@ import React from 'react';
 import { Modal } from 'react-bootstrap';
 
 const PopupModal = ({ show, onHide, title, contentType, file }) => {
+    const formatPrice = (price) => {
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    };
+
     return (
-        <Modal
-            show={show}
-            onHide={onHide}
-            centered
-            dialogClassName="custom-modal-80"
-        >
+        <Modal show={show} onHide={onHide} centered dialogClassName="custom-modal-80">
             <Modal.Header closeButton className="justify-content-center bg-color">
-                <Modal.Title className="w-100 text-center text-uppercase">
-                    {title || 'NA'}
-                </Modal.Title>
+                <Modal.Title className="w-100 text-center text-uppercase">{title || 'NA'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 {contentType === 'brochure' && file ? (
@@ -41,7 +38,7 @@ const PopupModal = ({ show, onHide, title, contentType, file }) => {
                         </a>
                     </>
                 ) : (
-                    <p className="text-center">No brochure available.</p>
+                    <p>No brochure available.</p>
                 )}
             </Modal.Body>
         </Modal>

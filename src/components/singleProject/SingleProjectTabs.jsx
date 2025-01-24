@@ -309,8 +309,9 @@ const SingleProjectTabs = () => {
     setIsFullScreenModalOpen(false);
     };
 
-    const isMobile = () => {
-        return window.innerWidth <= 768; // Adjust threshold as needed
+    // Function to detect if the user is on a mobile device
+    const isMobileDevice = () => {
+        return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     };
 
     // Function of Modal for Brochures
@@ -319,16 +320,20 @@ const SingleProjectTabs = () => {
             (brochure) => brochure.language === language.toUpperCase()
         );
         if (selectedBrochure) {
-            if (isMobile()) {
-                // Open brochure in new tab for mobile/tablet
-                window.open(selectedBrochure.url, '_blank', 'noopener,noreferrer');
+            const fileUrl = selectedBrochure.url;
+
+            if (isMobileDevice()) {
+                // Open PDF in a new tab on mobile devices
+                window.open(fileUrl, '_blank', 'noopener,noreferrer');
             } else {
-                // Show modal for desktop
+                // Show modal on desktop devices
                 setModalTitle(`${language} Brochure`);
-                setModalFile(selectedBrochure.url);
+                setModalFile(fileUrl);
                 setModalContentType('brochure');
                 toggleModal('brochureModal');
             }
+        } else {
+            console.warn('Brochure not found for language:', language);
         }
     };
 
@@ -645,52 +650,49 @@ const SingleProjectTabs = () => {
 
                     {/* Dropdown for Brochures Start */}
                     {brochures.length > 0 && (
-                        <>
-                            <li className="dropdown">
-                                <button
-                                    className={`tab-button dropdown-toggle ${
-                                        activeDropdown === 'brochures' ? 'active' : ''
-                                    }`}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        toggleDropdown('brochures');
-                                    }}
-                                    onTouchEnd={(e) => {
-                                        e.preventDefault();
-                                        toggleDropdown('brochures');
-                                    }} // Add touch event for mobile
-                                >
-                                    Brochures
-                                </button>
-                                <ul
-                                    className={`dropdown-menu ${
-                                        activeDropdown === 'brochures' ? 'show' : ''
-                                    }`}
-                                >
-                                    {brochures.map((brochure) => (
-                                        <li key={brochure.language}>
-                                            <button
-                                                className="tab-button"
-                                                onClick={() => {
-                                                    toggleDropdown(null); // Close dropdown on selection
-                                                    showBrochureModal(brochure.language);
-                                                }}
-                                            >
-                                                {brochure.language}
-                                            </button>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </li>
-                            <PopupModal
-                                show={modalStates['brochureModal']}
-                                onHide={() => toggleModal('brochureModal')}
-                                title={modalTitle}
-                                contentType={modalContentType}
-                                file={modalFile}
-                            />
-                        </>
-                    )}
+                <>
+                    <li className="dropdown">
+                        <button
+                            className={`tab-button dropdown-toggle ${
+                                activeDropdown === 'brochures' ? 'active' : ''
+                            }`}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                toggleDropdown('brochures');
+                            }}
+                        >
+                            Brochures
+                        </button>
+                        <ul
+                            className={`dropdown-menu ${
+                                activeDropdown === 'brochures' ? 'show' : ''
+                            }`}
+                        >
+                            {brochures.map((brochure) => (
+                                <li key={brochure.language}>
+                                    <button
+                                        className="tab-button"
+                                        onClick={() => {
+                                            toggleDropdown(null); // Close dropdown
+                                            showBrochureModal(brochure.language);
+                                        }}
+                                    >
+                                        {brochure.language}
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </li>
+                    {/* Modal for Desktop */}
+                    <PopupModal
+                        show={modalStates['brochureModal']}
+                        onHide={() => toggleModal('brochureModal')}
+                        title={modalTitle}
+                        contentType={modalContentType}
+                        file={modalFile}
+                    />
+                </>
+            )}
                     {/* Dropdown for Brochures End */}
 
                     {/* Available Units Start */}
