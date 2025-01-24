@@ -1,22 +1,16 @@
+// PopupModel.jsx 
 import React from 'react';
 import { Modal } from 'react-bootstrap';
 
 const PopupModal = ({ show, onHide, title, contentType, file }) => {
-    const formatPrice = (price) => {
-        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    };
-
     return (
-        <Modal 
-            show={show} 
-            onHide={onHide} 
-            centered 
+        <Modal
+            show={show}
+            onHide={onHide}
+            centered
             dialogClassName="custom-modal-80"
         >
-            <Modal.Header 
-                closeButton 
-                className="justify-content-center bg-color"
-            >
+            <Modal.Header closeButton className="justify-content-center bg-color">
                 <Modal.Title className="w-100 text-center text-uppercase">
                     {title || 'NA'}
                 </Modal.Title>
@@ -27,7 +21,7 @@ const PopupModal = ({ show, onHide, title, contentType, file }) => {
                         <iframe
                             src={file}
                             width="100%"
-                            height="calc(100vh - 200px)" // Adjust height for mobile
+                            height="600px"
                             title={`${title} Brochure`}
                             style={{ border: 'none' }}
                             onError={(e) => {

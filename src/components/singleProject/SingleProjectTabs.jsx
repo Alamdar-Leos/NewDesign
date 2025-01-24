@@ -309,16 +309,26 @@ const SingleProjectTabs = () => {
     setIsFullScreenModalOpen(false);
     };
 
+    const isMobile = () => {
+        return window.innerWidth <= 768; // Adjust threshold as needed
+    };
+
     // Function of Modal for Brochures
     const showBrochureModal = (language) => {
         const selectedBrochure = brochures.find(
             (brochure) => brochure.language === language.toUpperCase()
         );
         if (selectedBrochure) {
-            setModalTitle(`${language} Brochure`);
-            setModalFile(selectedBrochure.url);
-            setModalContentType('brochure');
-            toggleModal('brochureModal');
+            if (isMobile()) {
+                // Open brochure in new tab for mobile/tablet
+                window.open(selectedBrochure.url, '_blank', 'noopener,noreferrer');
+            } else {
+                // Show modal for desktop
+                setModalTitle(`${language} Brochure`);
+                setModalFile(selectedBrochure.url);
+                setModalContentType('brochure');
+                toggleModal('brochureModal');
+            }
         }
     };
 
@@ -639,18 +649,22 @@ const SingleProjectTabs = () => {
                             <li className="dropdown">
                                 <button
                                     className={`tab-button dropdown-toggle ${
-                                        activeDropdown === 'brochures' || modalStates['brochures'] ? 'active' : ''
+                                        activeDropdown === 'brochures' ? 'active' : ''
                                     }`}
                                     onClick={(e) => {
                                         e.preventDefault();
                                         toggleDropdown('brochures');
                                     }}
+                                    onTouchEnd={(e) => {
+                                        e.preventDefault();
+                                        toggleDropdown('brochures');
+                                    }} // Add touch event for mobile
                                 >
                                     Brochures
                                 </button>
                                 <ul
                                     className={`dropdown-menu ${
-                                        activeDropdown === 'brochures' || modalStates['brochures'] ? 'show' : ''
+                                        activeDropdown === 'brochures' ? 'show' : ''
                                     }`}
                                 >
                                     {brochures.map((brochure) => (
