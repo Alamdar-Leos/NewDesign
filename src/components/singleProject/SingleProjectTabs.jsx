@@ -43,6 +43,7 @@ const SingleProjectTabs = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [project, setProject] = useState(null);
+
     // const [projectTitle, setProjectTitle] = useState('');
     const [projectName, setProjectName] = useState("Loading...");
 
@@ -66,6 +67,7 @@ const SingleProjectTabs = () => {
     //Project Brochures
     const [brochures, setBrochures] = useState([]);
     const [modalFile, setModalFile] = useState('');
+    
 
     //Floor Plans
     const [floorPlans, setFloorPlans] = useState([]);
@@ -240,29 +242,13 @@ const SingleProjectTabs = () => {
     };
 
     // Handle modal toggle
-    const toggleModal = (modalId) => {
-        setModalStates(prevState => ({
-            ...prevState,
-            [modalId]: !prevState[modalId],
+    const toggleModal = (modal) => {
+        setModalStates((prev) => ({
+            ...prev,
+            [modal]: !prev[modal],
         }));
     };
 
-    // Function of Modal for Brochures
-    const showBrochureModal = (language) => {
-        console.log('Opening brochure modal for language:', language);
-        const selectedBrochure = brochures.find(
-          (brochure) => brochure.language === language.toUpperCase()
-        );
-        if (selectedBrochure) {
-          console.log('Selected Brochure:', selectedBrochure);
-          setModalTitle(`${language} Brochure`);
-          setModalFile(selectedBrochure.url);
-          setModalContentType('brochure');
-          toggleModal('brochureModal');
-        } else {
-          console.warn('Brochure not found for language:', language);
-        }
-    };
 
     // For Available Units Modal Details
     const handleUnitClick = async (unitId) => {
@@ -311,7 +297,7 @@ const SingleProjectTabs = () => {
     };
 
     const toggleDropdown = (dropdown) => {
-        setActiveDropdown(prevDropdown => (prevDropdown === dropdown ? '' : dropdown));
+        setActiveDropdown((prev) => (prev === dropdown ? null : dropdown));
     };
     const openFullScreenModal = (videoUrl) => {
         setSelectedVideoUrl(videoUrl); // Set the selected video URL
@@ -322,6 +308,20 @@ const SingleProjectTabs = () => {
     setSelectedVideoUrl(''); // Clear the selected video URL
     setIsFullScreenModalOpen(false);
     };
+
+    // Function of Modal for Brochures
+    const showBrochureModal = (language) => {
+        const selectedBrochure = brochures.find(
+            (brochure) => brochure.language === language.toUpperCase()
+        );
+        if (selectedBrochure) {
+            setModalTitle(`${language} Brochure`);
+            setModalFile(selectedBrochure.url);
+            setModalContentType('brochure');
+            toggleModal('brochureModal');
+        }
+    };
+
     
     // Function to calculate percentage-based amounts
     const calculatePercentageAmount = (percentage) => {
@@ -648,21 +648,24 @@ const SingleProjectTabs = () => {
                                 >
                                     Brochures
                                 </button>
-                                <ul className={`dropdown-menu ${activeDropdown === 'brochures' || modalStates['brochures'] ? 'show' : ''}`}>
-                                    {brochures.length > 0 ? (
-                                        brochures.map((brochure) => (
-                                            <li key={brochure.language}>
-                                                <button
-                                                    className="tab-button"
-                                                    onClick={() => showBrochureModal(brochure.language, brochure.file)}
-                                                >
-                                                    {brochure.language}
-                                                </button>
-                                            </li>
-                                        ))
-                                    ) : (
-                                        <li>No brochures available</li>
-                                    )}
+                                <ul
+                                    className={`dropdown-menu ${
+                                        activeDropdown === 'brochures' || modalStates['brochures'] ? 'show' : ''
+                                    }`}
+                                >
+                                    {brochures.map((brochure) => (
+                                        <li key={brochure.language}>
+                                            <button
+                                                className="tab-button"
+                                                onClick={() => {
+                                                    toggleDropdown(null); // Close dropdown on selection
+                                                    showBrochureModal(brochure.language);
+                                                }}
+                                            >
+                                                {brochure.language}
+                                            </button>
+                                        </li>
+                                    ))}
                                 </ul>
                             </li>
                             <PopupModal

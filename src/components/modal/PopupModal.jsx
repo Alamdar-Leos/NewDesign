@@ -1,6 +1,5 @@
-// PopupModel.jsx
 import React from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 
 const PopupModal = ({ show, onHide, title, contentType, file }) => {
     const formatPrice = (price) => {
@@ -8,9 +7,19 @@ const PopupModal = ({ show, onHide, title, contentType, file }) => {
     };
 
     return (
-        <Modal show={show} onHide={onHide} centered dialogClassName="custom-modal-80">
-            <Modal.Header closeButton className="justify-content-center bg-color">
-                <Modal.Title className="w-100 text-center text-uppercase">{title || 'NA'}</Modal.Title>
+        <Modal 
+            show={show} 
+            onHide={onHide} 
+            centered 
+            dialogClassName="custom-modal-80"
+        >
+            <Modal.Header 
+                closeButton 
+                className="justify-content-center bg-color"
+            >
+                <Modal.Title className="w-100 text-center text-uppercase">
+                    {title || 'NA'}
+                </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 {contentType === 'brochure' && file ? (
@@ -18,7 +27,7 @@ const PopupModal = ({ show, onHide, title, contentType, file }) => {
                         <iframe
                             src={file}
                             width="100%"
-                            height="600px"
+                            height="calc(100vh - 200px)" // Adjust height for mobile
                             title={`${title} Brochure`}
                             style={{ border: 'none' }}
                             onError={(e) => {
@@ -38,12 +47,9 @@ const PopupModal = ({ show, onHide, title, contentType, file }) => {
                         </a>
                     </>
                 ) : (
-                    <p>No brochure available.</p>
+                    <p className="text-center">No brochure available.</p>
                 )}
             </Modal.Body>
-            {/* <Modal.Footer>
-                <Button variant="primary" onClick={onHide}>Close</Button>
-            </Modal.Footer> */}
         </Modal>
     );
 };
