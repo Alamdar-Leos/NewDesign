@@ -498,40 +498,8 @@ span.price-filter-color {
     top: 20px;
     right: 20px;
     font-size: 45px;
+
     cursor: pointer;
     background-color: #ffa500;
   }
   
-
-
-
-  /* Dropdown menu styles for mobile */
-@media (max-width: 768px) {
-    .dropdown-menu {
-        position: static;
-        float: none;
-        width: 100%;
-        background-color: #fff;
-        border: none;
-        box-shadow: none;
-        padding: 0;
-    }
-
-    .dropdown-menu.show {
-        display: block;
-    }
-
-    .dropdown-menu li {
-        text-align: center;
-        padding: 10px;
-    }
-
-    .tab-button {
-        width: 100%;
-    }
-}
-
-/* Modal iframe adjustments for mobile */
-.custom-modal-80 .modal-body iframe {
-    height: calc(100vh - 200px); /* Ensure iframe fits on smaller screens */
-}
