@@ -650,49 +650,49 @@ const SingleProjectTabs = () => {
 
                     {/* Dropdown for Brochures Start */}
                     {brochures.length > 0 && (
-                <>
-                    <li className="dropdown">
-                        <button
-                            className={`tab-button dropdown-toggle ${
-                                activeDropdown === 'brochures' ? 'active' : ''
-                            }`}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                toggleDropdown('brochures');
-                            }}
-                        >
-                            Brochures
-                        </button>
-                        <ul
-                            className={`dropdown-menu ${
-                                activeDropdown === 'brochures' ? 'show' : ''
-                            }`}
-                        >
-                            {brochures.map((brochure) => (
-                                <li key={brochure.language}>
-                                    <button
-                                        className="tab-button"
-                                        onClick={() => {
-                                            toggleDropdown(null); // Close dropdown
-                                            showBrochureModal(brochure.language);
-                                        }}
-                                    >
-                                        {brochure.language}
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                    </li>
-                    {/* Modal for Desktop */}
-                    <PopupModal
-                        show={modalStates['brochureModal']}
-                        onHide={() => toggleModal('brochureModal')}
-                        title={modalTitle}
-                        contentType={modalContentType}
-                        file={modalFile}
-                    />
-                </>
-            )}
+                        <>
+                            <li className="dropdown">
+                                <button
+                                    className={`tab-button dropdown-toggle ${
+                                        activeDropdown === 'brochures' ? 'active' : ''
+                                    }`}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        toggleDropdown('brochures');
+                                    }}
+                                >
+                                    Brochures
+                                </button>
+                                <ul
+                                    className={`dropdown-menu ${
+                                        activeDropdown === 'brochures' ? 'show' : ''
+                                    }`}
+                                >
+                                    {brochures.map((brochure) => (
+                                        <li key={brochure.language}>
+                                            <button
+                                                className="tab-button"
+                                                onClick={() => {
+                                                    toggleDropdown(null); // Close dropdown
+                                                    showBrochureModal(brochure.language);
+                                                }}
+                                            >
+                                                {brochure.language}
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </li>
+                            {/* Modal for Desktop */}
+                            <PopupModal
+                                show={modalStates['brochureModal']}
+                                onHide={() => toggleModal('brochureModal')}
+                                title={modalTitle}
+                                contentType={modalContentType}
+                                file={modalFile}
+                            />
+                        </>
+                    )}
                     {/* Dropdown for Brochures End */}
 
                     {/* Available Units Start */}
