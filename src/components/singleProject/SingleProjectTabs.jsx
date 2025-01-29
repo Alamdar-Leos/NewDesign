@@ -472,15 +472,17 @@ const SingleProjectTabs = () => {
 
                 {/* Header Right Section */}
                 <div className="col-lg-4 col-md-4 col-sm-6 d-flex justify-content-center justify-content-lg-end justify-content-sm-end">
-                    <div className="social-icon d-flex justify-content-center mx-5">
-                        <Link
-                        className="pt-md-2 pt-0 px-2"
-                        to="https://www.youtube.com/@leosinternational"
-                        target="_blank"
-                        >
-                        <FaYoutube size={30} color="##d0a85f" />
-                        </Link>
-                    </div>
+                    {!isMobileDevice() && (
+                        <div className="social-icon d-flex justify-content-center mx-5">
+                            <Link
+                            className="pt-md-2 pt-0 px-2"
+                            to="https://www.youtube.com/@leosinternational"
+                            target="_blank"
+                            >
+                            <FaYoutube size={30} color="##d0a85f" />
+                            </Link>
+                        </div>
+                    )}
                     <div className="post-content text-center text-md-right">
                         <Link to="/" className="btn btn-style btn-primary">
                         <span className="fa fa-home"></span> HOME
@@ -838,11 +840,6 @@ const SingleProjectTabs = () => {
                             VIEW ON MAP
                             </button>
                         )}
-                        {/* <button
-                            className="btn btn-style btn-primary view-on-map-button"
-                            onClick={() => window.open(locationUrl, '_blank')}>
-                            VIEW ON MAP
-                        </button> */}
                     </div>
                     </>
                 )}

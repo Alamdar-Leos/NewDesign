@@ -30,16 +30,6 @@ const Header = ({ selectedUnit }) => {
     fetchCommunities();
   }, []);
 
-  // Fetch project title for a specific project (if projectId exists)
-  // useEffect(() => {
-  //   if (selectedUnit?.Projects?.name) {
-  //     setProjectTitle(selectedUnit.Projects.name);
-  //     console.log(setProjectTitle);
-  //   } else {
-  //     setProjectTitle('Project Title'); // Default title if no project name exists
-  //   }
-  // }, [selectedUnit]);
-
   const handleSearch = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -47,6 +37,11 @@ const Header = ({ selectedUnit }) => {
       community: form.community?.value || '',
     };
     setSelectedFilters(filters);
+  };
+
+  // Function to detect if the user is on a mobile device
+  const isMobileDevice = () => {
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   };
 
   return (
@@ -72,9 +67,11 @@ const Header = ({ selectedUnit }) => {
                 </div>
 
                 <div className="header-social-icon col-lg-8 col-md-9 col-sm-10 d-flex justify-content-md-end justify-content-sm-end">
-                  <Link className="pt-md-2 pt-0 mx-3 px-3" to="https://www.youtube.com/@leosinternational" target="_blank">
+                  {!isMobileDevice() && (
+                    <Link className="pt-md-2 pt-0 mx-3 px-3" to="https://www.youtube.com/@leosinternational" target="_blank">
                     <FaYoutube size={30} color="##d0a85f" />
-                  </Link>
+                    </Link>
+                  )}
                   <section className="w3l-cover-3">
                     <div className="search-icon" onClick={toggleForm}>
                       <i className="fas fa-search"></i>
