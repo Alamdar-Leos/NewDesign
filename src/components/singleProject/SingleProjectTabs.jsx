@@ -830,11 +830,19 @@ const SingleProjectTabs = () => {
                             )}
                         </Slider>
                         {/* VIEW ON MAP Button */}
-                        <button
+                        {!isMobileDevice() && (
+                            <button
+                            className="btn btn-style btn-primary view-on-map-button"
+                            onClick={() => window.open(locationUrl, '_blank')}
+                            >
+                            VIEW ON MAP
+                            </button>
+                        )}
+                        {/* <button
                             className="btn btn-style btn-primary view-on-map-button"
                             onClick={() => window.open(locationUrl, '_blank')}>
                             VIEW ON MAP
-                        </button>
+                        </button> */}
                     </div>
                     </>
                 )}
