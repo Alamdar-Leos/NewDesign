@@ -966,7 +966,8 @@ const SingleProjectTabs = () => {
                         <Modal show={showModal} onHide={closeModal} centered dialogClassName="custom-modal-80">
                             <Modal.Header closeButton className="justify-content-center bg-color">
                                 <Modal.Title className="w-100 text-center text-uppercase">
-                                    {selectedUnit?.Projects?.name || 'NA'}
+                                    {/* {selectedUnit?.Projects?.name || 'NA'} */}
+                                    {projectName || 'NA'}
                                 </Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
@@ -1055,7 +1056,6 @@ const SingleProjectTabs = () => {
                                                 </div>
                                             )}
                                         </Tab.Pane>
-
 
                                         {/* Payment Plan Tab */}
                                         <Tab.Pane eventKey="payment-plan">

@@ -143,55 +143,6 @@ export const fetchProjectMediaFilesAPI = async (projectId) => {
   }
 };
 
-// // Fetch Payment Plans for a Project
-// export const paymentPlanAPI = async (projectId) => {
-//   if (!projectId) {
-//     throw new Error("Project ID is required to fetch payment plans.");
-//   }
-
-//   try {
-//     const response = await axios.get(
-//       `${BASE_URL}/projects/project/payment_plans/${projectId}`,
-//       {
-//         headers: { Authorization: `Bearer 5ATh6co8WUuhaWp4_$45FGFGDFK%44*&23DF` },
-//         params: { device: 'WEB' },
-//       }
-//     );
-
-//     const paymentPlans = (response.data.data || [])
-//       .filter((plan) => plan.Project === projectId)
-//       .map((plan) => {
-//         // Log raw payment plan data
-//         console.log("Raw Payment Plan:", plan);
-
-//         // Parse afterCompletion and beforeCompletion fields
-//         const afterCompletion = plan.After_Completion?.length
-//           ? JSON.parse(plan.After_Completion[0] || "[]")
-//           : [];
-//         const beforeCompletion = plan.Before_Completion?.length
-//           ? JSON.parse(plan.Before_Completion[0] || "[]")
-//           : [];
-
-//         return {
-//           id: plan._id,
-//           name: plan.Name,
-//           bookingDeposit: plan.Booking_Deposit,
-//           onCompletion: plan.On_Completion,
-//           paymentPlanMethod: plan.Payment_Plan_Method,
-//           unitPrice: plan.Unit_Price, // Ensure unitPrice is included
-//           beforeCompletion,
-//           afterCompletion,
-//         };
-//       });
-
-//     console.log("Processed Payment Plans:", paymentPlans);
-//     return paymentPlans;
-//   } catch (error) {
-//     console.error("Error fetching payment plans:", error);
-//     throw new Error("Failed to fetch payment plans.");
-//   }
-// };
-
 // Fetch Payment Plans for a Project
 export const paymentPlanAPI = async (projectId) => {
   if (!projectId) {
